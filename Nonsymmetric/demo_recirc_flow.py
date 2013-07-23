@@ -71,7 +71,8 @@ if __name__ == '__main__':
     strength=[('evolution', {'k':2, 'epsilon':4.0})]
     presmoother =('gauss_seidel_nr', {'sweep':'symmetric', 'iterations':1})
     postsmoother=('gauss_seidel_nr', {'sweep':'symmetric', 'iterations':1})
-
+    improve_candidates =[('gauss_seidel_nr', {'sweep': 'symmetric', 'iterations': 4}), None]
+    
     ##
     # Construct solver and solve
     ##
@@ -79,11 +80,13 @@ if __name__ == '__main__':
     if choice == 1:
         sa_nonsymmetric = smoothed_aggregation_solver(A, B=B, smooth=smooth, \
                    strength=strength, presmoother=presmoother, \
-                   postsmoother=postsmoother, **SA_build_args)
+                   postsmoother=postsmoother, \
+                   improve_candidates=improve_candidates, **SA_build_args)
     elif choice == 2:
         sa_nonsymmetric = rootnode_solver(A, B=B, smooth=smooth, \
                    strength=strength, presmoother=presmoother, \
-                   postsmoother=postsmoother, **SA_build_args)
+                   postsmoother=postsmoother, \
+                   improve_candidates=improve_candidates, **SA_build_args)
     else:
         raise ValueError("Enter a choice of 1 or 2")
 

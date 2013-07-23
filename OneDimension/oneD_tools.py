@@ -308,8 +308,6 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
             pylab.title(title_string)
             pylab.xlabel('DOF')
             pylab.ylabel('real(Local Interp Fcn)')
-            ax = array(pylab.axis()); ax[0] = min(x); ax[1] = max(x)
-            ax = pylab.axis(ax)
             
             if P.dtype == complex:
                 pylab.figure(fig_num+10+j)
@@ -321,6 +319,4 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
                 pylab.title(title_string)
                 pylab.xlabel('Grid')
                 pylab.ylabel('imag(Local Interp Fcn)')
-                ax = array(pylab.axis()); ax[0] = min(x)
-                ax[1] = max(x); ax = pylab.axis(ax)
 

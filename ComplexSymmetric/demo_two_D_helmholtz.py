@@ -60,14 +60,14 @@ if __name__ == '__main__':
     smoother = [ ('gauss_seidel', {'iterations' : 4, 'sweep':'forward'}), 
                  ('gauss_seidel_nr', {'iterations' : 4, 'sweep':'forward'}) ]
 
-    # Bimprove[k] -- stipulates the relaxation method on level k used to "improve" B
-    Bimprove = [ ('gauss_seidel', {'iterations' : 2, 'sweep':'forward'}), 
+    # improve_candidates[k] -- stipulates the relaxation method on level k used to "improve" B
+    improve_candidates = [ ('gauss_seidel', {'iterations' : 2, 'sweep':'forward'}), 
                   ('gauss_seidel_nr', {'iterations' : 1, 'sweep':'forward'}) ]
 
     # Construct solver using the "naive" constant mode for B
     sa = smoothed_aggregation_helmholtz_solver(A, planewaves=[None], 
                use_constant=use_constant, strength=strength, smooth=smooth,
-               aggregate=aggregate, Bimprove=Bimprove, presmoother=smoother,
+               aggregate=aggregate, improve_candidates=improve_candidates, presmoother=smoother,
                postsmoother=smoother, **SA_build_args) 
     
     # Solve
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     # Construct solver using planewaves
     sa = smoothed_aggregation_helmholtz_solver(A, planewaves=pwave_args, 
                use_constant=use_constant, strength=strength, smooth=smooth,
-                aggregate=aggregate, Bimprove=Bimprove, presmoother=smoother,
+                aggregate=aggregate, improve_candidates=improve_candidates, presmoother=smoother,
                 postsmoother=smoother, **SA_build_args) 
    
     # Solve

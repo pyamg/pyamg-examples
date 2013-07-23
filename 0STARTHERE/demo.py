@@ -71,7 +71,9 @@ ml = smoothed_aggregation_solver(A,        # the matrix
         smooth=('jacobi', {'omega': 4.0/3.0,'degree':2}),   # prolongation smoothing
         presmoother=('block_gauss_seidel', {'sweep': 'symmetric'}), 
         postsmoother=('block_gauss_seidel', {'sweep': 'symmetric'}), 
-        Bimprove='default',                # use the default 5 sweeps of prerelaxing B at each level
+        improve_candidates=[('block_gauss_seidel', 
+            {'sweep': 'symmetric', 'iterations': 4}), None],                
+                                           # use the default 5 sweeps of prerelaxing B at each level
         max_levels=10,                     # maximum number of levels
         max_coarse=5,                      # maximum number on a coarse level
         keep=False)                        # keep extra operators around in the hierarchy (memory)
