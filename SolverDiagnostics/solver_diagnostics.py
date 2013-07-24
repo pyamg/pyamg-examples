@@ -314,12 +314,15 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
     ##
     # Default improve_candidates
     if improve_candidates_list == None:
-        improve_candidates_list = ['default', None]
+        if symmetry == 'nonsymmetric' or definiteness == 'indefinite':
+            improve_candidates_list = [ [('gauss_seidel_nr', {'sweep': 'symmetric', 'iterations': 4}), None], None]
+        else:
+            improve_candidates_list = [ [('block_gauss_seidel', {'sweep': 'symmetric', 'iterations': 4}), None], None]
 
     ##
     # Default basic solver parameters
     if max_levels_list == None:
-        max_levels_list = [25]
+        max_levels_list = [15]
     if coarse_size_list == None:
         coarse_size_list = [ (300, 'pinv') ]
    
