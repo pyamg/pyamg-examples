@@ -10,7 +10,7 @@ V = data['vertices']
 E2V = data['elements']
 
 # perform smoothed aggregation
-Agg = standard_aggregation(A)
+Agg, rootnodes = standard_aggregation(A)
 
 # create the vtk file of aggregates
 vis_coarse.vis_aggregate_groups(Verts=V, E2V=E2V, Agg=Agg, \

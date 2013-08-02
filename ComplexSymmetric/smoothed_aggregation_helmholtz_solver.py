@@ -7,12 +7,12 @@ import scipy
 from scipy.sparse import isspmatrix_csr, isspmatrix_bsr
 
 from pyamg.multilevel import multilevel_solver
-from pyamg.util.utils import relaxation_as_linear_operator
+from pyamg.util.utils import relaxation_as_linear_operator,\
+    levelize_strength_or_aggregation, levelize_smooth_or_improve_candidates
 from pyamg.relaxation.smoothing import change_smoothers
 from pyamg.strength import symmetric_strength_of_connection, evolution_strength_of_connection, \
                            distance_strength_of_connection
-from pyamg.aggregation.aggregation import extend_hierarchy, preprocess_Bimprove, \
-                                        preprocess_str_or_agg, preprocess_smooth
+from pyamg.aggregation.aggregation import extend_hierarchy
 from pyamg.aggregation.aggregate import standard_aggregation, lloyd_aggregation
 from pyamg.aggregation.tentative import fit_candidates
 from pyamg.aggregation.smooth import jacobi_prolongation_smoother, \
@@ -92,7 +92,7 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         smooth=('energy', {'krylov': 'gmres'}),
         presmoother=('gauss_seidel_nr',{'sweep':'symmetric'}),
         postsmoother=('gauss_seidel_nr',{'sweep':'symmetric'}),
-        Bimprove='default', max_levels = 10, max_coarse = 100, **kwargs):
+        improve_candidates='default', max_levels = 10, max_coarse = 100, **kwargs):
     
     """
     Create a multilevel solver using Smoothed Aggregation (SA) for a 2D Helmholtz operator
@@ -150,7 +150,7 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         varying this parameter on a per level basis.
     postsmoother : {tuple, string, list}
         Same as presmoother, except defines the postsmoother.
-    Bimprove : {list} : default [('block_gauss_seidel', {'sweep':'symmetric'}), None]
+    improve_candidates : {list} : default [('block_gauss_seidel', {'sweep':'symmetric'}), None]
         The ith entry defines the method used to improve the candidates B on
         level i.  If the list is shorter than max_levels, then the last entry
         will define the method for all levels lower.
@@ -258,11 +258,15 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
                          'Change use_constant and/or planewave arguments.')
         
     ##
-    # Preprocess parameters
-    max_levels, max_coarse, strength = preprocess_str_or_agg(strength, max_levels, max_coarse)
-    max_levels, max_coarse, aggregate = preprocess_str_or_agg(aggregate, max_levels, max_coarse)
-    Bimprove = preprocess_Bimprove(Bimprove, A, max_levels)
-    smooth = preprocess_smooth(smooth, max_levels)
+    # Levelize the user parameters, so that they become lists describing the
+    # desired user option on each level.
+    max_levels, max_coarse, strength =\
+        levelize_strength_or_aggregation(strength, max_levels, max_coarse)
+    max_levels, max_coarse, aggregate =\
+        levelize_strength_or_aggregation(aggregate, max_levels, max_coarse)
+    improve_candidates = levelize_smooth_or_improve_candidates(improve_candidates, max_levels)
+    smooth = levelize_smooth_or_improve_candidates(smooth, max_levels)
+
 
     ##
     # Start first level
@@ -285,16 +289,16 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
 
             ##
             # As in alpha-SA, relax the candidates before restriction
-            if Bimprove[0] is not None:
-                Bcoarse2 = relaxation_as_linear_operator(Bimprove[0], A, zeros_0)*Bcoarse2
+            if improve_candidates[0] is not None:
+                Bcoarse2 = relaxation_as_linear_operator(improve_candidates[0], A, zeros_0)*Bcoarse2
             
             ##
             # Restrict Bcoarse2 to current level
             for i in range(len(levels)-1):
                 Bcoarse2 = levels[i].R*Bcoarse2
             # relax after restriction
-            if Bimprove[len(levels)-1] is not None:
-                Bcoarse2 =relaxation_as_linear_operator(Bimprove[len(levels)-1],A_l,zeros_l)*Bcoarse2
+            if improve_candidates[len(levels)-1] is not None:
+                Bcoarse2 =relaxation_as_linear_operator(improve_candidates[len(levels)-1],A_l,zeros_l)*Bcoarse2
         else:
             Bcoarse2 = numpy.zeros((A_l.shape[0],0),dtype=A.dtype)
 

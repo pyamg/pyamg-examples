@@ -12,7 +12,7 @@ from pyamg.util.utils import print_table
 def solver_diagnostics(A, solver=smoothed_aggregation_solver, 
         fname='solver_diagnostic', definiteness=None,
         symmetry=None, strength_list=None, aggregate_list=None,
-        smooth_list=None, Bimprove_list=None, max_levels_list=None,
+        smooth_list=None, improve_candidates_list=None, max_levels_list=None,
         cycle_list=None, krylov_list=None, prepostsmoother_list=None,
         B_list=None, coarse_size_list=None):
     ''' 
@@ -80,8 +80,8 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
             ('energy',{'krylov':'gmres','maxiter':3,'degree':2,'weighting':'local'}),
             ('energy',{'krylov':'gmres','maxiter':3,'degree':3,'weighting':'local'})] 
 
-    Bimprove_list : {list} 
-        List of various parameter choices for the Bimprove argument sent to solver(...)
+    improve_candidates_list : {list} 
+        List of various parameter choices for the improve_candidates argument sent to solver(...)
 
         Default: ['default', None]
 
@@ -159,7 +159,7 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
 
     Generally, there are two types of parameter lists passed to this function.  
     Type 1 includes: cycle_list, strength_list, aggregate_list, smooth_list, 
-                     krylov_list, Bimprove_list, max_levels_list
+                     krylov_list, improve_candidates_list, max_levels_list
                      -------------------------------------------
                      Here, you pass in a list of different parameters, e.g., 
                      cycle_list=['V','W'].
@@ -312,14 +312,17 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
             krylov_list = [('cg', {'tol':1e-8, 'maxiter':300})]
 
     ##
-    # Default Bimprove
-    if Bimprove_list == None:
-        Bimprove_list = ['default', None]
+    # Default improve_candidates
+    if improve_candidates_list == None:
+        if symmetry == 'nonsymmetric' or definiteness == 'indefinite':
+            improve_candidates_list = [ [('gauss_seidel_nr', {'sweep': 'symmetric', 'iterations': 4}), None], None]
+        else:
+            improve_candidates_list = [ [('block_gauss_seidel', {'sweep': 'symmetric', 'iterations': 4}), None], None]
 
     ##
     # Default basic solver parameters
     if max_levels_list == None:
-        max_levels_list = [25]
+        max_levels_list = [15]
     if coarse_size_list == None:
         coarse_size_list = [ (300, 'pinv') ]
    
@@ -328,7 +331,7 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
     # The results array will hold in each row, three values: 
     # iterations, operator complexity, and work per digit of accuracy
     num_test = len(cycle_list)*len(strength_list)*len(aggregate_list)*len(smooth_list)* \
-               len(krylov_list)*len(Bimprove_list)*len(max_levels_list)*len(B_list)* \
+               len(krylov_list)*len(improve_candidates_list)*len(max_levels_list)*len(B_list)* \
                len(coarse_size_list)*len(prepostsmoother_list)
     results = zeros( (num_test,3) )
     solver_descriptors = []
@@ -355,7 +358,7 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
                             for strength in strength_list:
                                 for aggregate in aggregate_list:
                                     for smooth in smooth_list:
-                                        for Bimprove in Bimprove_list:
+                                        for improve_candidates in improve_candidates_list:
                                             
                                             counter += 1
                                             print "    Test %d out of %d"%(counter+1,num_test)
@@ -390,7 +393,7 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
                                                 '    strength = ' + str(strength) + '\n' \
                                                 '    aggregate = ' + str(aggregate) + '\n' \
                                                 '    smooth = ' + str(smooth) + '\n' \
-                                                '    Bimprove = ' + str(Bimprove) 
+                                                '    improve_candidates = ' + str(improve_candidates) 
                                             solver_descriptors.append(descriptor)
                                             solver_args.append( {'cycle' : cycle, 
                                                 'accel' : str(krylov[0]),
@@ -400,7 +403,7 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
                                                 'presmoother' : presmoother, 
                                                 'postsmoother' : postsmoother,
                                                 'strength' : strength, 'aggregate' : aggregate,
-                                                'smooth' : smooth, 'Bimprove' : Bimprove} )
+                                                'smooth' : smooth, 'improve_candidates' : improve_candidates} )
                                             
                                             ##
                                             # Construct solver
@@ -408,7 +411,7 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
                                                 sa = solver(A, B=B, BH=BH,
                                                         strength=strength,
                                                         smooth=smooth,
-                                                        Bimprove=Bimprove,
+                                                        improve_candidates=improve_candidates,
                                                         aggregate=aggregate,
                                                         presmoother=presmoother,
                                                         max_levels=max_levels,
@@ -525,7 +528,7 @@ def solver_diagnostics(A, solver=smoothed_aggregation_solver,
     fptr.write('    ml = ' + solver.func_name + '(A, B=B, BH=BH,\n' + \
                '        strength=%s,\n'%to_string(solver_args[0]['strength']) + \
                '        smooth=%s,\n'%to_string(solver_args[0]['smooth']) + \
-               '        Bimprove=%s,\n'%to_string(solver_args[0]['Bimprove']) + \
+               '        improve_candidates=%s,\n'%to_string(solver_args[0]['improve_candidates']) + \
                '        aggregate=%s,\n'%to_string(solver_args[0]['aggregate']) + \
                '        presmoother=%s,\n'%to_string(solver_args[0]['presmoother']) + \
                '        postsmoother=%s,\n'%to_string(solver_args[0]['postsmoother']) + \

@@ -62,14 +62,14 @@ if __name__ == '__main__':
     ##
     # Now, construct and solve with appropriate parameters 
     p = 5
-    Bimprove = [('block_gauss_seidel', {'sweep':'symmetric', 'iterations':p}),
+    improve_candidates = [('block_gauss_seidel', {'sweep':'symmetric', 'iterations':p}),
                 ('gauss_seidel', {'sweep':'symmetric', 'iterations':p})]   
     aggregate = ['naive', 'standard']
     # the initial conforming aggregation step requires no prolongation smoothing
     smooth=[None, ('energy', {'krylov' : 'cg', 'maxiter' : p})]
     strength =[('distance', {'V' : data['vertices'], 'theta':5e-5, 'relative_drop':False}),\
                ('evolution', {'k':4, 'proj_type':'l2', 'epsilon':2.0})]
-    sa = smoothed_aggregation_solver(A, B=B, smooth=smooth, Bimprove=Bimprove,\
+    sa = smoothed_aggregation_solver(A, B=B, smooth=smooth, improve_candidates=improve_candidates,\
              strength=strength, presmoother=presmoother, aggregate=aggregate,\
              postsmoother=postsmoother, **SA_build_args)
     resvec = []
