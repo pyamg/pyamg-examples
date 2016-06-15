@@ -577,14 +577,3 @@ INSTANTIATE_TYPEMAPS(npy_cfloat_wrapper,      PyArray_CFLOAT     )
 INSTANTIATE_TYPEMAPS(npy_cdouble_wrapper,     PyArray_CDOUBLE    )
 INSTANTIATE_TYPEMAPS(npy_clongdouble_wrapper, PyArray_CLONGDOUBLE)
 INSTANTIATE_TYPEMAPS(PyObject,                PyArray_OBJECT     )
-
-
-
-#undef TYPEMAP_IN1
-#undef TYPEMAP_IN2
-#undef TYPEMAP_INPLACE1
-#undef TYPEMAP_INPLACE2
-#undef TYPEMAP_ARGOUT1
-#undef TYPEMAP_ARGOUT2
-#under NPY_TYPECHECK
-

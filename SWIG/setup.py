@@ -3,14 +3,24 @@
 usage:
 python setup.py build_ext --inplace
 """
-import commands
-flag = commands.getstatusoutput('swig -c++ -python splinalg.i')
-if flag[0]!=0:
-    print flag
+#import commands
+#flag = commands.getstatusoutput('swig -c++ -python splinalg.i')
+cmd = 'swig -c++ -python splinalg.i'
+import subprocess
+pipe = subprocess.Popen(cmd, shell=True, universal_newlines=True,
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+output = str.join("", pipe.stdout.readlines())
+sts = pipe.wait()
+if sts is not None:
+    print(output)
     exit()
 
 from numpy.distutils.core import setup, Extension
-splinalg_module = Extension('_splinalg', sources=['splinalg_wrap.cxx'], define_macros=[('__STDC_FORMAT_MACROS', 1)],)
+import numpy
+numpy_include = numpy.get_include()
+
+splinalg_module = Extension('_splinalg', sources=['splinalg_wrap.cxx'], define_macros=[('__STDC_FORMAT_MACROS', 1)],
+                            include_dirs=[numpy_include])
 setup (name = 'splinalg',
        version = '0.1',
        author      = "Luke Olson",
