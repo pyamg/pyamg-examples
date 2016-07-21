@@ -17,21 +17,13 @@ from numpy import array, ones, zeros, sqrt, asarray, empty, concatenate, \
         random, uint8, kron, arange, diff, c_, where, issubdtype, \
         integer, mean, sum, prod, ravel, hstack, invert, repeat, floor
 
+from scipy.spatial import Delaunay
 from scipy import array, zeros, mean, kron, ones, sparse, rand
 from scipy.sparse import csr_matrix, coo_matrix, csc_matrix
 from os import system
 # pyamg
 from pyamg.vis import write_basic_mesh, write_vtu
 from pyamg.util.utils import scale_rows, scale_columns
-
-# have to manually install Delaunay package from scikits
-try:
-    from scikits import delaunay
-except:
-    try:
-        import delaunay
-    except:
-        raise ValueError("Install delaunay package from SciKits for this example")
 
 __all__ = ['my_vis', 'shrink_elmts', 'dg_vis']
 
@@ -201,7 +193,7 @@ def dg_vis(fname, Vert, E2V, Agg, mesh_type, A=None):
     # plot_type = 'primal', using a global Delaunay triangulation of the shrunken mesh,
     #   we visualize the aggregates as if the global Delaunay triangulation defined a continuous Galerkin
     #   mesh upon which our aggregates are defined.
-    #circum_cent, edges, tri_pts, tri_nbs = delaunay.delaunay(Vert[:,0], Vert[:,1])
+    #tri_pts = Delaunay(Vert[:,0:2]).simplices
     #coarse_grid_vis(filename, Vert, tri_pts, Agg, A=A, plot_type='primal', mesh_type='tri')
     filename = fname + "_aggs.vtu"
 
@@ -215,7 +207,7 @@ def dg_vis(fname, Vert, E2V, Agg, mesh_type, A=None):
         #The nonzeros in column i of Agg define the dofs in Agg i
         members = Agg.indices[rowstart:rowend]
         if max(members.shape) > 2:
-            circum_cent, edges, tri_pts, tri_nbs = delaunay.delaunay(Vert[members,0], Vert[members,1])
+            tri_pts = Delaunay(Vert[members,0:2]).simplices
             #if i == 0:
             #    E2Vnew = ravel(members[ravel(tri_pts)])
             #    colors_new = ravel(repeat(colors[i], tri_pts.shape[0]))
@@ -322,7 +314,7 @@ def my_vis(ml, V, error=None, fname="", E2V=None, Pcols=None):
     levels = ml.levels
     Vlist = [V]
     if E2V is None:
-        [circ_cent,edges,E2V,tri_nbs]=delaunay.delaunay(V[:,0], V[:,1])
+        E2V = Delaunay(V[:,0:2]).simplices
     E2Vlist = [E2V]
 
     mesh_type_list = []
@@ -363,7 +355,7 @@ def my_vis(ml, V, error=None, fname="", E2V=None, Pcols=None):
         AggY = (ravel(AggY)/count).reshape(-1,1)
         Vlist.append(hstack((AggX, AggY)))
 
-        [circ_cent,edges,E2Vnew,tri_nbs]=delaunay.delaunay(Vlist[i][:,0], Vlist[i][:,1])
+        E2Vnew = Delaunay(Vlist[i][:,0:2]).simplices
         E2Vlist.append(E2Vnew)
         mesh_type_list.append('tri')
         mesh_num_list.append(5)
