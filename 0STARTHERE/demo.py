@@ -28,9 +28,12 @@ x = ml.solve(b, tol=1e-12, residuals=res1)  # solve Ax=b to a tolerance of 1e-12
 # ------------------------------------------------------------------
 # Step 5: print details
 # ------------------------------------------------------------------
+print("\n")
+print("Details of the multilevel object")
+print("--------------------------------")
 print(ml)                                 # print hierarchy information
-print("residual norm is", np.linalg.norm(b - A * x))  # compute norm of residual vector
-print("\n\n\n\n\n")
+
+print("The residual norm is {}".format(np.linalg.norm(b - A * x)))  # compute norm of residual vector
 
 # notice that there are 5 (or maybe 6) levels in the hierarchy
 #
@@ -42,18 +45,15 @@ print("\n\n\n\n\n")
 #      B: near null-space modes for level 0
 #      presmoother: presmoothing function taking arguments (A,x,b)
 #      postsmoother: postsmoothing function taking arguments (A,x,b)
-print(dir(ml.levels[0]))
+print("\n")
+print("The Multigrid Hierarchy")
+print("-----------------------")
+for l in range(len(ml.levels)-1):
+    print("A_{}: {}x{}   P_{}: {}x{}".format(l, ml.levels[l].A.shape[0], ml.levels[l].A.shape[1],
+                                             l, ml.levels[l].P.shape[0], ml.levels[l].P.shape[1]))
 
-# e.g. the multigrid components on the coarsest (4) level
-print(dir(ml.levels[-1]))
-# there are no interpoation operators (P,R) or smoothers on the coarsest level
-
-# check the size and type of the fine level operators
-print('type = ', ml.levels[0].A.format)
-print('   A = ', ml.levels[0].A.shape)
-print('   P = ', ml.levels[0].P.shape)
-print('   R = ', ml.levels[0].R.shape)
-print("\n\n\n\n\n")
+# There is no P on the coarsest level:
+print("A_{}: {}x{}".format(l, ml.levels[-1].A.shape[0], ml.levels[-1].A.shape[1]))
 
 # ------------------------------------------------------------------
 # Step 6: change the hierarchy
@@ -79,9 +79,12 @@ ml = pyamg.smoothed_aggregation_solver(A,  # the matrix
 # ------------------------------------------------------------------
 res2 = []                                               # keep the residual history in the solve
 x = ml.solve(b, tol=1e-12, residuals=res2)              # solve Ax=b to a tolerance of 1e-12
+print("\n")
+print("The Multigrid Hierarchy")
+print("-----------------------")
 print(ml)                                               # print hierarchy information
-print("residual norm is", np.linalg.norm(b - A * x))    # compute norm of residual vector
-print("\n\n\n\n\n")
+print("The residual norm is {}".format(np.linalg.norm(b - A * x)))  # compute norm of residual vector
+print("\n")
 
 # ------------------------------------------------------------------
 # Step 8: plot convergence history
