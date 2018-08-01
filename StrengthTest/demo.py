@@ -16,17 +16,17 @@ options = []
 options.append(('symmetric', {'theta' : 0.0 }))
 options.append(('symmetric', {'theta' : 0.25}))
 options.append(('evolution', {'epsilon' : 4.0}))
-options.append(('algebraic_distance', {'theta' : 1e-1, 'p' : np.inf, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
-options.append(('algebraic_distance', {'theta' : 1e-2, 'p' : np.inf, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
-options.append(('algebraic_distance', {'theta' : 1e-3, 'p' : np.inf, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
-options.append(('algebraic_distance', {'theta' : 1e-4, 'p' : np.inf, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
+options.append(('algebraic_distance', {'epsilon' : 2.0, 'p' : np.inf, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
+options.append(('algebraic_distance', {'epsilon' : 3.0, 'p' : np.inf, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
+options.append(('affinity', {'epsilon' : 3.0, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
+options.append(('affinity', {'epsilon' : 4.0, 'R' : 10, 'alpha' : 0.5, 'k' : 20}))
 
 for opt in options:
     optstr = opt[0]+'\n    '+',\n    '.join(['%s=%s'%(u,v) for (u,v) in opt[1].items()])
     print "running %s"%(optstr)
-    
+
     ml = smoothed_aggregation_solver(A, strength = opt, max_levels=10, max_coarse=5, keep=False)
-    res = []                                
+    res = []
     x = ml.solve(b, x0, tol=1e-12,residuals=res)
     runs.append((res,optstr))
 
@@ -35,7 +35,7 @@ fig = plt.figure()
 ax = plt.subplot(111)
 ax.hold(True)
 for run in runs:
-    ax.semilogy(run[0], label=run[1], linewidth=3) 
+    ax.semilogy(run[0], label=run[1], linewidth=3)
 ax.set_xlabel('Iteration')
 ax.set_ylabel('Relative Residual')
 
