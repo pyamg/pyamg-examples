@@ -25,13 +25,13 @@ b = np.random.rand(A.shape[0]) + 1.0j*np.random.rand(A.shape[0])
 choice = int(choice)
 
 if choice == 1:
-    sa = pyamg.smoothed_aggregation_solver(A, smooth='energy')
+    ml = pyamg.smoothed_aggregation_solver(A, smooth='energy')
 elif choice == 2:
-    sa = pyamg.rootnode_solver(A, smooth='energy')
+    ml = pyamg.rootnode_solver(A, smooth='energy')
 else:
     raise ValueError("Enter a choice of 1 or 2")
 
 resvec = []
-x = sa.solve(b, x0=x, maxiter=20, tol=1e-14, residuals=resvec)
+x = ml.solve(b, x0=x, maxiter=20, tol=1e-14, residuals=resvec)
 
-print_cycle_history(resvec, sa, verbose=True, plotting=True)
+print_cycle_history(resvec, ml, verbose=True, plotting=True)
