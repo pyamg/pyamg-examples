@@ -36,29 +36,29 @@ def print_cycle_history(resvec, ml, verbose=False, plotting=False):
     resvec = numpy.array(resvec)
     factors = resvec[1:]/resvec[0:-1]
 
-    print '---Convergence Summary---------------------------------------'
-    print ''
+    print('---Convergence Summary---------------------------------------')
+    print('')
     avg_convergence_factor = (resvec[-1]/resvec[0])**(1.0/len(resvec))
-    print '             Levels: %d' % len(ml.levels)
-    print '   Cycle Complexity: %6.3f' % ml.cycle_complexity()
-    print 'Operator Complexity: %6.3f' % ml.operator_complexity()
-    print '    Grid Complexity: %6.3f' % ml.grid_complexity()
-    print 'avg geo conv factor: %6.3f' % avg_convergence_factor
-    print '               work: %6.3f' % (-ml.cycle_complexity() / scipy.log10(avg_convergence_factor))
-    print ''
+    print('             Levels: %d' % len(ml.levels))
+    print('   Cycle Complexity: %6.3f' % ml.cycle_complexity())
+    print('Operator Complexity: %6.3f' % ml.operator_complexity())
+    print('    Grid Complexity: %6.3f' % ml.grid_complexity())
+    print('avg geo conv factor: %6.3f' % avg_convergence_factor)
+    print('               work: %6.3f' % (-ml.cycle_complexity() / scipy.log10(avg_convergence_factor)))
+    print('')
 
     total_nnz =  sum([level.A.nnz for level in ml.levels])
-    print 'level   unknowns     nnz'
+    print('level   unknowns     nnz')
     for n,level in enumerate(ml.levels):
         A = level.A
-        print '   %-2d   %-10d   %-10d [%5.2f%%]' % (n,A.shape[1],A.nnz,(100*float(A.nnz)/float(total_nnz)))
+        print('   %-2d   %-10d   %-10d [%5.2f%%]' % (n,A.shape[1],A.nnz,(100*float(A.nnz)/float(total_nnz))))
 
     if(verbose):
-        print ''
-        print '---Convergence Summary (verbose)-----------------------------'
-        print '%20s'%'Factors:'
+        print('')
+        print('---Convergence Summary (verbose)-----------------------------')
+        print('%20s'%'Factors:')
         plist = ('iter', 'Factor', 'A-Mean','G-Mean', 'Work')
-        print '%-10s %-10s %-10s %-10s %-10s' % plist
+        print('%-10s %-10s %-10s %-10s %-10s' % plist)
 
         for i in range(0,len(resvec)):
             if(i>0):
@@ -73,9 +73,9 @@ def print_cycle_history(resvec, ml, verbose=False, plotting=False):
                 iwork = - ocx / scipy.log10(gafactor)               # current work-per-digit
 
                 plist = (i, ifactor, aafactor, gafactor, iwork)
-                print '%-10d %-10.3f %-10.3f %-10.3f %-10.3f' % plist
+                print('%-10d %-10.3f %-10.3f %-10.3f %-10.3f' % plist)
             else:
-                print '%-10d' % (i)
+                print('%-10d' % (i))
 
     if(plotting):
         from pylab import plot, show, semilogy, figure, xlabel, ylabel, axis
@@ -117,7 +117,7 @@ def print_scalability(factors,complexity,nnz,nlist,plotting=False,title='Scalabi
         table.append([ str(int(n)), str(int(nnz[run])), ('%1.3f'%factors[run]), ('%1.3f'%complexity[run]), ('%1.3f'%work[run]) ])
         run+=1
 
-    print print_table(table, title=title, col_padding=4)
+    print(print_table(table, title=title, col_padding=4))
 
     if(plotting):
         from pylab import plot, show, semilogy, figure, xlabel, ylabel, axis
