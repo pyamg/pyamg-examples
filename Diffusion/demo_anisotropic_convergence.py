@@ -1,34 +1,28 @@
 """
 Test the convergence of a 100x100 anisotropic diffusion equation
 """
-import numpy
-import scipy
+import numpy as np
+import pyamg
 
-from pyamg.gallery import stencil_grid
-from pyamg.gallery.diffusion import diffusion_stencil_2d
-from pyamg.strength import classical_strength_of_connection
-from pyamg.classical.classical import ruge_stuben_solver
+n = 100
+nx = n
+ny = n
 
-from convergence_tools import print_cycle_history
+# Rotated Anisotropic Diffusion
+stencil = pyamg.gallery.diffusion_stencil_2d(
+    type='FE', epsilon=0.001, theta=np.pi / 3)
 
-if __name__ == '__main__':
-    n = 100
-    nx = n
-    ny = n
+A = pyamg.gallery.stencil_grid(stencil, (nx, ny), format='csr')
+S = pyamg.strength.classical_strength_of_connection(A, 0.0)
 
-    # Rotated Anisotropic Diffusion
-    stencil = diffusion_stencil_2d(type='FE',epsilon=0.001,theta=scipy.pi/3)
+np.random.seed(625)
+x = np.random.rand(A.shape[0])
+b = A * np.random.rand(A.shape[0])
 
-    A = stencil_grid(stencil, (nx,ny), format='csr')
-    S = classical_strength_of_connection(A, 0.0)
+ml = pyamg.ruge_stuben_solver(A, max_coarse=10)
 
-    numpy.random.seed(625)
-    x = scipy.rand(A.shape[0])
-    b = A*scipy.rand(A.shape[0])
+resvec = []
+x = ml.solve(b, x0=x, maxiter=20, tol=1e-14, residuals=resvec)
 
-    ml = ruge_stuben_solver(A, max_coarse=10)
-
-    resvec = []
-    x = ml.solve(b, x0=x, maxiter=20, tol=1e-14, residuals=resvec)
-
-    print_cycle_history(resvec, ml, verbose=True, plotting=True)
+for i, r in enumerate(resvec):
+    print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
