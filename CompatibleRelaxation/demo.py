@@ -1,15 +1,20 @@
-import numpy
-
-from pyamg.gallery import poisson
-from pyamg.classical import CR
-from pyamg.vis import vis_splitting
+import numpy as np
+import pyamg
+import matplotlib.pyplot as plt
 
 n = 50
-A=poisson((n,n)).tocsr()
+A = pyamg.gallery.poisson((n,n)).tocsr()
 
-xx = numpy.arange(0,n,dtype=float)
-x,y = numpy.meshgrid(xx,xx)
-Verts = numpy.concatenate([[x.ravel()],[y.ravel()]],axis=0).T
+xx = np.arange(0,n,dtype=float)
+x,y = np.meshgrid(xx,xx)
+V = np.concatenate([[x.ravel()],[y.ravel()]],axis=0).T
 
-splitting = CR(A)
-vis_splitting(Verts=Verts, splitting=splitting,output='matplotlib')
+splitting = pyamg.classical.CR(A)
+
+C = np.where(splitting == 0)[0]
+F = np.where(splitting == 1)[0]
+plt.scatter(V[C, 0], V[C, 1], marker='s', s=12,
+            color=[232.0/255, 74.0/255, 39.0/255])
+plt.scatter(V[F, 0], V[F, 1], marker='s', s=12,
+            color=[19.0/255, 41.0/255, 75.0/255])
+plt.show()
