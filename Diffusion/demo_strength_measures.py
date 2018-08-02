@@ -13,20 +13,20 @@ np.random.seed(625)
 # Grid sizes to test
 nlist = [100, 200, 300, 400]
 
-factors_classic = np.zeros((len(nlist), 1)).ravel()
-complexity_classic = np.zeros((len(nlist), 1)).ravel()
-nnz_classic = np.zeros((len(nlist), 1)).ravel()
-sizelist_classic = np.zeros((len(nlist), 1)).ravel()
+factors_classic = np.zeros((len(nlist),))
+complexity_classic = np.zeros((len(nlist),))
+nnz_classic = np.zeros((len(nlist),))
+sizelist_classic = np.zeros((len(nlist),))
 
-factors_evo = np.zeros((len(nlist), 1)).ravel()
-complexity_evo = np.zeros((len(nlist), 1)).ravel()
-nnz_evo = np.zeros((len(nlist), 1)).ravel()
-sizelist_evo = np.zeros((len(nlist), 1)).ravel()
+factors_evo = np.zeros((len(nlist),))
+complexity_evo = np.zeros((len(nlist),))
+nnz_evo = np.zeros((len(nlist),))
+sizelist_evo = np.zeros((len(nlist),))
 
-factors_evo_root = np.zeros((len(nlist), 1)).ravel()
-complexity_evo_root = np.zeros((len(nlist), 1)).ravel()
-nnz_evo_root = np.zeros((len(nlist), 1)).ravel()
-sizelist_evo_root = np.zeros((len(nlist), 1)).ravel()
+factors_evo_root = np.zeros((len(nlist),))
+complexity_evo_root = np.zeros((len(nlist),))
+nnz_evo_root = np.zeros((len(nlist),))
+sizelist_evo_root = np.zeros((len(nlist),))
 
 run = 0
 
