@@ -6,38 +6,37 @@ the LOBPCG eigensolver on a two-dimensional Poisson problem with
 Dirichlet boundary conditions.
 """
 
-import scipy
-from scipy.sparse.linalg import lobpcg
+import numpy as np
+import scipy.sparse as sparse
 
-from pyamg import smoothed_aggregation_solver
-from pyamg.gallery import poisson
+import pyamg
+import matplotlib.pyplot as plt
 
 N = 100
 K = 9
-A = poisson((N,N), format='csr')
+A = pyamg.gallery.poisson((N, N), format='csr')
 
 # create the AMG hierarchy
-ml = smoothed_aggregation_solver(A)
+ml = pyamg.smoothed_aggregation_solver(A)
 
 # initial approximation to the K eigenvectors
-X = scipy.rand(A.shape[0], K) 
+X = np.random.rand(A.shape[0], K)
 
 # preconditioner based on ml
 M = ml.aspreconditioner()
 
 # compute eigenvalues and eigenvectors with LOBPCG
-W,V = lobpcg(A, X, M=M, tol=1e-8, largest=False)
+W, V = sparse.linalg.lobpcg(A, X, M=M, tol=1e-8, largest=False)
 
 
-#plot the eigenvectors
-import pylab
+# plot the eigenvectors
 
-pylab.figure(figsize=(9,9))
+plt.figure(figsize=(9, 9))
 
 for i in range(K):
-    pylab.subplot(3, 3, i+1)
-    pylab.title('Eigenvector %d' % i)
-    pylab.pcolor(V[:,i].reshape(N,N))
-    pylab.axis('equal')
-    pylab.axis('off')
-pylab.show()    
+    plt.subplot(3, 3, i + 1)
+    plt.title('Eigenvector %d' % i)
+    plt.pcolor(V[:, i].reshape(N, N))
+    plt.axis('equal')
+    plt.axis('off')
+plt.show()
