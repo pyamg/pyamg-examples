@@ -1,69 +1,80 @@
-# This example uses Dolfin version 0.9.7 of the Fenics Project:
-# http://www.fenicsproject.org/
-# to construct a FE solution the Poisson problem on the Unit Square.
-#
-# PyAMG is used to solve the resulting system.  Data is not copied when
-# constructing the scipy.sparse matrix
+"""PyAMG and Dolfin
 
+This example uses Dolfin version 0.9.7 of the Fenics Project:
+http://www.fenicsproject.org/
+to construct a FE solution the Poisson problem on the Unit Square.
+
+PyAMG is used to solve the resulting system.  Data is not copied when
+constructing the scipy.sparse matrix
+
+Steps:
+    - Install fenics.  Using docker:
+
+    docker run -ti -v $(pwd):/home/fenics/shared quay.io/fenicsproject/stable:latest
+
+    - Install pyamg
+
+    pip3 install pyamg --user
+
+"""
+
+import pyamg
 
 ############################################################
 # Part I: Setup problem with Dolfin
 try:
-    from dolfin import *
+    import dolfin as dfn
 except ImportError:
     raise ImportError('Problem with Dolfin Installation')
 
-parameters.linear_algebra_backend = "uBLAS"
+dfn.parameters['linear_algebra_backend'] = 'Eigen'
 
 # Define mesh, function space
-mesh = UnitSquare(75, 35)
-V = FunctionSpace(mesh, "CG", 1)
+mesh = dfn.UnitSquareMesh(75, 35)
+V = dfn.FunctionSpace(mesh, "CG", 1)
 
 # Define basis and bilinear form
-u = TrialFunction(V)
-v = TestFunction(V)
-a = dot(grad(v), grad(u))*dx
-f = Expression('500.0 * exp(-(pow(x[0] - 0.5, 2) + pow(x[1] - 0.5, 2)) / 0.02)')
-L = v*f*dx
+u = dfn.TrialFunction(V)
+v = dfn.TestFunction(V)
+a = dfn.dot(dfn.grad(v), dfn.grad(u)) * dfn.dx
+f = dfn.Expression(
+    '500.0 * exp(-(pow(x[0] - 0.5, 2) + pow(x[1] - 0.5, 2)) / 0.02)',
+    degree=1)
+L = v * f * dfn.dx
 
 # Define Dirichlet boundary (x = 0 or x = 1)
-class DirichletBoundary(SubDomain):
+
+
+class DirichletBoundary(dfn.SubDomain):
     def inside(self, x, on_boundary):
-        return x[0] < DOLFIN_EPS or x[0] > 1.0 - DOLFIN_EPS
-u0 = Constant(0.0)
-bc = DirichletBC(V, u0, DirichletBoundary())
+        return x[0] < dfn.DOLFIN_EPS or x[0] > 1.0 - dfn.DOLFIN_EPS
 
-A, rhs = assemble_system(a,L,bcs=bc)
+
+u0 = dfn.Constant(0.0)
+bc = dfn.DirichletBC(V, u0, DirichletBoundary())
+
+A, rhs = dfn.assemble_system(a, L, bcs=bc)
 ############################################################
-
 
 
 ############################################################
 # Part II: Solve with PyAMG
-from scipy.sparse import csr_matrix
-from pyamg import smoothed_aggregation_solver
-from numpy import intc
-(row,col,data) = A.data()   # get sparse data
-col = intc(col)
-row = intc(row)
-n = A.size(0)
-Asp = csr_matrix( (data,col,row), shape=(n,n))
-b = rhs.data()
+Asp = dfn.as_backend_type(A).sparray()
+b = dfn.as_backend_type(rhs).array_view()
 
-ml = smoothed_aggregation_solver(Asp,max_coarse=10)
+ml = pyamg.smoothed_aggregation_solver(Asp, max_coarse=10)
 residuals = []
-x = ml.solve(b,tol=1e-10,accel='cg',residuals=residuals)
+x = ml.solve(b, tol=1e-10, accel='cg', residuals=residuals)
 
-residuals = residuals/residuals[0]
-print ml
+residuals = residuals / residuals[0]
+print(ml)
 ############################################################
-
 
 
 ############################################################
 # Part III: plot
-import pylab
-pylab.figure(2)
-pylab.semilogy(residuals)
-pylab.show()
+# import matplotlib.pyplot as plt
+# plt.figure(2)
+# plt.semilogy(residuals)
+# plt.show()
 ############################################################
