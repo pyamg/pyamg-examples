@@ -13,14 +13,14 @@ from convergence_tools import print_cycle_history
 n = 100
 
 print("Test convergence for a simple 100x100 Grid, Gauge Laplacian")
-choice = input('\n Input Choice:\n' + \
-           '1:  Run smoothed_aggregation_solver\n' + \
-           '2:  Run rootnode_solver\n' )
+choice = input('\n Input Choice:\n' +
+               '1:  Run smoothed_aggregation_solver\n' +
+               '2:  Run rootnode_solver\n')
 
 np.random.seed(625)
 A = pyamg.gallery.gauge_laplacian(n, beta=0.001)
-x = np.random.rand(A.shape[0]) + 1.0j*np.random.rand(A.shape[0])
-b = np.random.rand(A.shape[0]) + 1.0j*np.random.rand(A.shape[0])
+x = np.random.rand(A.shape[0]) + 1.0j * np.random.rand(A.shape[0])
+b = np.random.rand(A.shape[0]) + 1.0j * np.random.rand(A.shape[0])
 
 choice = int(choice)
 
@@ -34,4 +34,5 @@ else:
 resvec = []
 x = ml.solve(b, x0=x, maxiter=20, tol=1e-14, residuals=resvec)
 
-print_cycle_history(resvec, ml, verbose=True, plotting=True)
+for i, r in enumerate(resvec):
+    print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
