@@ -257,9 +257,10 @@ def solver_diagnostics(
 
         if sparse.isspmatrix_bsr(A) and A.blocksize[0] > 1:
             bsize = A.blocksize[0]
+            m = int(A.shape[0]/bsize)
             B_list.append(
-                (np.kron(np.ones((A.shape[0] / bsize, 1), dtype=A.dtype), np.eye(bsize)),
-                 np.kron(np.ones((A.shape[0] / bsize, 1), dtype=A.dtype), np.eye(bsize)),
+                (np.kron(np.ones((m, 1), dtype=A.dtype), np.eye(bsize)),
+                 np.kron(np.ones((m, 1), dtype=A.dtype), np.eye(bsize)),
                     'B = kron(ones((A.shape[0]/A.blocksize[0],1), dtype=A.dtype), eye(A.blocksize[0])); BH = B.copy()'))
 
     ##
