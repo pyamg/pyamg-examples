@@ -9,7 +9,7 @@ V = data['vertices']
 E2V = data['elements']
 
 # perform smoothed aggregation
-Agg, rootnodes = pyamg.standard_aggregation(A)
+Agg, rootnodes = pyamg.aggregation.standard_aggregation(A)
 
 # create the vtk file of aggregates
 pyamg.vis.vis_coarse.vis_aggregate_groups(Verts=V, E2V=E2V, Agg=Agg,
