@@ -1,5 +1,5 @@
 """
-For use with pylab and 1D problems solved with a multilevel method.
+For use with matplotlib and 1D problems solved with a multilevel method.
 Routines here allow you to visualized aggregates, nullspace vectors
 and columns of P.  This is possible on any level
 """
@@ -22,20 +22,19 @@ def update_rcparams(fig_width_pt=700.0):
 
     returns
     -------
-    nothing, pylab.rcparams is updated
+    nothing, rcparams is updated
 
     examples
     --------
-    >>> from scipy import linspace
-    >>> from update_rcparams import update_rcparams
-    >>> import pylab
+    >>> from numpy import linspace
+    >>> from oneD_tools import update_rcparams
+    >>> import matplotlib.pyplot as plt
     >>> update_rcparams(700.0)
-    >>> pylab.plot(linspace(0,10,10), linspace(0,10,10))
-    >>> pylab.title(' X = Y' )
-    >>> pylab.xlabel('X')
-    >>> pylab.ylabel('Y')
-    >>> pylab.show()
-
+    >>> plt.plot(linspace(0,10,10), linspace(0,10,10))
+    >>> plt.title(' X = Y' )
+    >>> plt.xlabel('X')
+    >>> plt.ylabel('Y')
+    >>> plt.show()
     '''
 
     inches_per_pt = 1.0 / 72.27               # Convert pt to inch
@@ -84,7 +83,7 @@ def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', fig_num=1):
     Returns
     -------
     The residual ratio history are sent to the plotter.
-    To see plots, type ">>> import pylab; pylab.show()"
+    To see plots, type ">>> import matplotlib.pyplot as plt; plt.show()"
 
     Notes
     -----
@@ -93,14 +92,14 @@ def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', fig_num=1):
     --------
     >>> from pyamg import *
     >>> from oneD_tools import *
-    >>> import pylab
-    >>> from scipy import rand, zeros
+    >>> import matplotlib.pyplot as plt
+    >>> from numpy import random, zeros
     >>> A = poisson( (128,), format='csr')
     >>> ml=smoothed_aggregation_solver(A, max_coarse=5)
-    >>> oneD_profile(ml);                                         pylab.show()
-    >>> oneD_profile(ml, iter=3);                                 pylab.show()
-    >>> oneD_profile(ml, iter=3, cycle='W');                      pylab.show()
-    >>> oneD_profile(ml, b=rand(128,), x0=zeros((128,)), iter=5); pylab.show()
+    >>> oneD_profile(ml);                                         plt.show()
+    >>> oneD_profile(ml, iter=3);                                 plt.show()
+    >>> oneD_profile(ml, iter=3, cycle='W');                      plt.show()
+    >>> oneD_profile(ml, b=random.rand(128,), x0=zeros((128,)), iter=5); plt.show()
     '''
 
     # use good plotting parameters
@@ -145,13 +144,14 @@ def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', fig_num=1):
     res = np.array(res)
     resratio = res[1:] / res[0:-1]
     r = b - A * guess
-    print(np.linalg.norm(r))
+    print('Initial residual: ' + str(res[0]))
+    print('Final residual: ' + str(np.linalg.norm(r)))
 
     # plot results
     if iter > 1:
         plt.figure(fig_num)
         plt.plot(np.array(range(1, resratio.shape[0] + 1)), resratio)
-        plt.title('Residual Ratio History')
+        plt.title('Residual Reduction Ratio History')
         plt.xlabel('Iteration')
         plt.ylabel(r'$||r_{i}|| / ||r_{i-1}||$')
         plt.xticks(np.array(range(1, resratio.shape[0] + 1)))
@@ -175,7 +175,7 @@ def oneD_coarse_grid_vis(mg, fig_num=1, level=0):
     -------
     A plot of the aggregates on level=level is sent to the plotter
     The aggregates are always interpolated to the finest level
-    Use pylab.show() to see the plot
+    To see plots, type ">>> import matplotlib.pyplot as plt; plt.show()"
 
     Notes
     -----
@@ -184,13 +184,13 @@ def oneD_coarse_grid_vis(mg, fig_num=1, level=0):
     --------
     >>>from pyamg import *
     >>>from oneD_tools import *
-    >>>import pylab
+    >>>import matplotlib.pyplot as plt
     >>>A = poisson( (64,), format='csr')
     >>>ml=smoothed_aggregation_solver(A, max_coarse=5)
     >>>oneD_coarse_grid_vis(ml, level=0)
-    >>>pylab.show()
+    >>>plt.show()
     >>>oneD_coarse_grid_vis(ml, level=1)
-    >>>pylab.show()
+    >>>plt.show()
 
     '''
 
@@ -253,7 +253,7 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
     Returns
     -------
     A plot of the columns of P on level=level is sent to the plotter
-    Use pylab.show() to see the plot
+    To see plots, type ">>> import matplotlib.pyplot as plt; plt.show()"
 
     Notes
     -----
@@ -264,15 +264,15 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
     --------
     >>>from pyamg import *
     >>>from oneD_tools import *
-    >>>import pylab
+    >>>import matplotlib.pyplot as plt
     >>>A = poisson( (32,), format='csr')
     >>>ml=smoothed_aggregation_solver(A, max_coarse=5)
     >>>oneD_P_vis(ml, level=0, interp=False)
-    >>>pylab.show()
+    >>>plt.show()
     >>>oneD_P_vis(ml, level=1, interp=False)
-    >>>pylab.show()
+    >>>plt.show()
     >>>oneD_P_vis(ml, level=1, interp=True)
-    >>>pylab.show()
+    >>>plt.show()
     '''
 
     update_rcparams()
@@ -305,33 +305,17 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
         for j in range(blocks):
             plt.figure(fig_num + j)
             p2 = np.ravel(p[:, j])
-            plt.plot(x[p2 != 0], np.real(p2[p2 != 0.0]),
+            plt.plot(x[p2 != 0], p2[p2 != 0.0],
                      colors[np.mod(i, len(colors))],
                      marker='o', linewidth=2, markersize=12)
             title_string = (
                 'Level ' +
                 str(level) +
-                '\nReal Part of %d-th Local Interp Fcn' %
-                j)
+                '\nLocal Interp Fcn %d' %
+                (j+1))
             if interp and (level != 0):
                 title_string += '\nInterpolated to Finest Level'
             plt.title(title_string)
             plt.xlabel('DOF')
-            plt.ylabel('real(Local Interp Fcn)')
+            plt.ylabel('Local Interp Fcn')
 
-            if P.dtype == complex:
-                plt.figure(fig_num + 10 + j)
-                p2 = np.ravel(p[:, j])
-                plt.plot(x[p2 != 0], np.imag(p2[p2 != 0.0]),
-                         colors[np.mod(i, len(colors))],
-                         marker='o', linewidth=2, markersize=12)
-                title_string = (
-                    'Level ' +
-                    str(level) +
-                    '\nImag Part of %d-th Local Interp Fcn' %
-                    j)
-                if interp and (level != 0):
-                    title_string += '\nInterpolated to Finest Level'
-                plt.title(title_string)
-                plt.xlabel('Grid')
-                plt.ylabel('imag(Local Interp Fcn)')
