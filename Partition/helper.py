@@ -15,8 +15,8 @@ def trimesh(vertices, indices, labels=False):
     triangles = vertices[indices.ravel(), :].reshape((indices.shape[0], 3, 2))
 
     col = mpl.collections.PolyCollection(triangles)
-    col.set_facecolor('grey')
-    col.set_alpha(0.5)
+    col.set_facecolor('black')
+    col.set_alpha(0.75)
     col.set_linewidth(1)
 
     sub = plt.gca()
