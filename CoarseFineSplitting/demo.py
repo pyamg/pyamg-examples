@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 
 data = sio.loadmat('square.mat') #load_example('airfoil')
 
-A = data['A']                                      # matrix
-V = data['vertices'][:A.shape[0]]                  # vertices of each variable
+A = data['A'].tocsr()                           # matrix
+V = data['vertices'][:A.shape[0]]               # vertices of each variable
 E = np.vstack((A.tocoo().row,A.tocoo().col)).T  # edges of the matrix graph
 
 # Use Ruge-Stuben Splitting Algorithm (use 'keep' in order to retain the splitting)
@@ -33,13 +33,15 @@ ax.add_collection(col, autolim=True)
 ax.autoscale_view()
 
 plt.scatter(V[:,0][C_nodes], V[:,1][C_nodes],
-            c=[232.0/255, 74.0/255, 39.0/255],
+            color=[232.0/255, 74.0/255, 39.0/255],
             s=100.0, label='C pts', zorder=10)
 plt.scatter(V[:,0][F_nodes], V[:,1][F_nodes],
-            c=[19.0/255, 41.0/255, 75.0/255],
+            color=[19.0/255, 41.0/255, 75.0/255],
             s=100.0, label='F pts', zorder=10)
 
 ax.axis('equal')
-l = plt.legend(framealpha=1.0)
+l = plt.legend(framealpha=1.0, fontsize=16)
 l.set_zorder(20)
+plt.xlabel('X', fontsize=16)
+plt.ylabel('Y', fontsize=16)
 plt.show()
