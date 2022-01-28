@@ -51,7 +51,6 @@ ax.add_collection(col, autolim=True)
 ax.autoscale_view()
 ax.axis('equal')
 plt.title("Aggregates", fontsize=16)
-plt.savefig('temp.png', dpi=300)
 
 ##
 # Plot the C/F splitting
@@ -78,6 +77,4 @@ l.set_zorder(20)
 plt.xlabel('X', fontsize=16)
 plt.ylabel('Y', fontsize=16)
 plt.title("C/F Splitting", fontsize=16)
-plt.savefig('temp2.png', dpi=300)
-
 plt.show()

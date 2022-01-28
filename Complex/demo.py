@@ -8,7 +8,6 @@ implicit conversion to an equivalent real system.
 """
 import numpy as np
 import pyamg
-from convergence_tools import print_cycle_history
 
 n = 100
 
