@@ -7,12 +7,12 @@ import scipy
 from scipy.sparse import isspmatrix_csr, isspmatrix_bsr
 
 from pyamg.multilevel import multilevel_solver
-from pyamg.util.utils import relaxation_as_linear_operator,\
-    levelize_strength_or_aggregation, levelize_smooth_or_improve_candidates
+from pyamg.relaxation.utils import relaxation_as_linear_operator
+from pyamg.util.utils import levelize_strength_or_aggregation, levelize_smooth_or_improve_candidates
 from pyamg.relaxation.smoothing import change_smoothers
 from pyamg.strength import symmetric_strength_of_connection, evolution_strength_of_connection, \
                            distance_strength_of_connection
-from pyamg.aggregation.aggregation import extend_hierarchy
+from pyamg.aggregation.aggregation import _extend_hierarchy
 from pyamg.aggregation.aggregate import standard_aggregation, lloyd_aggregation
 from pyamg.aggregation.tentative import fit_candidates
 from pyamg.aggregation.smooth import jacobi_prolongation_smoother, \
@@ -317,7 +317,7 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         
         ##
         # Create and Append new level
-        extend_hierarchy(levels, strength, aggregate, smooth, [None for i in range(max_levels)] ,keep=True)
+        _extend_hierarchy(levels, strength, aggregate, smooth, [None for i in range(max_levels)] ,keep=True)
     
     ml = multilevel_solver(levels, **kwargs)
     change_smoothers(ml, presmoother, postsmoother)
