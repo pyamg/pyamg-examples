@@ -36,3 +36,6 @@ x = ml.solve(b, x0=x, maxiter=20, tol=1e-14, residuals=resvec)
 
 for i, r in enumerate(resvec):
     print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
+
+print("")
+print(ml)
