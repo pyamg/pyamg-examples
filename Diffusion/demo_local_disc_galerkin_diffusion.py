@@ -30,7 +30,7 @@ b = np.zeros_like(x0)
 
 # For demonstration, show that a naive SA solver
 # yields unsatisfactory convergence
-smooth = ('jacobi', {'filter': True})
+smooth = 'jacobi'
 strength = ('symmetric', {'theta': 0.1})
 SA_solve_args = {'cycle': 'W', 'maxiter': 20, 'tol': 1e-8, 'accel': 'cg'}
 SA_build_args = {
