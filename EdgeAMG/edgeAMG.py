@@ -39,7 +39,7 @@ def edgeAMG(Anode, Acurl, D):
 
     # construct multilevel structure
     levels = []
-    levels.append(pyamg.multilevel_solver.level())
+    levels.append(pyamg.MultilevelSolver.Level())
     levels[-1].A = Acurl
     levels[-1].D = D
     for i in range(1, len(nodalAMG.levels)):
@@ -49,7 +49,7 @@ def edgeAMG(Anode, Acurl, D):
         R = P.T
         levels[-1].P = P
         levels[-1].R = R
-        levels.append(pyamg.multilevel_solver.level())
+        levels.append(pyamg.MultilevelSolver.Level())
         A = R * A * P
         M = sparse.dia_matrix((1.0 / ((P.T * P).diagonal()), 0),
                               shape=(P.shape[1], P.shape[1]))
@@ -58,7 +58,7 @@ def edgeAMG(Anode, Acurl, D):
         levels[-1].A = A
         levels[-1].D = D
 
-    edgeML = pyamg.multilevel_solver(levels)
+    edgeML = pyamg.MultilevelSolver(levels)
     for i in range(0, len(edgeML.levels)):
         edgeML.levels[i].presmoother = setup_hiptmair(levels[i])
         edgeML.levels[i].postsmoother = setup_hiptmair(levels[i])
@@ -72,7 +72,7 @@ def findPEdge(D, PNode):
     marking the end node
     """
     numEdges = D.shape[0]
-    edges = np.zeros((numEdges, 2), dtype=np.int)
+    edges = np.zeros((numEdges, 2), dtype=int)
     DRowInd = D.nonzero()[0]
     DColInd = D.nonzero()[1]
     for i in range(0, numEdges):

@@ -1,5 +1,5 @@
 """
-Illustrates the selection of aggregates in AMG based on smoothed aggregation
+Illustrates and plots the selection of aggregates in AMG based on smoothed aggregation
 """
 
 import numpy

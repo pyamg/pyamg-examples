@@ -70,7 +70,7 @@ sa_symmetric = pyamg.smoothed_aggregation_solver(
     **SA_build_args)
 resvec = []
 x = sa_symmetric.solve(b, x0=x0, residuals=resvec, **SA_solve_args)
-print("\nObserve that standard SA parameters for Hermitian systems\n" +
+print("\nObserve that standard multigrid parameters for Hermitian systems\n" +
       "yield a nonconvergent stand-alone solver.\n")
 for i, r in enumerate(resvec):
     print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
@@ -78,7 +78,7 @@ for i, r in enumerate(resvec):
 # Now, construct and solve with nonsymmetric SA parameters
 smooth = ('energy', {'krylov': 'gmres', 'degree': 2})
 SA_build_args['symmetry'] = 'nonsymmetric'
-strength = [('evolution', {'k': 2, 'epsilon': 4.0})]
+strength = [('evolution', {'k': 2, 'epsilon': 1.5})]
 presmoother = ('gauss_seidel_nr', {'sweep': 'symmetric', 'iterations': 1})
 postsmoother = ('gauss_seidel_nr', {'sweep': 'symmetric', 'iterations': 1})
 improve_candidates = [
@@ -112,7 +112,7 @@ else:
 resvec = []
 x = sa_nonsymmetric.solve(b, x0=x0, residuals=resvec, **SA_solve_args)
 print("*************************************************************")
-print("Now using nonsymmetric parameters for SA, we obtain a\n" +
+print("Now using nonsymmetric parameters for multigrid , we obtain a\n" +
       "convergent stand-alone solver. \n")
 for i, r in enumerate(resvec):
     print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))

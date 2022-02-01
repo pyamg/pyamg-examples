@@ -139,9 +139,9 @@ def solver_diagnostics(
         if A is BSR:
             bsize = A.blocksize[0]
             B_list = [(ones((A.shape[0],1)), ones((A.shape[0],1)), 'B, BH are all ones'),
-                      (kron(ones((A.shape[0]/bsize,1)), numpy.eye(bsize)),
-                       kron(ones((A.shape[0]/bsize,1)), numpy.eye(bsize)),
-                       'B = kron(ones((A.shape[0]/A.blocksize[0],1), dtype=A.dtype),
+                      (kron(ones((int(A.shape[0]/bsize),1)), numpy.eye(bsize)),
+                       kron(ones((int(A.shape[0]/bsize),1)), numpy.eye(bsize)),
+                       'B = kron(ones((int(A.shape[0]/A.blocksize[0]),1), dtype=A.dtype),
                                  eye(A.blocksize[0])); BH = B.copy()')]
 
     coarse_size_list : {list}
@@ -237,7 +237,7 @@ def solver_diagnostics(
     # Detect definiteness
     if definiteness is None:
         [EVect, Lambda, H, V, breakdown_flag] = pyamg.util.linalg._approximate_eigenvalues(
-            A, 1e-6, 40)
+            A, 40)
         if Lambda.min() < 0.0:
             definiteness = 'indefinite'
             print("    Detected indefiniteness")
@@ -259,9 +259,9 @@ def solver_diagnostics(
             bsize = A.blocksize[0]
             m = int(A.shape[0]/bsize)
             B_list.append(
-                (np.kron(np.ones((m, 1), dtype=A.dtype), np.eye(bsize)),
-                 np.kron(np.ones((m, 1), dtype=A.dtype), np.eye(bsize)),
-                    'B = kron(ones((A.shape[0]/A.blocksize[0],1), dtype=A.dtype), eye(A.blocksize[0])); BH = B.copy()'))
+                (np.kron(np.ones((int(A.shape[0] / bsize), 1), dtype=A.dtype), np.eye(bsize)),
+                 np.kron(np.ones((int(A.shape[0] / bsize), 1), dtype=A.dtype), np.eye(bsize)),
+                    'B = kron(ones((int(A.shape[0]/A.blocksize[0]),1), dtype=A.dtype), eye(A.blocksize[0])); BH = B.copy()'))
 
     ##
     # Default is to try V- and W-cycles
@@ -568,18 +568,17 @@ def solver_diagnostics(
         '#######################################################################\n\n')
     fptr.write('from pyamg import ' + solver.__name__ + '\n')
     fptr.write('from pyamg.util.linalg import norm\n')
-    fptr.write('from numpy import ones, array, arange, zeros, abs, random\n')
-    fptr.write('from scipy import rand, ravel, log10, kron, eye\n')
+    fptr.write('from numpy import ones, array, arange, zeros, abs, random, ravel, log10, kron, eye\n')
     fptr.write('from scipy.io import loadmat\n')
     fptr.write('from scipy.sparse import isspmatrix_bsr, isspmatrix_csr\n')
-    fptr.write('import pylab\n\n')
+    fptr.write('from matplotlib import pyplot as plt\n\n')
     fptr.write('def ' + fname + '(A):\n')
     fptr.write('    ##\n    # Generate B\n')
     fptr.write('    ' + B_list[B_index][2] + '\n\n')
     fptr.write('    ##\n    # Random initial guess, zero right-hand side\n')
     fptr.write('    random.seed(0)\n')
     fptr.write('    b = zeros((A.shape[0],1))\n')
-    fptr.write('    x0 = rand(A.shape[0],1)\n\n')
+    fptr.write('    x0 = random.rand(A.shape[0],1)\n\n')
     fptr.write('    ##\n    # Create solver\n')
     fptr.write(
         '    ml = ' +
@@ -635,11 +634,11 @@ def solver_diagnostics(
     fptr.write(
         "    print(\"Relative residual norm:     %1.2e\" % (norm(ravel(b) - ravel(A*x))/normr0))\n\n")
     fptr.write('    ##\n    # Plot residual history\n')
-    fptr.write('    pylab.semilogy(array(res)/normr0)\n')
-    fptr.write('    pylab.title(\'Residual Histories\')\n')
-    fptr.write('    pylab.xlabel(\'Iteration\')\n')
-    fptr.write('    pylab.ylabel(\'Relative Residual Norm\')\n')
-    fptr.write('    pylab.show()\n\n')
+    fptr.write('    plt.semilogy(array(res)/normr0)\n')
+    fptr.write('    plt.title(\'Residual Histories\')\n')
+    fptr.write('    plt.xlabel(\'Iteration\')\n')
+    fptr.write('    plt.ylabel(\'Relative Residual Norm\')\n')
+    fptr.write('    plt.show()\n\n')
     # Close file pointer
     fptr.close()
 

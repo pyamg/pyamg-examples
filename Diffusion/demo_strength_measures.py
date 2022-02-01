@@ -120,18 +120,18 @@ print("--------------------------------------------------------")
 for i, n in enumerate(sizelist_classic):
     print("{:^9d} | {:^9d} | {:^9.2g} | {:^9.2g} | {:^9.2g}".format(
         int(n), int(nnz_classic[i]), factors_classic[i], complexity_classic[i],
-        complexity_classic[i] / np.log10(factors_classic[i])))
+        complexity_classic[i] / abs(np.log10(factors_classic[i]))))
 print("--------------------------------------------------------")
 print(" Evolution strength ")
 print("--------------------------------------------------------")
 for i, n in enumerate(sizelist_evo):
     print("{:^9d} | {:^9d} | {:^9.2g} | {:^9.2g} | {:^9.2g}".format(
         int(n), int(nnz_evo[i]), factors_evo[i], complexity_evo[i],
-        complexity_evo[i] / np.log10(factors_evo[i])))
+        complexity_evo[i] / abs(np.log10(factors_evo[i]))))
 print("--------------------------------------------------------")
 print(" Evolution strength with Rootnode ")
 print("--------------------------------------------------------")
 for i, n in enumerate(sizelist_evo_root):
     print("{:^9d} | {:^9d} | {:^9.2g} | {:^9.2g} | {:^9.2g}".format(
         int(n), int(nnz_evo_root[i]), factors_evo_root[i], complexity_evo_root[i],
-        complexity_evo_root[i] / np.log10(factors_evo_root[i])))
+        complexity_evo_root[i] / abs(np.log10(factors_evo_root[i]))))

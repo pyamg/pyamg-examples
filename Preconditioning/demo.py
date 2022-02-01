@@ -51,9 +51,9 @@ for name, A, B in trials:
 
     # Plot convergence history
     plt.figure()
-    plt.title('Convergence History (%s)' % name)
-    plt.xlabel('Iteration')
-    plt.ylabel('Relative Residual')
+    plt.title('Convergence History (%s)' % name, fontsize=16)
+    plt.xlabel('Iteration', fontsize=16)
+    plt.ylabel('Relative Residual', fontsize=16)
     plt.semilogy(
         standalone_residuals,
         label='Standalone',
@@ -64,6 +64,6 @@ for name, A, B in trials:
         label='Accelerated',
         linestyle='None',
         marker='.')
-    plt.legend()
+    plt.legend(fontsize=16)
     print("Close window for program to proceed.\n")
     plt.show()

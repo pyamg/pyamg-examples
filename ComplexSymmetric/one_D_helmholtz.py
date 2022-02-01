@@ -37,7 +37,7 @@ def min_wave(A, omega, x, tol=1e-5, maxiter=25):
     def obj_fcn(alpha):
         c = np.cos((omega + alpha) * x)
         Ac = (A * c)[1:-1]
-        return np.linalg.orm(Ac) / np.linalg.norm(c[1:-1])
+        return np.linalg.norm(Ac) / np.linalg.norm(c[1:-1])
 
     (xopt, fval, ierr, numfunc) = scipy.optimize.fminbound(
         obj_fcn, -0.99 * omega,
