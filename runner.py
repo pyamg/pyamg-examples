@@ -73,7 +73,7 @@ for section in toc:
                 main += '\n```\n' + output + '```\n'
 
             for fig in figs:
-                main += f'\n![](./{fig}|width=400px)\n\n'
+                main += f'\n<img src="./{fig}" width="300"/>\n\n'
     main += '\n***\n\n'
 
 with open(mainreadme, 'w') as f:
