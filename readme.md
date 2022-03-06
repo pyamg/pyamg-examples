@@ -60,7 +60,7 @@ plotted. From the figure, most aggregates encompass entire groups of
 elements in the underlying mesh. Still, there are a many aggregates that yield
 "strings" in the aggregation, often impacting performance.
 
-[[https://raw.githubusercontent.com/pyamg/pyamg-examples/reorg/aggregation/output/aggregates.png|width=450px|alt=aggregates.png]]
+[[https://raw.githubusercontent.com/pyamg/pyamg-examples/reorg/aggregation/output/aggregates.png|width=450px|alt=aggregates]]
 
 ***
 

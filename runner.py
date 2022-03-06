@@ -3,6 +3,8 @@ import yaml
 import os
 from glob import glob
 
+branch = 'reorg'
+
 def exectute_demo(exampledir, name='demo.py'):
     """Exectue a demo in a particular directory."""
     output = subprocess.run(['python', f'{name}', '--savefig'],
@@ -17,7 +19,7 @@ def exectute_demo(exampledir, name='demo.py'):
 def generate_fig_links(figs):
     links = ''
     for fig in figs:
-        url = f'https://raw.githubusercontent.com/pyamg/pyamg-examples/reorg/{fig}'
+        url = f'https://raw.githubusercontent.com/pyamg/pyamg-examples/{branch}/{fig}'
         alt = os.path.basename(fig)
         links +=  f'[[{url}|width=450px|alt={alt}]]\n'
     return links
