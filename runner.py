@@ -14,6 +14,14 @@ def exectute_demo(exampledir, name='demo.py'):
         raise ValueError(f'Trouble executing {exampledir} + {name}')
     return output.stdout, figs
 
+def generate_fig_links(figs):
+    links = ''
+    for fig in figs:
+        url = f'https://raw.githubusercontent.com/pyamg/pyamg-examples/reorg/{fig}'
+        alt = os.path.basename(fig)
+        links +=  f'[[{url}|width=450px|alt={alt}]]\n'
+    return links
+
 mainreadme = 'readme.md'
 toc = yaml.safe_load("""
 Blackbox Solver:
@@ -51,7 +59,7 @@ for section in toc:
     if toc[section] is not None:
         for demo in toc[section]:
             demoname = demo.get('demo', 'demo.py')
-            main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname}\n\n'
+            main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname})\n\n'
             # get the readme
             with open(os.path.join(f"{demo['dir']}",'readme.md'), 'r') as f:
                 readmeoutput = f.read()
@@ -59,7 +67,9 @@ for section in toc:
 
             # get the demo output
             output, figs = exectute_demo(demo['dir'], name=demoname)
-            main += '\n```\n' + output + '```\n'
+            if len(output) > 0:
+                main += '\n```\n' + output + '```\n'
+            main += '\n' + generate_fig_links(figs)
     main += '\n***\n\n'
 
 with open(mainreadme, 'w') as f:

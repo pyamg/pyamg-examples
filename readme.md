@@ -13,7 +13,7 @@ https://github.com/pyamg/pyamg-examples.
 <a name="blackboxsolver"></a>
 ### Blackbox Solver
 
-[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/blackbox/demo.py
+[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/blackbox/demo.py)
 
 This demo highlights using PyAMG's `blackbox` module, which attempts to solve
 an arbitrary system `A x = b` with minimal input.  The matrix `A` can be
@@ -45,12 +45,13 @@ The demo produces residual norms that can vary from machine to machine.
   Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
 ```
 
+
 ***
 
 <a name="smoothedaggregationamg"></a>
 ### Smoothed Aggregation AMG
 
-[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/aggregation/demo.py
+[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/aggregation/demo.py)
 
 In this example, the first-level aggregates are shown for AMG based on smoothed aggregation.
 An example mesh and adjacency matrix is loaded from `square.mat`, followed by a call to
@@ -59,8 +60,7 @@ plotted. From the figure, most aggregates encompass entire groups of
 elements in the underlying mesh. Still, there are a many aggregates that yield
 "strings" in the aggregation, often impacting performance.
 
-```
-```
+[[https://raw.githubusercontent.com/pyamg/pyamg-examples/reorg/aggregation/output/aggregates.png|width=450px|alt=aggregates.png]]
 
 ***
 
