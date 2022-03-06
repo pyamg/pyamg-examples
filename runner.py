@@ -71,7 +71,9 @@ for section in toc:
             output, figs = exectute_demo(demo['dir'], name=demoname)
             if len(output) > 0:
                 main += '\n```\n' + output + '```\n'
-            main += '\n' + generate_fig_links(figs)
+
+            for fig in figs:
+                main += f'\n![](./{fig}|width=400px)\n\n'
     main += '\n***\n\n'
 
 with open(mainreadme, 'w') as f:

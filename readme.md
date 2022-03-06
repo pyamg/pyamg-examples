@@ -45,7 +45,6 @@ The demo produces residual norms that can vary from machine to machine.
   Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
 ```
 
-
 ***
 
 <a name="smoothedaggregationamg"></a>
@@ -60,7 +59,8 @@ plotted. From the figure, most aggregates encompass entire groups of
 elements in the underlying mesh. Still, there are a many aggregates that yield
 "strings" in the aggregation, often impacting performance.
 
-[[https://raw.githubusercontent.com/pyamg/pyamg-examples/reorg/aggregation/output/aggregates.png|width=450px|alt=aggregates]]
+![](aggregation/output/aggregates.png|width=400px)
+
 
 ***
 
