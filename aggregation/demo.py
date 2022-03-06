@@ -44,4 +44,11 @@ ax.add_collection(col, autolim=True)
 
 ax.autoscale_view()
 ax.axis('equal')
-plt.show()
+
+figname = './output/aggregates.png'
+import sys
+if len(sys.argv) > 1:
+    if sys.argv[1] == '--savefig':
+        plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()

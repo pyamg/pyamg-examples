@@ -1,20 +1,25 @@
 import subprocess
 import yaml
 import os
+from glob import glob
 
-def exectute_demo(exampledir, name='demo.py', figure=False):
+def exectute_demo(exampledir, name='demo.py'):
     """Exectue a demo in a particular directory."""
-    demopath = os.path.join(f'{exampledir}', f'{name}')
-    output = subprocess.run(['python', demopath],
+    output = subprocess.run(['python', f'{name}', '--savefig'],
+                            cwd=f'{exampledir}',
                             capture_output=True, text=True)
 
-    return output.stdout
+    figs = glob(os.path.join(f'{exampledir}', 'output') +'/*.png')
+    if output.stderr:
+        raise ValueError(f'Trouble executing {exampledir} + {name}')
+    return output.stdout, figs
 
 mainreadme = 'readme.md'
 toc = yaml.safe_load("""
 Blackbox Solver:
   - dir: blackbox
 Smoothed Aggregation AMG:
+  - dir: aggregation
 Classical AMG:
 Rootnode AMG:
 Finite Elements:
@@ -53,8 +58,8 @@ for section in toc:
             main += readmeoutput
 
             # get the demo output
-            output = exectute_demo(demo['dir'], name=demoname)
-            main += output
+            output, figs = exectute_demo(demo['dir'], name=demoname)
+            main += '\n```\n' + output + '```\n'
     main += '\n***\n\n'
 
 with open(mainreadme, 'w') as f:

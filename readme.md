@@ -30,6 +30,8 @@ To use `solve()`, only the matrix `A` and a right-hand side `b` are needed:
 x = pyamg.solve(A, b, verb=True)
 ```
 The demo produces residual norms that can vary from machine to machine.
+
+```
   Detected a Hermitian matrix
     maxiter = 400
     iteration 1.0
@@ -41,12 +43,24 @@ The demo produces residual norms that can vary from machine to machine.
     iteration 7.0
   Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
   Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
+```
 
 ***
 
 <a name="smoothedaggregationamg"></a>
 ### Smoothed Aggregation AMG
 
+[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/aggregation/demo.py
+
+In this example, the first-level aggregates are shown for AMG based on smoothed aggregation.
+An example mesh and adjacency matrix is loaded from `square.mat`, followed by a call to
+`smoothed_aggregation_solver`.  Then the first-level aggregates are
+plotted. From the figure, most aggregates encompass entire groups of
+elements in the underlying mesh. Still, there are a many aggregates that yield
+"strings" in the aggregation, often impacting performance.
+
+```
+```
 
 ***
 
