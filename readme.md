@@ -50,6 +50,9 @@ The demo produces residual norms that can vary from machine to machine.
 <a name="smoothedaggregationamg"></a>
 ### Smoothed Aggregation AMG
 
+
+#### Aggregation
+
 [demo.py](https://github.com/pyamg/pyamg-examples/blob/master/aggregation/demo.py)
 
 In this example, the first-level aggregates are shown for AMG based on smoothed aggregation.
@@ -60,6 +63,17 @@ elements in the underlying mesh. Still, there are a many aggregates that yield
 "strings" in the aggregation, often impacting performance.
 
 <img src="./aggregation/output/aggregates.png" width="300"/>
+
+
+#### One Dimensional Problem
+
+[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/one_dimension/demo.py)
+
+This example illustrates the effect, in 1D, of smoothed aggregation on
+tentative prolongation operators.  Each of the aggregates (groups of three in
+this case) are plotted with the associated (smoothed) basis functions.
+
+<img src="./one_dimension/output/one_dimension_aggregates.png" width="300"/>
 
 
 ***

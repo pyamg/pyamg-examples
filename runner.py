@@ -13,16 +13,8 @@ def exectute_demo(exampledir, name='demo.py'):
 
     figs = glob(os.path.join(f'{exampledir}', 'output') +'/*.png')
     if output.stderr:
-        raise ValueError(f'Trouble executing {exampledir} + {name}')
+        raise ValueError(f'Trouble executing {exampledir} + {name} \n {output.stderr}')
     return output.stdout, figs
-
-def generate_fig_links(figs):
-    links = ''
-    for fig in figs:
-        url = f'https://raw.githubusercontent.com/pyamg/pyamg-examples/{branch}/{fig}'
-        alt = os.path.basename(fig)
-        links +=  f'[[{url}|width=450px|alt={alt}]]\n'
-    return links
 
 mainreadme = 'readme.md'
 toc = yaml.safe_load("""
@@ -30,6 +22,9 @@ Blackbox Solver:
   - dir: blackbox
 Smoothed Aggregation AMG:
   - dir: aggregation
+    title: Aggregation
+  - dir: one_dimension
+    title: One Dimensional Problem
 Classical AMG:
 Rootnode AMG:
 Finite Elements:
@@ -60,6 +55,10 @@ for section in toc:
 
     if toc[section] is not None:
         for demo in toc[section]:
+            title = demo.get('title', None)
+            if title:
+                main += f'\n#### {title}\n\n'
+
             demoname = demo.get('demo', 'demo.py')
             main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname})\n\n'
             # get the readme

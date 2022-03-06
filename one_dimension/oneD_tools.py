@@ -318,4 +318,3 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
             plt.title(title_string)
             plt.xlabel('DOF')
             plt.ylabel('Local Interp Fcn')
-
