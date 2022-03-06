@@ -9,17 +9,15 @@ V = data['vertices']
 E2V = data['elements']
 
 # perform smoothed aggregation
-Agg, rootnodes = pyamg.aggregation.standard_aggregation(A)
+AggOp, rootnodes = pyamg.aggregation.standard_aggregation(A)
 
 # create the vtk file of aggregates
-pyamg.vis.vis_coarse.vis_aggregate_groups(Verts=V, E2V=E2V, Agg=Agg,
-                                          mesh_type='tri', output='vtk',
-                                          fname='output_aggs.vtu')
+pyamg.vis.vis_coarse.vis_aggregate_groups(V=V, E2V=E2V, AggOp=AggOp,
+                                          mesh_type='tri', fname='output_aggs.vtu')
 
 # create the vtk file for a mesh
-pyamg.vis.vtk_writer.write_basic_mesh(Verts=V, E2V=E2V,
-                                      mesh_type='tri',
-                                      fname='output_mesh.vtu')
+pyamg.vis.vtk_writer.write_basic_mesh(V=V, E2V=E2V,
+                                      mesh_type='tri', fname='output_mesh.vtu')
 
 # to use Paraview:
 # start Paraview: Paraview --data=output_mesh.vtu
