@@ -48,6 +48,8 @@ Rootnode AMG:
 Finite Elements:
   - dir: diffusion
     title: Anisotropic Diffusion
+  - dir: linear_elasticity
+    title: Linear Elasticity
 Preconditioning:
 Other Applications:
 """)

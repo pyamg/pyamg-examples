@@ -42,8 +42,8 @@ The demo produces residual norms that can vary from machine to machine.
     iteration 5.0
     iteration 6.0
     iteration 7.0
-  Residuals ||r_k||_M, ||r_0||_M = 6.46e-01, 8.68e+06
-  Residual reduction ||r_k||_M/||r_0||_M = 7.44e-08
+  Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
+  Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
 ```
 
 ***
@@ -456,6 +456,36 @@ Rotation Angle = 0.393
   40000   |  357604   |   0.49    |    1.9    |     6    
   90000   |  806404   |    0.5    |    1.9    |    6.3   
  160000   |  1435204  |    0.5    |    1.9    |    6.5   
+```
+
+#### Linear Elasticity
+
+[demo.py](./linear_elasticity/demo.py)
+
+We consider the 2D linear elasticity problem from the pyamg gallery in this
+example (corresponding to a simple finite element discretization on a regular
+grid).  Three near null space modes are fed to the
+`smoothed_aggregation_solver()` (relating to rotation and two types of
+translation).  Smoothed aggregation and root node are ideal for this problem
+and the results are apparent.  Very low operator complexities and the
+convergence is quick, whether you choose the root node or smoothed aggregation
+solver.
+
+Using
+
+```python
+python demo --solver 2
+```
+
+results in the following.
+
+```
+Usage: python demo.py --solver N, with N=1 or 2.
+Test convergence for a 200x200 Grid, Linearized Elasticity Problem
+Input Choice:
+1:  Run smoothed_aggregation_solver
+2:  Run rootnode_solver
+
 ```
 
 ***
