@@ -69,7 +69,7 @@ ax.semilogy(residuals1,    label='AMG with $B=1$')
 ax.semilogy(residualswave, label='AMG with $B=$wave')
 plt.legend()
 ax.set_title('AMG convergence for the 1D Helmholtz problem')
-figname = f'./output/helmholtz1dconv.png'
+figname = f'./output/1dhelmholtzconv.png'
 import sys
 if '--savefig' in sys.argv:
     plt.savefig(figname, bbox_inches='tight', dpi=150)
@@ -96,7 +96,7 @@ ax.plot(vertices[indys, 0], scale * np.real(np.ravel(V[indys, -1])),
 ax.set_title('Near Null-Space (NNS) vs. Lowest Right Singular Vector $\\nu$')
 plt.legend(framealpha=1.0)
 
-figname = f'./output/helmholtz1dwaves.png'
+figname = f'./output/1dhelmholtzwaves.png'
 import sys
 if '--savefig' in sys.argv:
     plt.savefig(figname, bbox_inches='tight', dpi=150)

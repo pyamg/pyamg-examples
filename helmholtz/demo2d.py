@@ -161,7 +161,7 @@ for aggs in AggOp.T:
 ax.set_title('Level-0 aggregates')
 ax.axis('square')
 ax.axis('off')
-figname = f'./output/helmholtz2dagg.png'
+figname = f'./output/2dhelmholtzagg.png'
 import sys
 if '--savefig' in sys.argv:
     plt.savefig(figname, bbox_inches='tight', dpi=150)
@@ -176,7 +176,7 @@ for i, ax in enumerate(axs.ravel()):
     ax.axis('square')
     ax.axis('off')
 
-figname = f'./output/helmholtz2dB.png'
+figname = f'./output/2dhelmholtzB.png'
 import sys
 if '--savefig' in sys.argv:
     plt.savefig(figname, bbox_inches='tight', dpi=150)

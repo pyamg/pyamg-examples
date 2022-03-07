@@ -16,86 +16,6 @@ https://github.com/pyamg/pyamg-examples.
 ### Introduction
 
 
-#### Indefinite Helmholtz
-
-[demo1d.py](./helmholtz/demo1d.py)
-
-[demo2d.py](./helmholtz/demo2d.py)
-
-The example focusses on the indefinite Helmholtz wave problem.  The first
-part highlights the value in using waves to represent the near-null space, `B`.
-In addition, we observe the waves to resemble the  (lowest) right singular vectors
-of the problem.
-
-In the case of 2D, discontinuous Galerkin is used, yielding multiple
-degrees of freedom at each spatial location.  As a result,
-the fine level (level-0) aggregates of the discontinuous
-elemeents, largely group neigboring vertices.  The wave-like near
-null-space is then enforced on the first coarse grid (level-1), resulting
-in four modes.
-
-```
-
-Running 2D Helmholtz Example
--- 10.00 Points-per-wavelength
--- 2.73e-01 = h,  2.50 = omega
--- Discretized with a local discontinuous Galerkin method
-   on annulus-shaped domain
-Using only a constant mode for interpolation yields an inefficient solver.
-This is due to aliasing oscillatory, but algebraically smooth, modes on the coarse levels.
-residual at iteration  0: 3.14e+01
-residual at iteration  1: 4.00e+00
-residual at iteration  2: 2.53e+00
-residual at iteration  3: 9.74e-01
-residual at iteration  4: 2.76e-01
-residual at iteration  5: 1.22e-01
-residual at iteration  6: 5.91e-02
-residual at iteration  7: 2.64e-02
-residual at iteration  8: 1.48e-02
-residual at iteration  9: 6.75e-03
-residual at iteration 10: 3.30e-03
-residual at iteration 11: 1.73e-03
-residual at iteration 12: 6.48e-04
-residual at iteration 13: 3.75e-04
-residual at iteration 14: 1.44e-04
-residual at iteration 15: 6.55e-05
-residual at iteration 16: 3.85e-05
-residual at iteration 17: 1.34e-05
-residual at iteration 18: 7.11e-06
-residual at iteration 19: 3.81e-06
-residual at iteration 20: 9.36e-07
-Note the improved performance from using planewaves in B.
-residual at iteration  0: 3.05e+01
-residual at iteration  1: 2.62e-01
-residual at iteration  2: 2.42e-03
-residual at iteration  3: 2.88e-05
-residual at iteration  4: 3.29e-07
-residual at iteration  5: 3.87e-09
-MultilevelSolver
-Number of Levels:     4
-Operator Complexity:  1.435
-Grid Complexity:      1.411
-Coarse Solver:        'pinv2'
-  level   unknowns     nonzeros
-     0        2880        52016 [69.67%]
-     1         880        10480 [14.04%]
-     2         256         9856 [13.20%]
-     3          48         2304 [3.09%]
-
-```
-
-<img src="./helmholtz/output/helmholtz2dagg.png" width="300"/>
-
-
-<img src="./helmholtz/output/helmholtz1dwaves.png" width="300"/>
-
-
-<img src="./helmholtz/output/helmholtz1dconv.png" width="300"/>
-
-
-<img src="./helmholtz/output/helmholtz2dB.png" width="300"/>
-
-
 #### Overview
 
 [demo.py](./0_start_here/demo.py)
@@ -133,7 +53,7 @@ Coarse Solver:        'pinv'
      3          64          484 [0.12%]
      4           9           49 [0.01%]
 
-The residual norm is 0.13013502420692594
+The residual norm is 0.09698099058812655
 
 
 The Multigrid Hierarchy
@@ -153,14 +73,14 @@ Operator Complexity:  2.159
 Grid Complexity:      1.201
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
-     0       40000       357604 [46.31%]
-     1        6700       226352 [29.31%]
-     2        1232       176222 [22.82%]
-     3         109        11827 [1.53%]
+     0       40000       357604 [46.32%]
+     1        6700       226352 [29.32%]
+     2        1232       176224 [22.83%]
+     3         108        11634 [1.51%]
      4          13          169 [0.02%]
-     5           4           16 [0.00%]
+     5           2            4 [0.00%]
 
-The residual norm is 1.1048153918060711e-10
+The residual norm is 1.0418617881770976e-10
 
 
 ```
@@ -201,8 +121,8 @@ The demo produces residual norms that can vary from machine to machine.
     iteration 5.0
     iteration 6.0
     iteration 7.0
-  Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
-  Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
+  Residuals ||r_k||_M, ||r_0||_M = 6.46e-01, 8.68e+06
+  Residual reduction ||r_k||_M/||r_0||_M = 7.44e-08
 ```
 
 ***
@@ -655,23 +575,23 @@ Number of iterations:  19d
 
 residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
-residual at iteration  2: 8.20e+00
+residual at iteration  2: 8.19e+00
 residual at iteration  3: 1.12e+00
-residual at iteration  4: 2.58e-01
-residual at iteration  5: 6.81e-02
-residual at iteration  6: 1.87e-02
-residual at iteration  7: 5.18e-03
+residual at iteration  4: 2.56e-01
+residual at iteration  5: 6.76e-02
+residual at iteration  6: 1.85e-02
+residual at iteration  7: 5.16e-03
 residual at iteration  8: 1.45e-03
 residual at iteration  9: 4.09e-04
 residual at iteration 10: 1.16e-04
-residual at iteration 11: 3.29e-05
-residual at iteration 12: 9.41e-06
-residual at iteration 13: 2.70e-06
-residual at iteration 14: 7.77e-07
-residual at iteration 15: 2.24e-07
-residual at iteration 16: 6.52e-08
-residual at iteration 17: 1.90e-08
-residual at iteration 18: 5.55e-09
+residual at iteration 11: 3.31e-05
+residual at iteration 12: 9.49e-06
+residual at iteration 13: 2.73e-06
+residual at iteration 14: 7.90e-07
+residual at iteration 15: 2.29e-07
+residual at iteration 16: 6.69e-08
+residual at iteration 17: 1.96e-08
+residual at iteration 18: 5.75e-09
 ```
 
 ***
@@ -766,6 +686,86 @@ vector.  Positive/negative values of the Fiedler vector are plotted in
 different colors, illustrating the natural splitting this mesh.
 
 <img src="./mesh_partition/output/mesh_partition.png" width="300"/>
+
+
+#### Indefinite Helmholtz
+
+[demo1d.py](./helmholtz/demo1d.py)
+
+[demo2d.py](./helmholtz/demo2d.py)
+
+The example focusses on the indefinite Helmholtz wave problem.  The first
+part highlights the value in using waves to represent the near-null space, `B`.
+In addition, we observe the waves to resemble the  (lowest) right singular vectors
+of the problem.
+
+In the case of 2D, discontinuous Galerkin is used, yielding multiple
+degrees of freedom at each spatial location.  As a result,
+the fine level (level-0) aggregates of the discontinuous
+elemeents, largely group neigboring vertices.  The wave-like near
+null-space is then enforced on the first coarse grid (level-1), resulting
+in four modes.
+
+```
+
+Running 2D Helmholtz Example
+-- 10.00 Points-per-wavelength
+-- 2.73e-01 = h,  2.50 = omega
+-- Discretized with a local discontinuous Galerkin method
+   on annulus-shaped domain
+Using only a constant mode for interpolation yields an inefficient solver.
+This is due to aliasing oscillatory, but algebraically smooth, modes on the coarse levels.
+residual at iteration  0: 3.14e+01
+residual at iteration  1: 4.00e+00
+residual at iteration  2: 2.53e+00
+residual at iteration  3: 9.74e-01
+residual at iteration  4: 2.76e-01
+residual at iteration  5: 1.22e-01
+residual at iteration  6: 5.91e-02
+residual at iteration  7: 2.64e-02
+residual at iteration  8: 1.48e-02
+residual at iteration  9: 6.75e-03
+residual at iteration 10: 3.30e-03
+residual at iteration 11: 1.73e-03
+residual at iteration 12: 6.48e-04
+residual at iteration 13: 3.75e-04
+residual at iteration 14: 1.44e-04
+residual at iteration 15: 6.55e-05
+residual at iteration 16: 3.85e-05
+residual at iteration 17: 1.34e-05
+residual at iteration 18: 7.11e-06
+residual at iteration 19: 3.81e-06
+residual at iteration 20: 9.36e-07
+Note the improved performance from using planewaves in B.
+residual at iteration  0: 3.05e+01
+residual at iteration  1: 2.62e-01
+residual at iteration  2: 2.42e-03
+residual at iteration  3: 2.88e-05
+residual at iteration  4: 3.29e-07
+residual at iteration  5: 3.87e-09
+MultilevelSolver
+Number of Levels:     4
+Operator Complexity:  1.435
+Grid Complexity:      1.411
+Coarse Solver:        'pinv2'
+  level   unknowns     nonzeros
+     0        2880        52016 [69.67%]
+     1         880        10480 [14.04%]
+     2         256         9856 [13.20%]
+     3          48         2304 [3.09%]
+
+```
+
+<img src="./helmholtz/output/1dhelmholtzconv.png" width="300"/>
+
+
+<img src="./helmholtz/output/2dhelmholtzagg.png" width="300"/>
+
+
+<img src="./helmholtz/output/1dhelmholtzwaves.png" width="300"/>
+
+
+<img src="./helmholtz/output/2dhelmholtzB.png" width="300"/>
 
 
 ***
