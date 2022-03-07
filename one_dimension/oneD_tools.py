@@ -3,60 +3,13 @@ For use with matplotlib and 1D problems solved with a multilevel method.
 Routines here allow you to visualized aggregates, nullspace vectors
 and columns of P.  This is possible on any level
 """
-__docformat__ = "restructuredtext en"
-
 __all__ = ['oneD_P_vis', 'oneD_coarse_grid_vis', 'oneD_profile']
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def update_rcparams(fig_width_pt=700.0):
-    '''
-    Updates rcparams for appropriate plotting parameters
-
-    parameters
-    ----------
-    fig_width_pt : {float}
-        sets the size of the figure
-
-    returns
-    -------
-    nothing, rcparams is updated
-
-    examples
-    --------
-    >>> from numpy import linspace
-    >>> from oneD_tools import update_rcparams
-    >>> import matplotlib.pyplot as plt
-    >>> update_rcparams(700.0)
-    >>> plt.plot(linspace(0,10,10), linspace(0,10,10))
-    >>> plt.title(' X = Y' )
-    >>> plt.xlabel('X')
-    >>> plt.ylabel('Y')
-    >>> plt.show()
-    '''
-
-    inches_per_pt = 1.0 / 72.27               # Convert pt to inch
-    golden_mean = (np.sqrt(5) - 1.0) / 2.0         # Aesthetic ratio
-    fig_width = fig_width_pt * inches_per_pt  # width in inches
-    fig_height = fig_width * golden_mean      # height in inches
-    fig_size = [fig_width, fig_height]
-
-    params = {'backend': 'ps',
-              'axes.labelsize': 24,
-              'axes.titlesize': 24,
-              'legend.fontsize': 22,
-              'xtick.labelsize': 22,
-              'ytick.labelsize': 22,
-              'text.usetex': True,
-              'lines.linewidth': 2,
-              'figure.figsize': fig_size}
-
-    plt.rcParams.update(params)
-
-
-def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', fig_num=1):
+def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', ax=None):
     '''
     Profile mg on the problem defined by x0 and b.
     Default problem is x0=rand, b = 0.
@@ -77,8 +30,6 @@ def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', fig_num=1):
         number of cycle iterations, default is 1
     cycle : {'V', 'W', 'F'}
         solve with a V, W or F cycle
-    fig_num : int
-        figure number from which to begin plotting
 
     Returns
     -------
@@ -102,8 +53,8 @@ def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', fig_num=1):
     >>> oneD_profile(ml, b=random.rand(128,), x0=zeros((128,)), iter=5); plt.show()
     '''
 
-    # use good plotting parameters
-    update_rcparams()
+    if ax is None:
+        raise ValueError('Must specify an axis')
 
     A = mg.levels[0].A
     ndof = mg.levels[0].A.shape[0]
@@ -144,20 +95,19 @@ def oneD_profile(mg, grid=None, x0=None, b=None, iter=1, cycle='V', fig_num=1):
     res = np.array(res)
     resratio = res[1:] / res[0:-1]
     r = b - A * guess
-    print('Initial residual: ' + str(res[0]))
-    print('Final residual: ' + str(np.linalg.norm(r)))
+    # print('Initial residual: ' + str(res[0]))
+    # print('Final residual: ' + str(np.linalg.norm(r)))
 
     # plot results
     if iter > 1:
-        plt.figure(fig_num)
-        plt.plot(np.array(range(1, resratio.shape[0] + 1)), resratio)
-        plt.title('Residual Reduction Ratio History')
-        plt.xlabel('Iteration')
-        plt.ylabel(r'$||r_{i}|| / ||r_{i-1}||$')
-        plt.xticks(np.array(range(1, resratio.shape[0] + 1)))
+        ax.plot(np.array(range(1, resratio.shape[0] + 1)), resratio)
+        ax.set_title('Residual Reduction Ratio History')
+        ax.set_xlabel('Iteration')
+        ax.set_ylabel(r'$||r_{i}|| / ||r_{i-1}||$')
+        ax.set_xticks(np.array(range(1, resratio.shape[0] + 1)))
 
 
-def oneD_coarse_grid_vis(mg, fig_num=1, level=0):
+def oneD_coarse_grid_vis(mg, fig_num=1, level=0, ax=None):
     '''
     Visualize the aggregates on level=level in terms of
     the aggregates' fine grid representation
@@ -194,7 +144,9 @@ def oneD_coarse_grid_vis(mg, fig_num=1, level=0):
 
     '''
 
-    update_rcparams()
+    if ax is None:
+        raise ValueError('Must specify an axis')
+
     colors = ['b', 'r', 'g', 'k', 'c', 'm', 'y']
 
     if level > (len(mg.levels) - 2):
@@ -217,23 +169,22 @@ def oneD_coarse_grid_vis(mg, fig_num=1, level=0):
     x = np.array(range(ndof))
 
     # Plot each aggregate
-    plt.figure(fig_num)
     for i in range(AggOp.shape[1]):
         aggi = AggOp[:, i].indices
-        plt.plot(x[aggi], i * np.ones((aggi.shape[0],)),
-                 colors[np.mod(i, len(colors))],
-                 marker='o', linewidth=2, markersize=12)
+        ax.plot(x[aggi], i * np.ones((aggi.shape[0],)),
+                colors[np.mod(i, len(colors))],
+                marker='o', linewidth=2, markersize=12)
 
     title_string = 'Level ' + str(level) + ' Aggregates'
     if level != 0:
         title_string += '\nMapped to Finest Level'
-    plt.title(title_string)
-    plt.xlabel('DOF')
-    plt.ylabel('Aggregate Number')
-    plt.axis([min(x) - .05, max(x) + .05, -1, AggOp.shape[1]])
+    ax.set_title(title_string)
+    ax.set_xlabel('DOF')
+    ax.set_ylabel('Aggregate Number')
+    ax.set(xlim = (min(x) - .05, max(x) + .05), ylim=(-1, AggOp.shape[1]))
 
 
-def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
+def oneD_P_vis(mg, fig_num=1, level=0, interp=False, ax=None):
     '''
     Visualize the basis functions of P (i.e. columns) from level=level
 
@@ -275,7 +226,9 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
     >>>plt.show()
     '''
 
-    update_rcparams()
+    if ax is None:
+        raise ValueError('Must specify an axis')
+
     colors = ['b', 'r', 'g', 'k', 'c', 'm', 'y']
 
     if level > (len(mg.levels) - 2):
@@ -303,11 +256,10 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
         # extract aggregate i's basis functions
         p = P[:, i:(i + blocks)].todense()
         for j in range(blocks):
-            plt.figure(fig_num + j)
             p2 = np.ravel(p[:, j])
-            plt.plot(x[p2 != 0], p2[p2 != 0.0],
-                     colors[np.mod(i, len(colors))],
-                     marker='o', linewidth=2, markersize=12)
+            ax.plot(x[p2 != 0], p2[p2 != 0.0],
+                    colors[np.mod(i, len(colors))],
+                    marker='o', linewidth=2, markersize=12)
             title_string = (
                 'Level ' +
                 str(level) +
@@ -315,6 +267,6 @@ def oneD_P_vis(mg, fig_num=1, level=0, interp=False):
                 (j+1))
             if interp and (level != 0):
                 title_string += '\nInterpolated to Finest Level'
-            plt.title(title_string)
-            plt.xlabel('DOF')
-            plt.ylabel('Local Interp Fcn')
+            ax.set_title(title_string)
+            ax.set_xlabel('DOF')
+            ax.set_ylabel('Local Interp Fcn')

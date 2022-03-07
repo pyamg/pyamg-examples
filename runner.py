@@ -40,7 +40,7 @@ https://github.com/pyamg/pyamg-examples.
 
 """
 
-tocmd = '### Table of Contents'
+tocmd = '### Table of Contents\n'
 
 main = '\n'
 

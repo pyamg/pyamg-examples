@@ -2,7 +2,8 @@ This is a collection of short examples for [PyAMG](https://github.com/pyamg/pyam
 The source code for these **(and more)** examples is available at
 https://github.com/pyamg/pyamg-examples.
 
-### Table of Contents- **<a href="#blackboxsolver">Blackbox Solver</a>**
+### Table of Contents
+- **<a href="#blackboxsolver">Blackbox Solver</a>**
 - **<a href="#smoothedaggregationamg">Smoothed Aggregation AMG</a>**
 - **<a href="#classicalamg">Classical AMG</a>**
 - **<a href="#rootnodeamg">Rootnode AMG</a>**

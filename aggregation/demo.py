@@ -26,7 +26,7 @@ inner_edges = AggOp.indices[E[:,0]] == AggOp.indices[E[:,1]]
 outer_edges = ~inner_edges
 
 # set up a figure
-fig, ax = plt.subplots(figsize=(6, 6))
+fig, ax = plt.subplots()
 
 # non aggregate edges
 nonaggs = V[E[outer_edges].ravel(),:].reshape((-1, 2, 2))
