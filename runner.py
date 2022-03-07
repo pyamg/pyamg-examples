@@ -43,6 +43,8 @@ Classical AMG:
   - dir: compatible_relaxation
     title: Compatible Relaxation
 Rootnode AMG:
+  - dir: rootnode
+    title: Rootnode AMG
 Finite Elements:
 Preconditioning:
 Other Applications:
