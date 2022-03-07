@@ -1,5 +1,6 @@
 # Examples of AMG as a preconditioner
 
+import sys
 import numpy as np
 import pyamg
 import matplotlib.pyplot as plt
@@ -11,17 +12,25 @@ trials.append(('Poisson', A, B))
 A, B = pyamg.gallery.linear_elasticity((200, 200), format='bsr')
 trials.append(('Elasticity', A, B))
 
-print("Show advantages of accleration for two example problems")
-choice = input('\n Input Choice:\n' +
-               '1:  Run smoothed_aggregation_solver\n' +
-               '2:  Run rootnode_solver\n')
-choice = int(choice)
-if choice == 1:
+solvernum = 1
+if '--solver' in sys.argv:
+    i = sys.argv.index('--solver')
+    solvernum = int(sys.argv[i+1])
+else:
+    print('Usage: python demo.py --solver N, with N=1 or 2.\n'
+          'Show advantages of accleration for two example problems\n'
+          'Test convergence for a simple 100 x 100 grid, Gauge Laplacian.\n'
+          'Input Choice:\n'
+          '1:  Run smoothed_aggregation_solver\n'
+          '2:  Run rootnode_solver\n')
+    sys.exit()
+
+if solvernum == 1:
     method = pyamg.smoothed_aggregation_solver
-elif choice == 2:
+elif solvernum == 2:
     method = pyamg.rootnode_solver
 else:
-    raise ValueError("Enter a choice of 1 or 2")
+    raise ValueError("Enter a solver of 1 or 2")
 
 
 for name, A, B in trials:
@@ -50,20 +59,19 @@ for name, A, B in trials:
         accelerated_residuals) / accelerated_residuals[0]
 
     # Plot convergence history
-    plt.figure()
-    plt.title('Convergence History (%s)' % name, fontsize=16)
-    plt.xlabel('Iteration', fontsize=16)
-    plt.ylabel('Relative Residual', fontsize=16)
-    plt.semilogy(
-        standalone_residuals,
-        label='Standalone',
-        linestyle='None',
-        marker='.')
-    plt.semilogy(
-        accelerated_residuals,
-        label='Accelerated',
-        linestyle='None',
-        marker='.')
-    plt.legend(fontsize=16)
-    print("Close window for program to proceed.\n")
-    plt.show()
+    fig, ax = plt.subplots()
+    ax.set_title(f'Convergence History ({name})')
+    ax.set_xlabel('Iteration')
+    ax.set_ylabel('Relative Residual')
+    ax.semilogy(standalone_residuals,
+                label='Standalone', linestyle='None', marker='.')
+    ax.semilogy(accelerated_residuals,
+                label='Accelerated', linestyle='None', marker='.')
+    ax.legend()
+
+    figname = f'./output/convergence_{name.lower()}.png'
+    import sys
+    if '--savefig' in sys.argv:
+        plt.savefig(figname, bbox_inches='tight', dpi=150)
+    else:
+        plt.show()

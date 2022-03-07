@@ -50,7 +50,11 @@ Finite Elements:
     title: Anisotropic Diffusion
   - dir: linear_elasticity
     title: Linear Elasticity
+    demo: demo.py --solver 2
 Preconditioning:
+  - dir: preconditioning
+    title: Krylov Methods
+    demo: demo.py --solver 1
 Other Applications:
 """)
 

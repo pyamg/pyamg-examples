@@ -25,7 +25,6 @@ else:
           '1:  Run smoothed_aggregation_solver\n'
           '2:  Run rootnode_solver\n')
     sys.exit()
-
 np.random.seed(625)
 A = pyamg.gallery.gauge_laplacian(n, beta=0.001)
 x = np.random.rand(A.shape[0]) + 1.0j * np.random.rand(A.shape[0])

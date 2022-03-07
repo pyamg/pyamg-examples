@@ -460,7 +460,7 @@ Rotation Angle = 0.393
 
 #### Linear Elasticity
 
-[demo.py](./linear_elasticity/demo.py)
+[demo.py --solver 2](./linear_elasticity/demo.py)
 
 We consider the 2D linear elasticity problem from the pyamg gallery in this
 example (corresponding to a simple finite element discretization on a regular
@@ -480,18 +480,102 @@ python demo --solver 2
 results in the following.
 
 ```
-Usage: python demo.py --solver N, with N=1 or 2.
-Test convergence for a 200x200 Grid, Linearized Elasticity Problem
-Input Choice:
-1:  Run smoothed_aggregation_solver
-2:  Run rootnode_solver
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:  1.125
+Grid Complexity:      1.127
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       80000      1430416 [88.91%]
+     1        8978       158404 [9.85%]
+     2        1058        17956 [1.12%]
+     3         128         1936 [0.12%]
+     4          18          196 [0.01%]
 
+Number of iterations:  19d
+
+residual at iteration  0: 1.64e+02
+residual at iteration  1: 1.13e+02
+residual at iteration  2: 8.23e+00
+residual at iteration  3: 1.13e+00
+residual at iteration  4: 2.58e-01
+residual at iteration  5: 6.80e-02
+residual at iteration  6: 1.86e-02
+residual at iteration  7: 5.18e-03
+residual at iteration  8: 1.45e-03
+residual at iteration  9: 4.10e-04
+residual at iteration 10: 1.16e-04
+residual at iteration 11: 3.31e-05
+residual at iteration 12: 9.48e-06
+residual at iteration 13: 2.73e-06
+residual at iteration 14: 7.87e-07
+residual at iteration 15: 2.28e-07
+residual at iteration 16: 6.64e-08
+residual at iteration 17: 1.94e-08
+residual at iteration 18: 5.69e-09
 ```
 
 ***
 
 <a name="preconditioning"></a>
 ### Preconditioning
+
+
+#### Krylov Methods
+
+[demo.py --solver 1](./preconditioning/demo.py)
+
+This example shows how to effectively use multilevel solvers to
+precondtion a Krylov method. The first example considers the Poisson problem
+from the pyamg gallery and uses a constant near-nullspace vector for SA-AMG.
+The second example is 2D linear elasticity also from the pyamg gallery and uses
+the typical three ridgid body modes (rotation and translation in x and y) to
+coach SA-AMG. Since both problems are symmetric and positive definite, CG
+acceleration is used. The residual histories show a clear improvement in using
+the SA-AMG preconditioners in both cases.
+
+Using
+
+```python
+python demo.py --sover 1
+```
+
+produces the following.
+
+```
+Matrix: Poisson
+MultilevelSolver
+Number of Levels:     6
+Operator Complexity:  1.337
+Grid Complexity:      1.188
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0      250000      1248000 [74.82%]
+     1       41750       373416 [22.39%]
+     2        4704        41554 [2.49%]
+     3         532         4526 [0.27%]
+     4          65          509 [0.03%]
+     5           9           65 [0.00%]
+
+Matrix: Elasticity
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:  1.281
+Grid Complexity:      1.191
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       80000      1430416 [78.08%]
+     1       13467       356409 [19.45%]
+     2        1587        40401 [2.21%]
+     3         192         4356 [0.24%]
+     4          27          441 [0.02%]
+
+```
+
+<img src="./preconditioning/output/convergence_elasticity.png" width="300"/>
+
+
+<img src="./preconditioning/output/convergence_poisson.png" width="300"/>
 
 
 ***
