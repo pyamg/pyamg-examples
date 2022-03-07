@@ -29,8 +29,8 @@ x = ml.solve(b, tol=1e-12, residuals=res1)  # solve Ax=b to a tolerance of 1e-12
 # Step 5: print details
 # ------------------------------------------------------------------
 print("\n")
-print("Details of the multilevel object")
-print("--------------------------------")
+print("Details: Default AMG")
+print("--------------------")
 print(ml)                                 # print hierarchy information
 
 print("The residual norm is {}".format(np.linalg.norm(b - A * x)))  # compute norm of residual vector
@@ -48,12 +48,15 @@ print("The residual norm is {}".format(np.linalg.norm(b - A * x)))  # compute no
 print("\n")
 print("The Multigrid Hierarchy")
 print("-----------------------")
-for l in range(len(ml.levels)-1):
-    print("A_{}: {}x{}   P_{}: {}x{}".format(l, ml.levels[l].A.shape[0], ml.levels[l].A.shape[1],
-                                             l, ml.levels[l].P.shape[0], ml.levels[l].P.shape[1]))
-
-# There is no P on the coarsest level:
-print("A_{}: {}x{}".format(l, ml.levels[-1].A.shape[0], ml.levels[-1].A.shape[1]))
+for l in range(len(ml.levels)):
+    An = ml.levels[l].A.shape[0]
+    Am = ml.levels[l].A.shape[1]
+    if l == (len(ml.levels)-1):
+        print(f"A_{l}: {An:>10}x{Am:<10}")
+    else:
+        Pn = ml.levels[l].P.shape[0]
+        Pm = ml.levels[l].P.shape[1]
+        print(f"A_{l}: {An:>10}x{Am:<10}   P_{l}: {Pn:>10}x{Pm:<10}")
 
 # ------------------------------------------------------------------
 # Step 6: change the hierarchy
@@ -80,8 +83,8 @@ ml = pyamg.smoothed_aggregation_solver(A,  # the matrix
 res2 = []                                               # keep the residual history in the solve
 x = ml.solve(b, tol=1e-12, residuals=res2)              # solve Ax=b to a tolerance of 1e-12
 print("\n")
-print("The Multigrid Hierarchy")
-print("-----------------------")
+print("Details: Specialized AMG")
+print("------------------------")
 print(ml)                                               # print hierarchy information
 print("The residual norm is {}".format(np.linalg.norm(b - A * x)))  # compute norm of residual vector
 print("\n")
@@ -94,6 +97,7 @@ ax.semilogy(res1, label='Default AMG solver')
 ax.semilogy(res2, label='Specialized AMG solver')
 ax.set_xlabel('Iteration')
 ax.set_ylabel('Relative Residual')
+ax.grid(True)
 plt.legend()
 
 figname = f'./output/amg_convergence.png'

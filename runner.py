@@ -18,6 +18,9 @@ def exectute_demo(exampledir, name='demo.py'):
 
 mainreadme = 'readme.md'
 toc = yaml.safe_load("""
+Introduction:
+  - dir: 0_start_here
+    title: Overview
 Blackbox Solver:
   - dir: blackbox
 Smoothed Aggregation AMG:

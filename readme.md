@@ -3,6 +3,7 @@ The source code for these **(and more)** examples is available at
 https://github.com/pyamg/pyamg-examples.
 
 ### Table of Contents
+- **<a href="#introduction">Introduction</a>**
 - **<a href="#blackboxsolver">Blackbox Solver</a>**
 - **<a href="#smoothedaggregationamg">Smoothed Aggregation AMG</a>**
 - **<a href="#classicalamg">Classical AMG</a>**
@@ -10,6 +11,84 @@ https://github.com/pyamg/pyamg-examples.
 - **<a href="#finiteelements">Finite Elements</a>**
 - **<a href="#preconditioning">Preconditioning</a>**
 - **<a href="#otherapplications">Other Applications</a>**
+
+<a name="introduction"></a>
+### Introduction
+
+
+#### Overview
+
+[demo.py](./0_start_here/demo.py)
+
+As a starting example, this demo considers a rotated anisotropic
+diffusion problem from the `pyamg.gallery`.  First, a basic
+smoothed aggregation solver is constructed.  Then, many of the
+options are modified to yield a more effective solver.
+
+The comments in `demo.py` follow several steps that walk through the demo:
+
+- Step 1: import scipy and pyamg packages
+- Step 2: setup up the system using pyamg.gallery
+- Step 3: setup of the multigrid hierarchy
+- Step 4: solve the system
+- Step 5: print details
+- Step 6: change the hierarchy
+- Step 7: print details
+- Step 8: plot convergence history
+
+```
+
+
+Details: Default AMG
+--------------------
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:  1.125
+Grid Complexity:      1.127
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       40000       357604 [88.91%]
+     1        4489        39601 [9.85%]
+     2         529         4489 [1.12%]
+     3          64          484 [0.12%]
+     4           9           49 [0.01%]
+
+The residual norm is 0.19445108041220222
+
+
+The Multigrid Hierarchy
+-----------------------
+A_0:      40000x40000        P_0:      40000x4489      
+A_1:       4489x4489         P_1:       4489x529       
+A_2:        529x529          P_2:        529x64        
+A_3:         64x64           P_3:         64x9         
+A_4:          9x9         
+
+
+Details: Specialized AMG
+------------------------
+MultilevelSolver
+Number of Levels:     6
+Operator Complexity:  2.159
+Grid Complexity:      1.201
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       40000       357604 [46.31%]
+     1        6700       226352 [29.31%]
+     2        1232       176222 [22.82%]
+     3         109        11829 [1.53%]
+     4          13          169 [0.02%]
+     5           2            4 [0.00%]
+
+The residual norm is 1.0743979739798777e-10
+
+
+```
+
+<img src="./0_start_here/output/amg_convergence.png" width="300"/>
+
+
+***
 
 <a name="blackboxsolver"></a>
 ### Blackbox Solver
@@ -496,23 +575,23 @@ Number of iterations:  19d
 
 residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
-residual at iteration  2: 8.21e+00
+residual at iteration  2: 8.20e+00
 residual at iteration  3: 1.12e+00
-residual at iteration  4: 2.57e-01
-residual at iteration  5: 6.78e-02
-residual at iteration  6: 1.86e-02
-residual at iteration  7: 5.18e-03
+residual at iteration  4: 2.56e-01
+residual at iteration  5: 6.75e-02
+residual at iteration  6: 1.85e-02
+residual at iteration  7: 5.15e-03
 residual at iteration  8: 1.45e-03
-residual at iteration  9: 4.10e-04
+residual at iteration  9: 4.08e-04
 residual at iteration 10: 1.16e-04
-residual at iteration 11: 3.31e-05
-residual at iteration 12: 9.47e-06
+residual at iteration 11: 3.30e-05
+residual at iteration 12: 9.46e-06
 residual at iteration 13: 2.72e-06
-residual at iteration 14: 7.84e-07
-residual at iteration 15: 2.27e-07
-residual at iteration 16: 6.60e-08
-residual at iteration 17: 1.93e-08
-residual at iteration 18: 5.64e-09
+residual at iteration 14: 7.87e-07
+residual at iteration 15: 2.29e-07
+residual at iteration 16: 6.67e-08
+residual at iteration 17: 1.95e-08
+residual at iteration 18: 5.74e-09
 ```
 
 ***
