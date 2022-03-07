@@ -16,6 +16,8 @@ https://github.com/pyamg/pyamg-examples.
 
 [demo.py](https://github.com/pyamg/pyamg-examples/blob/master/blackbox/demo.py)
 
+[demo.py](./blackbox/demo.py)
+
 This demo highlights using PyAMG's `blackbox` module, which attempts to solve
 an arbitrary system `A x = b` with minimal input.  The matrix `A` can be
 non-Hermitian, indefinite, Hermitian positive-definite, etc...  The method tries
@@ -42,8 +44,8 @@ The demo produces residual norms that can vary from machine to machine.
     iteration 5.0
     iteration 6.0
     iteration 7.0
-  Residuals ||r_k||_M, ||r_0||_M = 6.46e-01, 8.68e+06
-  Residual reduction ||r_k||_M/||r_0||_M = 7.44e-08
+  Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
+  Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
 ```
 
 ***
@@ -55,6 +57,8 @@ The demo produces residual norms that can vary from machine to machine.
 #### Aggregation
 
 [demo.py](https://github.com/pyamg/pyamg-examples/blob/master/aggregation/demo.py)
+
+[demo.py](./aggregation/demo.py)
 
 In this example, the first-level aggregates are shown for AMG based on smoothed aggregation.
 An example mesh and adjacency matrix is loaded from `square.mat`, followed by a call to
@@ -70,6 +74,8 @@ elements in the underlying mesh. Still, there are a many aggregates that yield
 
 [demo.py](https://github.com/pyamg/pyamg-examples/blob/master/one_dimension/demo.py)
 
+[demo.py](./one_dimension/demo.py)
+
 This example illustrates the effect, in 1D, of smoothed aggregation on
 tentative prolongation operators.  Each of the aggregates (groups of three in
 this case) are plotted with the associated (smoothed) basis functions.
@@ -81,7 +87,11 @@ this case) are plotted with the associated (smoothed) basis functions.
 
 [demo1.py](https://github.com/pyamg/pyamg-examples/blob/master/visualizing_aggregation/demo1.py)
 
+[demo1.py](./visualizing_aggregation/demo1.py)
+
 [demo2.py](https://github.com/pyamg/pyamg-examples/blob/master/visualizing_aggregation/demo2.py)
+
+[demo2.py](./visualizing_aggregation/demo2.py)
 
 In these two example the `pyamg.vis` module is called to display
 aggregation in both two and three dimensions.  `demo1.py` considers the Poisson
@@ -116,6 +126,8 @@ Start [Paraview](http://www.paravieworg/paraview/resources/software.php):
 #### Solver Diagnostics
 
 [demo.py --matrix 2](https://github.com/pyamg/pyamg-examples/blob/master/solver_diagnostics/demo.py)
+
+[demo.py --matrix 2](./solver_diagnostics/demo.py)
 
 AMG has a range of parameter choices; selecting the optimal combination
 can be challenging yet can lead to significant improvements in convergences.
