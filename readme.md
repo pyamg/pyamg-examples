@@ -494,25 +494,25 @@ Coarse Solver:        'pinv'
 
 Number of iterations:  19d
 
-residual at iteration  0: 1.64e+02
+residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
-residual at iteration  2: 8.23e+00
+residual at iteration  2: 8.21e+00
 residual at iteration  3: 1.13e+00
-residual at iteration  4: 2.58e-01
-residual at iteration  5: 6.80e-02
-residual at iteration  6: 1.86e-02
-residual at iteration  7: 5.18e-03
-residual at iteration  8: 1.45e-03
-residual at iteration  9: 4.10e-04
-residual at iteration 10: 1.16e-04
-residual at iteration 11: 3.31e-05
-residual at iteration 12: 9.48e-06
-residual at iteration 13: 2.73e-06
-residual at iteration 14: 7.87e-07
-residual at iteration 15: 2.28e-07
-residual at iteration 16: 6.64e-08
-residual at iteration 17: 1.94e-08
-residual at iteration 18: 5.69e-09
+residual at iteration  4: 2.62e-01
+residual at iteration  5: 6.93e-02
+residual at iteration  6: 1.90e-02
+residual at iteration  7: 5.30e-03
+residual at iteration  8: 1.49e-03
+residual at iteration  9: 4.21e-04
+residual at iteration 10: 1.19e-04
+residual at iteration 11: 3.40e-05
+residual at iteration 12: 9.75e-06
+residual at iteration 13: 2.80e-06
+residual at iteration 14: 8.09e-07
+residual at iteration 15: 2.34e-07
+residual at iteration 16: 6.82e-08
+residual at iteration 17: 1.99e-08
+residual at iteration 18: 5.83e-09
 ```
 
 ***
@@ -537,7 +537,7 @@ the SA-AMG preconditioners in both cases.
 Using
 
 ```python
-python demo.py --sover 1
+python demo.py --solver 1
 ```
 
 produces the following.
@@ -577,6 +577,17 @@ Coarse Solver:        'pinv'
 
 <img src="./preconditioning/output/convergence_poisson.png" width="300"/>
 
+
+#### Eigenvalue Solvers
+
+[demo.py](./eigensolver/demo.py)
+
+In this this example, smoothed aggregation AMG is used to precondition the
+LOBPCG eigensolver to find the lowest nine eigenmodes of a Poisson problem.
+With preconditioning (`M=M` in the `loppcg` call), the computation of the
+eigensubspace is extremely fast.
+
+<img src="./eigensolver/output/eigenmodes.png" width="300"/>
 
 ***
 

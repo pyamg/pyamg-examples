@@ -26,17 +26,21 @@ X = np.random.rand(A.shape[0], K)
 M = ml.aspreconditioner()
 
 # compute eigenvalues and eigenvectors with LOBPCG
-W, V = sparse.linalg.lobpcg(A, X, M=M, tol=1e-8, largest=False)
-
+W, V = sparse.linalg.lobpcg(A, X, M=M, tol=1e-8, largest=False, maxiter=40)
 
 # plot the eigenvectors
 
-plt.figure(figsize=(9, 9))
+fig, axs = plt.subplots(nrows=3, ncols=3)
 
-for i in range(K):
-    plt.subplot(3, 3, i + 1)
-    plt.title('Eigenvector %d' % i)
-    plt.pcolor(V[:, i].reshape(N, N), cmap='cool')
-    plt.axis('equal')
-    plt.axis('off')
-plt.show()
+for i, ax in enumerate(axs.ravel()):
+    ax.set_title('Eigenvector %d' % i, fontsize=10)
+    ax.pcolor(V[:, i].reshape(N, N), cmap='cool')
+    ax.axis('square')
+    ax.axis('off')
+
+figname = f'./output/eigenmodes.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()

@@ -55,6 +55,8 @@ Preconditioning:
   - dir: preconditioning
     title: Krylov Methods
     demo: demo.py --solver 1
+  - dir: eigensolver
+    title: Eigenvalue Solvers
 Other Applications:
 """)
 
