@@ -46,6 +46,8 @@ Rootnode AMG:
   - dir: rootnode
     title: Rootnode AMG
 Finite Elements:
+  - dir: diffusion
+    title: Anisotropic Diffusion
 Preconditioning:
 Other Applications:
 """)
@@ -73,6 +75,7 @@ for section in toc:
 
     if toc[section] is not None:
         for demo in toc[section]:
+            print(f'Processing {demo["dir"]}')
             title = demo.get('title', None)
             if title:
                 main += f'\n#### {title}\n\n'

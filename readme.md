@@ -42,8 +42,8 @@ The demo produces residual norms that can vary from machine to machine.
     iteration 5.0
     iteration 6.0
     iteration 7.0
-  Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
-  Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
+  Residuals ||r_k||_M, ||r_0||_M = 6.46e-01, 8.68e+06
+  Residual reduction ||r_k||_M/||r_0||_M = 7.44e-08
 ```
 
 ***
@@ -409,6 +409,54 @@ operator than for classical AMG.
 <a name="finiteelements"></a>
 ### Finite Elements
 
+
+#### Anisotropic Diffusion
+
+[demo.py](./diffusion/demo.py)
+
+This demo considers different strength measures in the SA-AMG setup phase for
+finite element (Q1) discretizations of anisotropic diffusion.  In particular,
+the Classic Strength Measure is compared to the Evolution Measure.  For this
+example, we see that total work is reduced by using the Evolution Measure and
+that a scalable convergence rate is observed with rootnode:
+
+```
+Running Grid = (100 x 100)
+Running Grid = (200 x 200)
+Running Grid = (300 x 300)
+Running Grid = (400 x 400)
+
+AMG Scalability Study for Ax = 0, x_init = rand
+
+Emphasis on Robustness of Evolution Strength 
+Measure and Root-Node Solver
+
+Rotated Anisotropic Diffusion in 2D
+Anisotropic Coefficient = 1.000e-03
+Rotation Angle = 0.393
+    n     |    nnz    |    rho    |   OpCx    |   Work   
+--------------------------------------------------------
+ Classic strength 
+--------------------------------------------------------
+  10000   |   88804   |   0.86    |    1.6    |    24    
+  40000   |  357604   |   0.87    |    1.6    |    25    
+  90000   |  806404   |   0.87    |    1.6    |    27    
+ 160000   |  1435204  |   0.87    |    1.6    |    27    
+--------------------------------------------------------
+ Evolution strength 
+--------------------------------------------------------
+  10000   |   88804   |   0.56    |    1.8    |     7    
+  40000   |  357604   |   0.67    |    1.8    |    10    
+  90000   |  806404   |   0.69    |    1.8    |    11    
+ 160000   |  1435204  |   0.72    |    1.8    |    13    
+--------------------------------------------------------
+ Evolution strength with Rootnode 
+--------------------------------------------------------
+  10000   |   88804   |   0.46    |    1.8    |    5.4   
+  40000   |  357604   |   0.49    |    1.9    |     6    
+  90000   |  806404   |    0.5    |    1.9    |    6.3   
+ 160000   |  1435204  |    0.5    |    1.9    |    6.5   
+```
 
 ***
 
