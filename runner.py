@@ -11,10 +11,9 @@ def exectute_demo(exampledir, name='demo.py'):
                             cwd=f'{exampledir}',
                             capture_output=True, text=True)
 
-    figs = glob(os.path.join(f'{exampledir}', 'output') +'/*.png')
     if output.stderr:
         raise ValueError(f'Trouble executing {exampledir} + {name} \n {output.stderr}')
-    return output.stdout, figs
+    return output.stdout
 
 mainreadme = 'readme.md'
 toc = yaml.safe_load("""
@@ -25,6 +24,8 @@ Smoothed Aggregation AMG:
     title: Aggregation
   - dir: one_dimension
     title: One Dimensional Problem
+  - dir: visualizing_aggregation
+    demo: demo1.py, demo2.py
 Classical AMG:
 Rootnode AMG:
 Finite Elements:
@@ -59,18 +60,22 @@ for section in toc:
             if title:
                 main += f'\n#### {title}\n\n'
 
-            demoname = demo.get('demo', 'demo.py')
-            main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname})\n\n'
+            demonames = [d.strip() for d in demo.get('demo', 'demo.py').split(',')]
+            for demoname in demonames:
+                main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname})\n\n'
             # get the readme
             with open(os.path.join(f"{demo['dir']}",'readme.md'), 'r') as f:
                 readmeoutput = f.read()
             main += readmeoutput
 
             # get the demo output
-            output, figs = exectute_demo(demo['dir'], name=demoname)
-            if len(output) > 0:
-                main += '\n```\n' + output + '```\n'
+            for demoname in demonames:
+                output = exectute_demo(demo['dir'], name=demoname)
+                if len(output) > 0:
+                    main += '\n```\n' + output + '```\n'
 
+            # get the output figs
+            figs = glob(os.path.join(f'{demo["dir"]}', 'output') +'/*.png')
             for fig in figs:
                 main += f'\n<img src="./{fig}" width="300"/>\n\n'
     main += '\n***\n\n'
