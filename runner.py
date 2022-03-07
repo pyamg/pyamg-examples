@@ -34,6 +34,9 @@ Smoothed Aggregation AMG:
   - dir: complex
     title: Complex Arithmetic
     demo: demo.py --solver 1
+  - dir: nonsymmetric
+    title: Nonsymmetric example
+    demo: demo.py --solver 1
 
 Classical AMG:
 Rootnode AMG:

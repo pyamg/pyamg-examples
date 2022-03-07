@@ -1,18 +1,27 @@
 """
 Test the convergence of a small recirculating flow problem that generates a
 nonsymmetric matrix
+
+Usage: python demo.py --solver 1
 """
 
+import sys
 import numpy as np
 import pyamg
 
-print("Test convergence of a small recirculating flow problem " +
-      "that generates a nonsymmetric matrix ")
-choice = eval(input('\n Input Choice:\n' +
-                    '1:  Run smoothed_aggregation_solver\n' +
-                    '2:  Run rootnode_solver\n'))
+solvernum = 1
+if '--solver' in sys.argv:
+    i = sys.argv.index('--solver')
+    solvernum = int(sys.argv[i+1])
+else:
+    print('Usage: python demo.py --solver N, with N=1 or 2.\n'
+          'Test convergence of a small recirculating flow problem '
+          'that generates a nonsymmetric matrix n'
+          'Input Choice:\n'
+          '1:  Run smoothed_aggregation_solver\n'
+          '2:  Run rootnode_solver\n')
+    sys.exit()
 
-choice = int(choice)
 # Recirculating flow, nonsymmetric matrix
 data = pyamg.gallery.load_example('recirc_flow')
 A = data['A'].tocsr()
@@ -39,7 +48,7 @@ postsmoother = ('gauss_seidel', {'sweep': 'symmetric', 'iterations': 1})
 
 ##
 # Construct solver and solve
-if choice == 1:
+if solvernum == 1:
     sa_symmetric = pyamg.smoothed_aggregation_solver(
         A,
         B=B,
@@ -48,7 +57,7 @@ if choice == 1:
         presmoother=presmoother,
         postsmoother=postsmoother,
         **SA_build_args)
-elif choice == 2:
+elif solvernum == 2:
     sa_symmetric = pyamg.rootnode_solver(
         A,
         B=B,
@@ -58,7 +67,7 @@ elif choice == 2:
         postsmoother=postsmoother,
         **SA_build_args)
 else:
-    raise ValueError("Enter a choice of 1 or 2")
+    raise ValueError("Enter a solver of 1 or 2")
 
 sa_symmetric = pyamg.smoothed_aggregation_solver(
     A,
@@ -86,7 +95,7 @@ improve_candidates = [
         'sweep': 'symmetric', 'iterations': 4}), None]
 
 # Construct solver and solve
-if choice == 1:
+if solvernum == 1:
     sa_nonsymmetric = pyamg.smoothed_aggregation_solver(
         A,
         B=B,
@@ -96,7 +105,7 @@ if choice == 1:
         postsmoother=postsmoother,
         improve_candidates=improve_candidates,
         **SA_build_args)
-elif choice == 2:
+elif solvernum == 2:
     sa_nonsymmetric = pyamg.rootnode_solver(
         A,
         B=B,
@@ -107,7 +116,7 @@ elif choice == 2:
         improve_candidates=improve_candidates,
         **SA_build_args)
 else:
-    raise ValueError("Enter a choice of 1 or 2")
+    raise ValueError("Enter a solver of 1 or 2")
 
 resvec = []
 x = sa_nonsymmetric.solve(b, x0=x0, residuals=resvec, **SA_solve_args)

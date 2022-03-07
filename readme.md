@@ -230,6 +230,86 @@ Coarse Solver:        'pinv'
 
 ```
 
+#### Nonsymmetric example
+
+[demo.py --solver 1](./nonsymmetric/demo.py)
+
+The smoothed aggregation solver supports nonsymmetric (i.e., non-Hermitian) and
+indefinite matrices, through recent advances in multigrid research. The
+demo highlighted here constructs a solver for a small nonsymmetric
+recirculating flow problem.  The out-of-the-box example diverges,
+while more advanced options yield a convergent solver.
+
+Using
+
+```python
+python demo.py --solver 1
+```
+
+we observe the following convergence history.
+
+```
+
+Observe that standard multigrid parameters for Hermitian systems
+yield a nonconvergent stand-alone solver.
+
+residual at iteration  0: 8.64e-01
+residual at iteration  1: 6.92e-01
+residual at iteration  2: 2.02e+01
+residual at iteration  3: 5.89e+02
+residual at iteration  4: 1.72e+04
+residual at iteration  5: 5.02e+05
+residual at iteration  6: 1.47e+07
+residual at iteration  7: 4.28e+08
+residual at iteration  8: 1.25e+10
+residual at iteration  9: 3.65e+11
+residual at iteration 10: 1.07e+13
+residual at iteration 11: 3.12e+14
+residual at iteration 12: 9.10e+15
+residual at iteration 13: 2.66e+17
+residual at iteration 14: 7.76e+18
+residual at iteration 15: 2.27e+20
+*************************************************************
+Now using nonsymmetric parameters for multigrid , we obtain a
+convergent stand-alone solver. 
+
+residual at iteration  0: 8.64e-01
+residual at iteration  1: 1.14e-01
+residual at iteration  2: 3.53e-02
+residual at iteration  3: 1.61e-02
+residual at iteration  4: 8.68e-03
+residual at iteration  5: 5.09e-03
+residual at iteration  6: 3.08e-03
+residual at iteration  7: 1.89e-03
+residual at iteration  8: 1.18e-03
+residual at iteration  9: 7.44e-04
+residual at iteration 10: 4.78e-04
+residual at iteration 11: 3.14e-04
+residual at iteration 12: 2.11e-04
+residual at iteration 13: 1.46e-04
+residual at iteration 14: 1.04e-04
+residual at iteration 15: 7.55e-05
+*************************************************************
+Now, we use the nonsymmetric solver to accelerate GMRES. 
+
+residual at iteration  0: 5.54e+00
+residual at iteration  1: 1.47e+00
+residual at iteration  2: 5.00e-01
+residual at iteration  3: 2.96e-01
+residual at iteration  4: 1.62e-01
+residual at iteration  5: 5.09e-02
+residual at iteration  6: 1.20e-02
+residual at iteration  7: 4.86e-03
+residual at iteration  8: 1.39e-03
+residual at iteration  9: 9.68e-04
+residual at iteration 10: 3.05e-04
+residual at iteration 11: 1.36e-04
+residual at iteration 12: 2.94e-05
+residual at iteration 13: 6.66e-06
+residual at iteration 14: 1.48e-06
+residual at iteration 15: 4.32e-07
+```
+
 ***
 
 <a name="classicalamg"></a>

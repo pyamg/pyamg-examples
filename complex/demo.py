@@ -19,7 +19,7 @@ if '--solver' in sys.argv:
     i = sys.argv.index('--solver')
     solvernum = int(sys.argv[i+1])
 else:
-    print('Usage: python demo.py --matrix N, with N=1 or 2.\n'
+    print('Usage: python demo.py --solver N, with N=1 or 2.\n'
           'Test convergence for a simple 100 x 100 grid, Gauge Laplacian.\n'
           'Input Choice:\n'
           '1:  Run smoothed_aggregation_solver\n'
