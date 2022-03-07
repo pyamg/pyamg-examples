@@ -4,35 +4,49 @@ parameter combinations for smoothed_aggregation_solver(...) and
 rootnode_solver(...).  The goal is to find appropriate parameter settings
 for an arbitrary matrix.
 
-Explore 4 different matrices: CSR matrix for basic isotropic diffusion
-                              CSR matrix for basic rotated anisotropic diffusion
-                              BSR matrix for basic 2D linearized elasticity
-                              CSR matrix for a nonsymmetric recirculating flow problem
+Explore 4 different matrices:
+
+1. CSR matrix for basic isotropic diffusion
+2. CSR matrix for basic rotated anisotropic diffusion
+3. BSR matrix for basic 2D linearized elasticity
+4. CSR matrix for a nonsymmetric recirculating flow problem
 
 Many more solver parameters may be specified than outlined in the below
 examples.  Only the most basic are shown.
 
 Run with
-    >>> python demo.py
-and examine the on-screen output and file output.
+
+.. code-block:: python
+
+    >>> python demo.py --matrix 1
+
+Then examine the on-screen output and file output.
 '''
 
+import sys
 import numpy as np
 import pyamg
 from solver_diagnostics import solver_diagnostics
 
-stencil = pyamg.gallery.diffusion.diffusion_stencil_2d(
-    type='FE', epsilon=0.001, theta=2 * np.pi / 16.0)
+stencil = pyamg.gallery.diffusion.diffusion_stencil_2d(type='FE',
+                                                       epsilon=0.001,
+                                                       theta=2 * np.pi / 16.0)
 A = pyamg.gallery.stencil_grid(stencil, (50, 50), format='csr')
 
-choice = eval(input('\nThere are four different test problems.  Enter \n' +
-                    '1:  Isotropic diffusion example\n' +
-                    '2:  Anisotropic diffusion example\n' +
-                    '3:  Elasticity example\n' +
-                    '4:  Nonsymmetric flow example\n\n '))
+matrixnum = 1
+if '--matrix' in sys.argv:
+    i = sys.argv.index('--matrix')
+    matrixnum = int(sys.argv[i+1])
+else:
+    print('Usage: python demo.py --matrix N, with N=1, 2, 3, or 4.\n'
+          'There are four different test problems.  Enter \n'
+          '1:  Isotropic diffusion example\n'
+          '2:  Anisotropic diffusion example\n'
+          '3:  Elasticity example\n'
+          '4:  Nonsymmetric flow example\n\n')
+    sys.exit()
 
-choice = int(choice)
-if choice == 1:
+if matrixnum == 1:
     # Try a basic isotropic diffusion problem from finite differences
     # --> Only use V-cycles by specifying cycle_list
     # --> Don't specify symmetry and definiteness and allow for auto-detection
@@ -43,7 +57,7 @@ if choice == 1:
     # from iso_diff_diagnostic import iso_diff_diagnostic
     # iso_diff_diagnostic(A)
 
-if choice == 2:
+if matrixnum == 2:
     # Try a basic rotated anisotropic diffusion problem from bilinear finite elements
     # --> Only use V-cycles by specifying cycle_list
     # --> Specify symmetry and definiteness (the safest option)
@@ -62,7 +76,7 @@ if choice == 2:
     # rot_ani_diff_diagnostic(A)
 
 
-if choice == 3:
+if matrixnum == 3:
     # Try a basic elasticity problem
     # --> Try V- and W-cycles by specifying cycle_list
     # --> Don't specify symmetry and definiteness and allow for auto-detection
@@ -73,7 +87,7 @@ if choice == 3:
     # from elas_diagnostic import elas_diagnostic
     # elas_diagnostic(A)
 
-if choice == 4:
+if matrixnum == 4:
     # Try a basic nonsymmetric recirculating flow problem
     # --> Only use V-cycles by specifying cycle_list
     # --> Don't specify symmetry and definiteness and allow for auto-detection

@@ -7,7 +7,8 @@ branch = 'reorg'
 
 def exectute_demo(exampledir, name='demo.py'):
     """Exectue a demo in a particular directory."""
-    output = subprocess.run(['python', f'{name}', '--savefig'],
+    nameall = name.split()
+    output = subprocess.run(['python'] + nameall + ['--savefig'],
                             cwd=f'{exampledir}',
                             capture_output=True, text=True)
 
@@ -25,7 +26,11 @@ Smoothed Aggregation AMG:
   - dir: one_dimension
     title: One Dimensional Problem
   - dir: visualizing_aggregation
+    title: Visualizing Aggregation
     demo: demo1.py, demo2.py
+  - dir: solver_diagnostics
+    title: Solver Diagnostics
+    demo: demo.py --matrix 2
 Classical AMG:
 Rootnode AMG:
 Finite Elements:
@@ -62,7 +67,7 @@ for section in toc:
 
             demonames = [d.strip() for d in demo.get('demo', 'demo.py').split(',')]
             for demoname in demonames:
-                main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname})\n\n'
+                main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname.split()[0]})\n\n'
             # get the readme
             with open(os.path.join(f"{demo['dir']}",'readme.md'), 'r') as f:
                 readmeoutput = f.read()

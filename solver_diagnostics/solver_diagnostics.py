@@ -383,7 +383,8 @@ def solver_diagnostics(
                                         for improve_candidates in improve_candidates_list:
 
                                             counter += 1
-                                            print("    Test %d out of %d" % (counter + 1, num_test))
+                                            print("    Test %d out of %d" % (counter + 1, num_test),
+                                                  end='')
 
                                             ##
                                             # Grab B vectors
@@ -464,7 +465,7 @@ def solver_diagnostics(
                                                     tol=tol,
                                                     maxiter=maxiter,
                                                     residuals=residuals)
-                                                print(np.linalg.norm(b - A * x))
+                                                # print(np.linalg.norm(b - A * x))
 
                                                 # Store results: iters, operator complexity, and
                                                 # work per digit-of-accuracy
@@ -480,10 +481,13 @@ def solver_diagnostics(
                                             except BaseException:
                                                 descriptor_indented = '      ' + \
                                                     descriptor.replace('\n', '\n      ')
-                                                print("    --> Failed this test")
-                                                print("    --> Solver descriptor is...")
-                                                print(descriptor_indented)
+                                                #print("    --> Failed this test")
+                                                #print("    --> Solver descriptor is...")
+                                                #print(descriptor_indented)
                                                 results[counter, :] = np.inf
+                                                print(f' -> failure (see output in {fname}.txt)', end='')
+                                            finally:
+                                                print('')
     ##
     # Sort results and solver_descriptors according to work-per-doa
     indys = np.argsort(results[:, 2])
@@ -642,14 +646,11 @@ def solver_diagnostics(
     # Close file pointer
     fptr.close()
 
-    print("    ...")
-    print("    --> Diagnostic Results located in " + fname + '.txt')
-    print("    ...")
-    print("    --> See automatically generated function definition\n" +
-          "        ./" + fname + ".py.\n\n" +
-          "        Use the function defined here to generate and run the best\n" +
-          "        smoothed aggregation method found.  The only argument taken\n" +
-          "        is a CSR/BSR matrix.\n\n" +
-          "        To run: >>> # User must load/generate CSR/BSR matrix A\n" +
-          "                >>> from " + fname + " import " + fname + "\n" +
-          "                >>> " + fname + "(A)")
+    print(f'    --> Diagnostic Results located in {fname}.txt')
+    print(f'    --> See automatically generated function definition in {fname}.py')
+    #     "        Use the function defined here to generate and run the best\n" +
+    #     "        smoothed aggregation method found.  The only argument taken\n" +
+    #     "        is a CSR/BSR matrix.\n\n" +
+    #     "        To run: >>> # User must load/generate CSR/BSR matrix A\n" +
+    #     "                >>> from " + fname + " import " + fname + "\n" +
+    #     "                >>> " + fname + "(A)")

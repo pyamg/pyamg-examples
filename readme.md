@@ -42,8 +42,8 @@ The demo produces residual norms that can vary from machine to machine.
     iteration 5.0
     iteration 6.0
     iteration 7.0
-  Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
-  Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
+  Residuals ||r_k||_M, ||r_0||_M = 6.46e-01, 8.68e+06
+  Residual reduction ||r_k||_M/||r_0||_M = 7.44e-08
 ```
 
 ***
@@ -75,6 +75,9 @@ tentative prolongation operators.  Each of the aggregates (groups of three in
 this case) are plotted with the associated (smoothed) basis functions.
 
 <img src="./one_dimension/output/one_dimension_aggregates.png" width="300"/>
+
+
+#### Visualizing Aggregation
 
 [demo1.py](https://github.com/pyamg/pyamg-examples/blob/master/visualizing_aggregation/demo1.py)
 
@@ -109,6 +112,71 @@ Start [Paraview](http://www.paravieworg/paraview/resources/software.php):
 
 <img src="./visualizing_aggregation/output/vis_aggs2.png" width="300"/>
 
+
+#### Solver Diagnostics
+
+[demo.py --matrix 2](https://github.com/pyamg/pyamg-examples/blob/master/solver_diagnostics/demo.py)
+
+AMG has a range of parameter choices; selecting the optimal combination
+can be challenging yet can lead to significant improvements in convergences.
+This example highlights a "solver diagnostics" function that makes finding good parameter
+choices a bit easier.  A brute force search is applied, and depending on the matrix
+characteristics (e.g., symmetry and definiteness), 60-120 different solvers are
+constructed and then tested.  As a result, this test is intended for smaller matrix problems.
+
+The function `solver_diagnostics` (`solver_diagnostics.py`) has many
+parameters, but the defaults should be sufficient.  For this test,
+only the matrix, `A`, is needed, and `A` can be nonsymmetric, indefinite, or
+symmetric positive definite.  The function detects symmetry and definiteness,
+but it is safest to specify these.
+
+The function outputs two separate files and we briefly examine this output
+for the second example of rotated anisotropic diffusion when running the above
+`demo.py`. 
+
+Running
+
+```python
+python demo.py --matrix 2
+```
+will run solver diagnostics on the rotated anisotropic diffusion problem.
+
+The first output file is `rot_ani_diff_diagnostic.txt`, which is a sorted table
+of solver statistics for all the solvers tried.  This file has detailed output
+for the performance of each solver, and the parameter choices used for
+each solver.
+
+The second file defines a function `rot_ani_diff_diagnostic.py`, that when
+given a matrix, automatically generates and uses the best solver found.
+
+```
+
+Searching for optimal smoothed aggregation method for (2500,2500) matrix
+    ...
+    User specified a symmetric matrix
+    User specified definiteness as positive
+    ...
+    Test 1 out of 18
+    Test 2 out of 18
+    Test 3 out of 18
+    Test 4 out of 18
+    Test 5 out of 18
+    Test 6 out of 18
+    Test 7 out of 18
+    Test 8 out of 18
+    Test 9 out of 18
+    Test 10 out of 18
+    Test 11 out of 18
+    Test 12 out of 18
+    Test 13 out of 18
+    Test 14 out of 18
+    Test 15 out of 18
+    Test 16 out of 18
+    Test 17 out of 18
+    Test 18 out of 18
+    --> Diagnostic Results located in rot_ani_diff_diagnostic.txt
+    --> See automatically generated function definition in rot_ani_diff_diagnostic.py
+```
 
 ***
 
