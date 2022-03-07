@@ -497,22 +497,22 @@ Number of iterations:  19d
 residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
 residual at iteration  2: 8.21e+00
-residual at iteration  3: 1.13e+00
-residual at iteration  4: 2.62e-01
-residual at iteration  5: 6.93e-02
-residual at iteration  6: 1.90e-02
-residual at iteration  7: 5.30e-03
-residual at iteration  8: 1.49e-03
-residual at iteration  9: 4.21e-04
-residual at iteration 10: 1.19e-04
-residual at iteration 11: 3.40e-05
-residual at iteration 12: 9.75e-06
-residual at iteration 13: 2.80e-06
-residual at iteration 14: 8.09e-07
-residual at iteration 15: 2.34e-07
-residual at iteration 16: 6.82e-08
-residual at iteration 17: 1.99e-08
-residual at iteration 18: 5.83e-09
+residual at iteration  3: 1.12e+00
+residual at iteration  4: 2.57e-01
+residual at iteration  5: 6.78e-02
+residual at iteration  6: 1.86e-02
+residual at iteration  7: 5.18e-03
+residual at iteration  8: 1.45e-03
+residual at iteration  9: 4.10e-04
+residual at iteration 10: 1.16e-04
+residual at iteration 11: 3.31e-05
+residual at iteration 12: 9.47e-06
+residual at iteration 13: 2.72e-06
+residual at iteration 14: 7.84e-07
+residual at iteration 15: 2.27e-07
+residual at iteration 16: 6.60e-08
+residual at iteration 17: 1.93e-08
+residual at iteration 18: 5.64e-09
 ```
 
 ***
@@ -589,10 +589,24 @@ eigensubspace is extremely fast.
 
 <img src="./eigensolver/output/eigenmodes.png" width="300"/>
 
+
 ***
 
 <a name="otherapplications"></a>
 ### Other Applications
+
+
+#### Graph Partitioning
+
+[demo.py](./mesh_partition/demo.py)
+
+In this example we computing a partition of a basic crack mesh (`crack_mesh.mat`)
+using the Fiedler vector (the second lowest eigenmode of the graph laplacian).
+We construct a SA-AMG preconditioner to assist LOBPCG in finding the Fiedler
+vector.  Positive/negative values of the Fiedler vector are plotted in
+different colors, illustrating the natural splitting this mesh.
+
+<img src="./mesh_partition/output/mesh_partition.png" width="300"/>
 
 
 ***

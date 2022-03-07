@@ -89,10 +89,16 @@ print("\n")
 # ------------------------------------------------------------------
 # Step 8: plot convergence history
 # ------------------------------------------------------------------
-plt.semilogy(res1)
-plt.semilogy(res2)
-plt.title('Residual Histories')
-plt.legend(['Default Solver', 'Specialized Solver'])
-plt.xlabel('Iteration')
-plt.ylabel('Relative Residual')
-plt.show()
+fig, ax = plt.subplots()
+ax.semilogy(res1, label='Default AMG solver')
+ax.semilogy(res2, label='Specialized AMG solver')
+ax.set_xlabel('Iteration')
+ax.set_ylabel('Relative Residual')
+plt.legend()
+
+figname = f'./output/amg_convergence.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()

@@ -58,6 +58,8 @@ Preconditioning:
   - dir: eigensolver
     title: Eigenvalue Solvers
 Other Applications:
+  - dir: mesh_partition
+    title: Graph Partitioning
 """)
 
 # generate table and header
