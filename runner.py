@@ -31,6 +31,10 @@ Smoothed Aggregation AMG:
   - dir: solver_diagnostics
     title: Solver Diagnostics
     demo: demo.py --matrix 2
+  - dir: complex
+    title: Complex Arithmetic
+    demo: demo.py --solver 1
+
 Classical AMG:
 Rootnode AMG:
 Finite Elements:
@@ -67,7 +71,6 @@ for section in toc:
 
             demonames = [d.strip() for d in demo.get('demo', 'demo.py').split(',')]
             for demoname in demonames:
-                main += f'[{demoname}](https://github.com/pyamg/pyamg-examples/blob/master/{demo["dir"]}/{demoname.split()[0]})\n\n'
                 main += f'[{demoname}](./{demo["dir"]}/{demoname.split()[0]})\n\n'
             # get the readme
             with open(os.path.join(f"{demo['dir']}",'readme.md'), 'r') as f:

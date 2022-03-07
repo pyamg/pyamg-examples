@@ -14,8 +14,6 @@ https://github.com/pyamg/pyamg-examples.
 <a name="blackboxsolver"></a>
 ### Blackbox Solver
 
-[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/blackbox/demo.py)
-
 [demo.py](./blackbox/demo.py)
 
 This demo highlights using PyAMG's `blackbox` module, which attempts to solve
@@ -56,8 +54,6 @@ The demo produces residual norms that can vary from machine to machine.
 
 #### Aggregation
 
-[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/aggregation/demo.py)
-
 [demo.py](./aggregation/demo.py)
 
 In this example, the first-level aggregates are shown for AMG based on smoothed aggregation.
@@ -72,8 +68,6 @@ elements in the underlying mesh. Still, there are a many aggregates that yield
 
 #### One Dimensional Problem
 
-[demo.py](https://github.com/pyamg/pyamg-examples/blob/master/one_dimension/demo.py)
-
 [demo.py](./one_dimension/demo.py)
 
 This example illustrates the effect, in 1D, of smoothed aggregation on
@@ -85,11 +79,7 @@ this case) are plotted with the associated (smoothed) basis functions.
 
 #### Visualizing Aggregation
 
-[demo1.py](https://github.com/pyamg/pyamg-examples/blob/master/visualizing_aggregation/demo1.py)
-
 [demo1.py](./visualizing_aggregation/demo1.py)
-
-[demo2.py](https://github.com/pyamg/pyamg-examples/blob/master/visualizing_aggregation/demo2.py)
 
 [demo2.py](./visualizing_aggregation/demo2.py)
 
@@ -124,8 +114,6 @@ Start [Paraview](http://www.paravieworg/paraview/resources/software.php):
 
 
 #### Solver Diagnostics
-
-[demo.py --matrix 2](https://github.com/pyamg/pyamg-examples/blob/master/solver_diagnostics/demo.py)
 
 [demo.py --matrix 2](./solver_diagnostics/demo.py)
 
@@ -188,6 +176,58 @@ Searching for optimal smoothed aggregation method for (2500,2500) matrix
     Test 18 out of 18
     --> Diagnostic Results located in rot_ani_diff_diagnostic.txt
     --> See automatically generated function definition in rot_ani_diff_diagnostic.py
+```
+
+#### Complex Arithmetic
+
+[demo.py --solver 1](./complex/demo.py)
+
+The smoothed aggregation solver supports complex arithmetc and
+there is no conversion to an equivalent real system.  For example, the
+highlighted demo here generates a basic gauge Laplacian from quantum
+chromodynamics and solves the system for a random right-hand side and random
+initial guess.
+   
+Using
+```
+python demo.py --solver 1
+```
+results in the following.
+
+```
+residual at iteration  0: 2.00e+02
+residual at iteration  1: 1.21e+02
+residual at iteration  2: 2.47e+01
+residual at iteration  3: 5.40e+00
+residual at iteration  4: 1.46e+00
+residual at iteration  5: 4.60e-01
+residual at iteration  6: 1.58e-01
+residual at iteration  7: 5.77e-02
+residual at iteration  8: 2.20e-02
+residual at iteration  9: 8.70e-03
+residual at iteration 10: 3.53e-03
+residual at iteration 11: 1.46e-03
+residual at iteration 12: 6.12e-04
+residual at iteration 13: 2.59e-04
+residual at iteration 14: 1.11e-04
+residual at iteration 15: 4.75e-05
+residual at iteration 16: 2.04e-05
+residual at iteration 17: 8.82e-06
+residual at iteration 18: 3.81e-06
+residual at iteration 19: 1.65e-06
+residual at iteration 20: 7.13e-07
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:  1.344
+Grid Complexity:      1.184
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       10000        50000 [74.43%]
+     1        1658        15132 [22.53%]
+     2         170         1906 [2.84%]
+     3          12          138 [0.21%]
+     4           1            1 [0.00%]
+
 ```
 
 ***
