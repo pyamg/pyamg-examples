@@ -23,25 +23,32 @@ splitting = ml.levels[0].splitting
 C_nodes = splitting == 1
 F_nodes = splitting == 0
 
-fig, ax = plt.subplots(figsize=(6, 6))
+fig, ax = plt.subplots()
 alledges = V[E.ravel(),:].reshape((-1, 2, 2))
 col = mplt.collections.LineCollection(alledges,
                                       color=[0.7, 0.7, 0.7],
                                       linewidth=1.0)
 ax.add_collection(col, autolim=True)
-
 ax.autoscale_view()
 
-plt.scatter(V[:,0][C_nodes], V[:,1][C_nodes],
-            color=[232.0/255, 74.0/255, 39.0/255],
-            s=100.0, label='C pts', zorder=10)
-plt.scatter(V[:,0][F_nodes], V[:,1][F_nodes],
-            color=[19.0/255, 41.0/255, 75.0/255],
-            s=100.0, label='F pts', zorder=10)
+ax.scatter(V[:,0][C_nodes], V[:,1][C_nodes],
+           color=[232.0/255, 74.0/255, 39.0/255],
+           s=100.0, label='C-pts', zorder=10)
+ax.scatter(V[:,0][F_nodes], V[:,1][F_nodes],
+           color=[19.0/255, 41.0/255, 75.0/255],
+           s=100.0, label='F-pts', zorder=10)
 
-ax.axis('equal')
-l = plt.legend(framealpha=1.0, fontsize=16)
-l.set_zorder(20)
-plt.xlabel('X', fontsize=16)
-plt.ylabel('Y', fontsize=16)
-plt.show()
+ax.axis('square')
+ax.set_xlabel('$x$')
+ax.set_ylabel('$y$')
+
+plt.legend(bbox_to_anchor=(0,1.02,1,0.2), loc="lower left",
+           borderaxespad=0, ncol=2)
+
+figname = './output/splitting.png'
+import sys
+if len(sys.argv) > 1:
+    if sys.argv[1] == '--savefig':
+        plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()

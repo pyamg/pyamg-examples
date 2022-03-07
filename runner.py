@@ -37,8 +37,11 @@ Smoothed Aggregation AMG:
   - dir: nonsymmetric
     title: Nonsymmetric example
     demo: demo.py --solver 1
-
 Classical AMG:
+  - dir: coarse_fine_splitting
+    title: Coarse Fine Splitting
+  - dir: compatible_relaxation
+    title: Compatible Relaxation
 Rootnode AMG:
 Finite Elements:
 Preconditioning:

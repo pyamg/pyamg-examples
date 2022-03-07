@@ -316,6 +316,48 @@ residual at iteration 15: 4.32e-07
 ### Classical AMG
 
 
+#### Coarse Fine Splitting
+
+[demo.py](./coarse_fine_splitting/demo.py)
+
+The C/F splitting---i.e. the splitting of indices into strictly coarse nodes
+(C-pts) and strictly fine nodes (F-pts)---using Ruge-Stuben coarsening is
+illustrated in this example.  An example mesh and adjacency graph is loaded
+from `square.mat`, `ruge_stuben_solver()` is initiated, and the first level of
+splittings is plotted.  Printing the multilevel object in this case shows that
+the coarsening is typical: around 25% reduction in unknowns (or
+coarsening-by-four), as shown below. The demo also plots the coarse-fine
+splitting, with the orange C-pts and the blue F-pts.
+
+```
+MultilevelSolver
+Number of Levels:     2
+Operator Complexity:  1.327
+Grid Complexity:      1.267
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0         191         1243 [75.33%]
+     1          51          407 [24.67%]
+
+```
+
+<img src="./coarse_fine_splitting/output/splitting.png" width="300"/>
+
+
+#### Compatible Relaxation
+
+[demo.py](./compatible_relaxation/demo.py)
+
+The C/F splitting---i.e. the splitting of indices into strictly coarse nodes (C-pts)
+and strictly fine nodes (F-pts)---using Compatible Relaxation is illustrated in this
+example.  A 2d finite-difference matrix of the Poisson problem is used and the
+coarse and fine splitting is plotted.  Coarse nodes are
+highlighted orange, while fine nodes are highlighted blue.  In this case, the
+coarsening is not aggressive, resulting in a coarsening-by-two.
+
+<img src="./compatible_relaxation/output/crsplitting.png" width="300"/>
+
+
 ***
 
 <a name="rootnodeamg"></a>
