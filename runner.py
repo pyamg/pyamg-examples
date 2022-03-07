@@ -19,6 +19,9 @@ def exectute_demo(exampledir, name='demo.py'):
 mainreadme = 'readme.md'
 toc = yaml.safe_load("""
 Introduction:
+  - dir: helmholtz
+    title: Indefinite Helmholtz
+    demo: demo1d.py, demo2d.py
   - dir: 0_start_here
     title: Overview
 Blackbox Solver:

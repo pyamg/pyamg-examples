@@ -41,11 +41,11 @@ sa = pyamg.smoothed_aggregation_solver(A,
 # Solve
 residuals = []
 x = sa.solve(b, x0=x0, residuals=residuals, **SA_solve_args)
+residuals1 = residuals
 
-print("*************************************************************")
-print("A single constant mode for interpolation is an inefficient.")
-for i, r in enumerate(residuals):
-    print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
+#print("SA with B=1:")
+#for i, r in enumerate(residuals):
+#    print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
 
 # Construct solver using the wave-like modes for B
 sa = pyamg.smoothed_aggregation_solver(A,
@@ -59,27 +59,46 @@ sa = pyamg.smoothed_aggregation_solver(A,
 # Solve
 residuals = []
 x = sa.solve(b, x0=x0, residuals=residuals, **SA_solve_args)
+residualswave = residuals
 
-print("*************************************************************")
-print("The performance improves with wave-like interpolation.")
-for i, r in enumerate(residuals):
-    print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
+#print("SA with B=waves:")
+#for i, r in enumerate(residuals):
+#    print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
+fig, ax = plt.subplots()
+ax.semilogy(residuals1,    label='AMG with $B=1$')
+ax.semilogy(residualswave, label='AMG with $B=$wave')
+plt.legend()
+ax.set_title('AMG convergence for the 1D Helmholtz problem')
+figname = f'./output/helmholtz1dconv.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()
 
 # plot B vs. the lowest right singular vector, which represents
 # the near null-space, for a segment of the domain
-f, ax = plt.subplots(1, 1)
+fig, ax = plt.subplots()
+
 indys = np.arange(0, min(75, h))
 line_styles = ["-b", "--m", ":k"]
 for i in range(B.shape[1]):
-    plt.plot(vertices[indys, 0], np.real(B[indys, i]),
-             line_styles[i], label='NNS Mode {}'.format(i))
+    ax.plot(vertices[indys, 0], np.real(B[indys, i]),
+            line_styles[i], label='NNS Mode {}'.format(i))
 
 [U, S, V] = sla.svd(A.todense())
 V = V.T.copy()
 scale = 0.9 / max(np.real(V[indys, -1]))
-plt.plot(vertices[indys, 0], scale * np.real(np.ravel(V[indys, -1])),
-         line_styles[i + 1], label='Re$(\\nu)$')
 
-plt.title('Near Null-Space (NNS) vs. Lowest Right Singular Vector $\\nu$')
+ax.plot(vertices[indys, 0], scale * np.real(np.ravel(V[indys, -1])),
+        line_styles[i + 1], label='Re$(\\nu)$')
+
+ax.set_title('Near Null-Space (NNS) vs. Lowest Right Singular Vector $\\nu$')
 plt.legend(framealpha=1.0)
-plt.show()
+
+figname = f'./output/helmholtz1dwaves.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()

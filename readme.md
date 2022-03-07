@@ -16,6 +16,86 @@ https://github.com/pyamg/pyamg-examples.
 ### Introduction
 
 
+#### Indefinite Helmholtz
+
+[demo1d.py](./helmholtz/demo1d.py)
+
+[demo2d.py](./helmholtz/demo2d.py)
+
+The example focusses on the indefinite Helmholtz wave problem.  The first
+part highlights the value in using waves to represent the near-null space, `B`.
+In addition, we observe the waves to resemble the  (lowest) right singular vectors
+of the problem.
+
+In the case of 2D, discontinuous Galerkin is used, yielding multiple
+degrees of freedom at each spatial location.  As a result,
+the fine level (level-0) aggregates of the discontinuous
+elemeents, largely group neigboring vertices.  The wave-like near
+null-space is then enforced on the first coarse grid (level-1), resulting
+in four modes.
+
+```
+
+Running 2D Helmholtz Example
+-- 10.00 Points-per-wavelength
+-- 2.73e-01 = h,  2.50 = omega
+-- Discretized with a local discontinuous Galerkin method
+   on annulus-shaped domain
+Using only a constant mode for interpolation yields an inefficient solver.
+This is due to aliasing oscillatory, but algebraically smooth, modes on the coarse levels.
+residual at iteration  0: 3.14e+01
+residual at iteration  1: 4.00e+00
+residual at iteration  2: 2.53e+00
+residual at iteration  3: 9.74e-01
+residual at iteration  4: 2.76e-01
+residual at iteration  5: 1.22e-01
+residual at iteration  6: 5.91e-02
+residual at iteration  7: 2.64e-02
+residual at iteration  8: 1.48e-02
+residual at iteration  9: 6.75e-03
+residual at iteration 10: 3.30e-03
+residual at iteration 11: 1.73e-03
+residual at iteration 12: 6.48e-04
+residual at iteration 13: 3.75e-04
+residual at iteration 14: 1.44e-04
+residual at iteration 15: 6.55e-05
+residual at iteration 16: 3.85e-05
+residual at iteration 17: 1.34e-05
+residual at iteration 18: 7.11e-06
+residual at iteration 19: 3.81e-06
+residual at iteration 20: 9.36e-07
+Note the improved performance from using planewaves in B.
+residual at iteration  0: 3.05e+01
+residual at iteration  1: 2.62e-01
+residual at iteration  2: 2.42e-03
+residual at iteration  3: 2.88e-05
+residual at iteration  4: 3.29e-07
+residual at iteration  5: 3.87e-09
+MultilevelSolver
+Number of Levels:     4
+Operator Complexity:  1.435
+Grid Complexity:      1.411
+Coarse Solver:        'pinv2'
+  level   unknowns     nonzeros
+     0        2880        52016 [69.67%]
+     1         880        10480 [14.04%]
+     2         256         9856 [13.20%]
+     3          48         2304 [3.09%]
+
+```
+
+<img src="./helmholtz/output/helmholtz2dagg.png" width="300"/>
+
+
+<img src="./helmholtz/output/helmholtz1dwaves.png" width="300"/>
+
+
+<img src="./helmholtz/output/helmholtz1dconv.png" width="300"/>
+
+
+<img src="./helmholtz/output/helmholtz2dB.png" width="300"/>
+
+
 #### Overview
 
 [demo.py](./0_start_here/demo.py)
@@ -53,7 +133,7 @@ Coarse Solver:        'pinv'
      3          64          484 [0.12%]
      4           9           49 [0.01%]
 
-The residual norm is 0.19445108041220222
+The residual norm is 0.13013502420692594
 
 
 The Multigrid Hierarchy
@@ -76,11 +156,11 @@ Coarse Solver:        'pinv'
      0       40000       357604 [46.31%]
      1        6700       226352 [29.31%]
      2        1232       176222 [22.82%]
-     3         109        11829 [1.53%]
+     3         109        11827 [1.53%]
      4          13          169 [0.02%]
-     5           2            4 [0.00%]
+     5           4           16 [0.00%]
 
-The residual norm is 1.0743979739798777e-10
+The residual norm is 1.1048153918060711e-10
 
 
 ```
@@ -577,21 +657,21 @@ residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
 residual at iteration  2: 8.20e+00
 residual at iteration  3: 1.12e+00
-residual at iteration  4: 2.56e-01
-residual at iteration  5: 6.75e-02
-residual at iteration  6: 1.85e-02
-residual at iteration  7: 5.15e-03
+residual at iteration  4: 2.58e-01
+residual at iteration  5: 6.81e-02
+residual at iteration  6: 1.87e-02
+residual at iteration  7: 5.18e-03
 residual at iteration  8: 1.45e-03
-residual at iteration  9: 4.08e-04
+residual at iteration  9: 4.09e-04
 residual at iteration 10: 1.16e-04
-residual at iteration 11: 3.30e-05
-residual at iteration 12: 9.46e-06
-residual at iteration 13: 2.72e-06
-residual at iteration 14: 7.87e-07
-residual at iteration 15: 2.29e-07
-residual at iteration 16: 6.67e-08
-residual at iteration 17: 1.95e-08
-residual at iteration 18: 5.74e-09
+residual at iteration 11: 3.29e-05
+residual at iteration 12: 9.41e-06
+residual at iteration 13: 2.70e-06
+residual at iteration 14: 7.77e-07
+residual at iteration 15: 2.24e-07
+residual at iteration 16: 6.52e-08
+residual at iteration 17: 1.90e-08
+residual at iteration 18: 5.55e-09
 ```
 
 ***

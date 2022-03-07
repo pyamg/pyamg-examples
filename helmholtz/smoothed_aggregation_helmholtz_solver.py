@@ -18,7 +18,7 @@ from pyamg.aggregation.tentative import fit_candidates
 from pyamg.aggregation.smooth import jacobi_prolongation_smoother, \
                     richardson_prolongation_smoother, energy_prolongation_smoother
 
- 
+
 __all__ = ['smoothed_aggregation_helmholtz_solver', 'planewaves']
 
 def planewaves(X, Y, omega=1.0, angles=[0.0]):
@@ -34,21 +34,21 @@ def planewaves(X, Y, omega=1.0, angles=[0.0]):
         Helmholtz wave number, Laplace(u) + omega^2 u = f
     angles : {list}
         List of angles in [0, 2 pi] from which to generate planewaves
-    
+
     Returns
     -------
     Array of planewaves
-    
-    """   
+
+    """
 
     L = 2*len(angles)
     dimen = max(X.shape)
     W = numpy.zeros((L, dimen),dtype=complex)
-    
+
     if L == 0:
         W = W.T.copy()
         return W
-    
+
     X = numpy.ravel(X)
     Y = numpy.ravel(Y)
 
@@ -61,13 +61,13 @@ def planewaves(X, Y, omega=1.0, angles=[0.0]):
         W[counter,:] = numpy.real(wave)
         W[counter+1,:] = numpy.imag(wave)
         counter += 2
-    
+
     # write W row-wise for efficiency
     W = W.T.copy()
     return W
 
 def preprocess_planewaves(planewaves, max_levels):
-    # Helper function for smoothed_aggregation_solver.   
+    # Helper function for smoothed_aggregation_solver.
     # Will extend planewaves to a length max_levels list, repeating
     # the final element of planewaves if necessary.
 
@@ -87,13 +87,13 @@ def unpack_arg(v):
     else:
         return v,{}
 
-def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'last_level':0}), 
+def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'last_level':0}),
         symmetry='symmetric', strength='symmetric', aggregate='standard',
         smooth=('energy', {'krylov': 'gmres'}),
         presmoother=('gauss_seidel_nr',{'sweep':'symmetric'}),
         postsmoother=('gauss_seidel_nr',{'sweep':'symmetric'}),
         improve_candidates='default', max_levels = 10, max_coarse = 100, **kwargs):
-    
+
     """
     Create a multilevel solver using Smoothed Aggregation (SA) for a 2D Helmholtz operator
 
@@ -105,19 +105,19 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         [pw_0, pw_1, ..., pw_n], where the k-th tuple pw_k is of the form (fn,
         args).  fn is a callable and args is a dictionary of arguments for fn.
         This k-th tuple is used to define any new planewaves (i.e., new coarse
-        grid basis functions) to be appended to the existing B_k at that level. 
-            The function fn must return functions defined on the finest level, 
+        grid basis functions) to be appended to the existing B_k at that level.
+            The function fn must return functions defined on the finest level,
         i.e., a collection of vector(s) of length A.shape[0].  These vectors
-        are then restricted to the appropriate level, where they enrich the 
+        are then restricted to the appropriate level, where they enrich the
         coarse space.
             Instead of a tuple, None can be used to stipulate no introduction
-        of planewaves at that level.  If len(planewaves) < max_levels, the 
+        of planewaves at that level.  If len(planewaves) < max_levels, the
         last entry is used to define coarser level planewaves.
     use_constant : {tuple}
-        Tuple of the form (bool, {'last_level':int}).  The boolean denotes 
+        Tuple of the form (bool, {'last_level':int}).  The boolean denotes
         whether to introduce the constant in B at level 0.  'last_level' denotes
         the final level to use the constant in B.  That is, if 'last_level' is 1,
-        then the vector in B corresponding to the constant on level 0 is dropped 
+        then the vector in B corresponding to the constant on level 0 is dropped
         from B at level 2.
             This is important, because using constant based interpolation beyond
         the Nyquist rate will result in poor solver performance.
@@ -131,7 +131,7 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         Method used to determine the strength of connection between unknowns of
         the linear system.  Method-specific parameters may be passed in using a
         tuple, e.g. strength=('symmetric',{'theta' : 0.25 }). If strength=None,
-        all nonzero entries of the matrix are considered strong.  
+        all nonzero entries of the matrix are considered strong.
             See notes below for varying this parameter on a per level basis.  Also,
         see notes below for using a predefined strength matrix on each level.
     aggregate : ['standard', 'lloyd', 'naive', ('predefined', {'AggOp' : csr_matrix})]
@@ -159,12 +159,12 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
     max_levels : {integer} : default 10
         Maximum number of levels to be used in the multilevel solver.
     max_coarse : {integer} : default 500
-        Maximum number of variables permitted on the coarse grid. 
+        Maximum number of variables permitted on the coarse grid.
 
     Other Parameters
     ----------------
     coarse_solver : ['splu','lu', ... ]
-        Solver used at the coarsest level of the MG hierarchy 
+        Solver used at the coarsest level of the MG hierarchy
 
     Returns
     -------
@@ -186,7 +186,7 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
       levels, use a list as input so that the ith entry defines the method at
       the ith level.  If there are more levels in the hierarchy than list
       entries, the last entry will define the method for all levels lower.
-      
+
       Examples are:
       smooth=[('jacobi', {'omega':1.0}), None, 'jacobi']
       presmoother=[('block_gauss_seidel', {'sweep':symmetric}), 'sor']
@@ -202,7 +202,7 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
       degree-of-freedom in C0 represents a supernode.  For instance to
       predefine a three-level hierarchy, use [('predefined', {'C' : C0}),
       ('predefined', {'C' : C1}) ].
-      
+
       Similarly for predefined aggregation, use a list of tuples.  For instance
       to predefine a three-level hierarchy, use [('predefined', {'AggOp' :
       Agg0}), ('predefined', {'AggOp' : Agg1}) ], where the dimensions of A,
@@ -231,14 +231,14 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         raise TypeError('argument A must have type csr_matrix or bsr_matrix')
 
     A = A.asfptype()
-    
+
     if (symmetry != 'symmetric') and (symmetry != 'hermitian') and (symmetry != 'nonsymmetric'):
         raise ValueError('expected \'symmetric\', \'nonsymmetric\' or \'hermitian\' for the symmetry parameter ')
     A.symmetry = symmetry
 
     if A.shape[0] != A.shape[1]:
         raise ValueError('expected square matrix')
-    
+
     ##
     # Preprocess and extend planewaves to length max_levels
     planewaves = preprocess_planewaves(planewaves, max_levels)
@@ -249,14 +249,14 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         first_planewave_level += 1
         if pw is not None:
             break
-    ##    
+    ##
     if (use_const == False) and (planewaves[0] == None):
         raise ValueError('No functions defined for B on the finest level, ' + \
               'either use_constant must be true, or planewaves must be defined for level 0')
     elif (use_const == True) and (args['last_level'] < first_planewave_level-1):
         raise ValueError('Some levels have no function(s) defined for B.  ' + \
                          'Change use_constant and/or planewave arguments.')
-        
+
     ##
     # Levelize the user parameters, so that they become lists describing the
     # desired user option on each level.
@@ -291,7 +291,7 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
             # As in alpha-SA, relax the candidates before restriction
             if improve_candidates[0] is not None:
                 Bcoarse2 = relaxation_as_linear_operator(improve_candidates[0], A, zeros_0)*Bcoarse2
-            
+
             ##
             # Restrict Bcoarse2 to current level
             for i in range(len(levels)-1):
@@ -308,17 +308,17 @@ def smoothed_aggregation_helmholtz_solver(A, planewaves, use_constant=(True, {'l
         if use_const and len(levels) == 1:
             # If level 0, and the constant is to be used in interpolation
            levels[0].B = numpy.hstack( (numpy.ones((A.shape[0],1), dtype=A.dtype), Bcoarse2) )
-        elif use_const and args['last_level'] == len(levels)-2: 
+        elif use_const and args['last_level'] == len(levels)-2:
             # If the previous level was the last level to use the constant, then remove the
             # coarse grid function based on the constant from B
             levels[-1].B = numpy.hstack( (levels[-1].B[:,1:], Bcoarse2) )
         else:
             levels[-1].B = numpy.hstack((levels[-1].B, Bcoarse2))
-        
+
         ##
         # Create and Append new level
         _extend_hierarchy(levels, strength, aggregate, smooth, [None for i in range(max_levels)] ,keep=True)
-    
+
     ml = multilevel_solver(levels, **kwargs)
     change_smoothers(ml, presmoother, postsmoother)
     return ml

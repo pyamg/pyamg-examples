@@ -3,10 +3,11 @@
 """
 import numpy as np
 import pyamg
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+from matplotlib.collections import PatchCollection
 
 from smoothed_aggregation_helmholtz_solver import smoothed_aggregation_helmholtz_solver, planewaves
-
-from my_vis import my_vis, shrink_elmts
 
 # Retrieve 2-D Helmholtz Operator and problem data.
 # This is operator was discretized with a local
@@ -39,7 +40,7 @@ strength = [('distance', {'V': vertices, 'theta': 1e-5, 'relative_drop': False})
             ('symmetric', {'theta': 0.00})]
 
 # Prolongator smoother
-smooth = ('energy', {'krylov': 'cgnr'})
+smooth = ('energy', {'krylov': 'cgnr', 'weighting': 'diagonal'})
 
 # Aggregation -- non-standard 'naive' aggregation is done on level 0 so that
 # only algebraic neighbors at the same spatial location are aggregated
@@ -86,7 +87,6 @@ sa = smoothed_aggregation_helmholtz_solver(A,
 residuals = []
 x = sa.solve(b, x0=x0, residuals=residuals, **SA_solve_args)
 
-print("*************************************************************")
 print("Using only a constant mode for interpolation yields an inefficient solver.")
 print("This is due to aliasing oscillatory, but algebraically smooth, modes on the coarse levels.")
 for i, r in enumerate(residuals):
@@ -125,10 +125,60 @@ sa = smoothed_aggregation_helmholtz_solver(
 # Solve
 residuals = []
 x = sa.solve(b, x0=x0, residuals=residuals, **SA_solve_args)
-print("*************************************************************")
 print("Note the improved performance from using planewaves in B.")
 for i, r in enumerate(residuals):
     print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
 
-elements2, vertices2 = shrink_elmts(elements, vertices)
-my_vis(sa, vertices2, error=abs(x), fname='helmholtz_', E2V=elements2)
+#elements2, vertices2 = shrink_elmts(elements, vertices)
+#my_vis(sa, vertices2, error=abs(x), fname='helmholtz_', E2V=elements2)
+
+print(sa)
+# first shrink the elements
+E = elements
+Vs = np.zeros((3*E.shape[0], 3))
+shrink = 0.75
+for i, e in enumerate(E):
+    xy = vertices[e, :]
+    xymean = xy.mean(axis=0)
+    Vs[e,:] = shrink * xy + (1-shrink) * np.kron(xy.mean(axis=0), np.ones((3, 1)))
+
+AggOp = sa.levels[0].AggOp
+count = np.array(AggOp.sum(axis=0)).ravel()
+Vc = AggOp.T @ vertices
+Vc[:,0] /= count
+Vc[:,1] /= count
+I  = E.ravel()
+J = AggOp.indices[I]
+Ec = J.reshape(E.shape)
+
+fig, ax = plt.subplots()
+ax.triplot(Vs[:,0], Vs[:,1], E, lw=0.5)
+
+from cycler import cycler
+for aggs in AggOp.T:
+    I = aggs.indices
+    ax.plot(Vs[I,0], Vs[I,1], 'o', ms=2)
+ax.set_title('Level-0 aggregates')
+ax.axis('square')
+ax.axis('off')
+figname = f'./output/helmholtz2dagg.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()
+
+fig, axs = plt.subplots(nrows=2, ncols=2)
+for i, ax in enumerate(axs.ravel()):
+    B0 = sa.levels[1].B[:,i]
+    ax.tripcolor(Vc[:,0], Vc[:,1], B0.real, Ec, lw=1.5)
+    ax.set_title(f'Level-1 $B_{i}$')
+    ax.axis('square')
+    ax.axis('off')
+
+figname = f'./output/helmholtz2dB.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()
