@@ -265,8 +265,8 @@ def dg_vis(fname, Vert, E2V, Agg, mesh_type, A=None):
     cdata = {3: colors2, 5: colors3}
 
     pyamg.vis.write_vtu(
-        Verts=Vert,
-        Cells=Cells,
+        V=Vert,
+        cells=Cells,
         pdata=None,
         cdata=cdata,
         pvdata=None,
@@ -355,8 +355,8 @@ def my_vis(ml, V, error=None, fname="", E2V=None, Pcols=None):
         Agg.data[:] = 1.0
         Agglist.append(Agg)
 
-        AggX = pyamg.util.scale_rows(Agg, Vlist[0][:, 0], copy=True)
-        AggY = pyamg.util.scale_rows(Agg, Vlist[0][:, 1], copy=True)
+        AggX = pyamg.util.utils.scale_rows(Agg, Vlist[0][:, 0], copy=True)
+        AggY = pyamg.util.utils.scale_rows(Agg, Vlist[0][:, 1], copy=True)
         AggX = ones((1, AggX.shape[0])) * AggX
         AggY = ones((1, AggY.shape[0])) * AggY
         Agg = Agg.tocsc()
@@ -378,6 +378,7 @@ def my_vis(ml, V, error=None, fname="", E2V=None, Pcols=None):
         vertices = Vlist[i]
         elements = E2Vlist[i]
         # Print mesh
+        print(i)
         pyamg.vis.write_basic_mesh(vertices, elements, mesh_type=mesh_type,
                                    fname=fname + "mesh_lvl" + str(i) + ".vtu")
         # Visualize the aggregates
@@ -392,8 +393,8 @@ def my_vis(ml, V, error=None, fname="", E2V=None, Pcols=None):
         cell_stuff = {mesh_num: elements}
         for j in range(nPDEs):
             indys = np.arange(j, levels[i].A.shape[0], nPDEs)
-            pyamg.vis.write_vtu(Verts=vertices,
-                                Cells=cell_stuff,
+            pyamg.vis.write_vtu(V=vertices,
+                                cells=cell_stuff,
                                 pdata=levels[i].B[indys, :].real,
                                 fname=fname + "B_variable" + str(j) + "_lvl" + str(i) + ".vtu")
 
@@ -405,8 +406,8 @@ def my_vis(ml, V, error=None, fname="", E2V=None, Pcols=None):
             for i in cols:
                 Pcol = array(P[:, i].todense())
                 pyamg.vis.write_vtu(
-                    Verts=Vlist[lvl],
-                    Cells=cell_stuff,
+                    V=Vlist[lvl],
+                    cells=cell_stuff,
                     pdata=Pcol,
                     fname=fname + "P_lvl" + str(lvl) + "col" + str(i) + ".vtu")
 
@@ -420,5 +421,5 @@ def my_vis(ml, V, error=None, fname="", E2V=None, Pcols=None):
             nPDEs = 1
         for j in range(nPDEs):
             indys = np.arange(j, levels[0].A.shape[0], nPDEs)
-            pyamg.vis.write_vtu(Verts=Vlist[0], Cells=cell_stuff, pdata=error[indys, :],
+            pyamg.vis.write_vtu(V=Vlist[0], cells=cell_stuff, pdata=error[indys, :],
                                 fname=fname + "error_variable" + str(j) + ".vtu")

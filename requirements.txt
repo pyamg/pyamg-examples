@@ -1,0 +1,4 @@
+pyamg
+matplotlib
+vedo
+pyinstrument

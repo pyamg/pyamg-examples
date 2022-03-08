@@ -4,3 +4,4 @@
 __pycache__
 *.so
 *.bak
+*.vtu
