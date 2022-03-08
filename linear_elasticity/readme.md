@@ -3,9 +3,9 @@ example (corresponding to a simple finite element discretization on a regular
 grid).  Three near null space modes are fed to the
 `smoothed_aggregation_solver()` (relating to rotation and two types of
 translation).  Smoothed aggregation and root node are ideal for this problem
-and the results are apparent.  Very low operator complexities and the
-convergence is quick, whether you choose the root node or smoothed aggregation
-solver.
+and the results are apparent.  Very low operator complexities are observed and
+the convergence is quick, whether you choose the root node or smoothed
+aggregation solver.
 
 Using
 

@@ -6,6 +6,6 @@ of the problem.
 In the case of 2D, discontinuous Galerkin is used, yielding multiple
 degrees of freedom at each spatial location.  As a result,
 the fine level (level-0) aggregates of the discontinuous
-elemeents, largely group neigboring vertices.  The wave-like near
+elements, largely group neighboring vertices.  The wave-like near
 null-space is then enforced on the first coarse grid (level-1), resulting
 in four modes.
