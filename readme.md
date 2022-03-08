@@ -198,7 +198,7 @@ Start [Paraview](http://www.paravieworg/paraview/resources/software.php):
 [demo.py --matrix 2](./solver_diagnostics/demo.py)
 
 AMG has a range of parameter choices; selecting the optimal combination
-can be challenging yet can lead to significant improvements in convergences.
+can be challenging yet can lead to significant improvements in convergence.
 This example highlights a "solver diagnostics" function that makes finding good parameter
 choices a bit easier.  A brute force search is applied, and depending on the matrix
 characteristics (e.g., symmetry and definiteness), 60-120 different solvers are
