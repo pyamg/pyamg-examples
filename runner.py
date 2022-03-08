@@ -45,6 +45,8 @@ Classical AMG:
     title: Coarse Fine Splitting
   - dir: compatible_relaxation
     title: Compatible Relaxation
+  - dir: strength_options
+    title: Stength of Connection
 Rootnode AMG:
   - dir: rootnode
     title: Rootnode AMG

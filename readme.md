@@ -54,7 +54,7 @@ Coarse Solver:        'pinv'
      3          64          484 [0.12%]
      4           9           49 [0.01%]
 
-The residual norm is 0.20899882235741957
+The residual norm is 0.18950389529528489
 
 
 The Multigrid Hierarchy
@@ -70,18 +70,18 @@ Details: Specialized AMG
 ------------------------
 MultilevelSolver
 Number of Levels:     6
-Operator Complexity:  2.159
-Grid Complexity:      1.201
+Operator Complexity:  2.164
+Grid Complexity:      1.202
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
-     0       40000       357604 [46.32%]
-     1        6700       226352 [29.32%]
-     2        1232       176224 [22.83%]
-     3         108        11634 [1.51%]
+     0       40000       357604 [46.21%]
+     1        6700       226352 [29.25%]
+     2        1237       177891 [22.99%]
+     3         109        11813 [1.53%]
      4          13          169 [0.02%]
-     5           2            4 [0.00%]
+     5           3            9 [0.00%]
 
-The residual norm is 1.1177737356252396e-10
+The residual norm is 1.0658088716615871e-10
 
 
 ```
@@ -438,6 +438,27 @@ coarsening is not aggressive, resulting in a coarsening-by-two.
 <img src="./compatible_relaxation/output/crsplitting.png" width="300"/>
 
 
+#### Stength of Connection
+
+[demo.py](./strength_options/demo.py)
+
+In this example we look at several strength of connection measures, including `symmetric`,
+`evolution`, `affinity`, and `algebraic_distance`.  From the output, we see the large impact
+on convergence and the variability due to parameter selection.
+
+```
+running symmetric: theta=0.0
+running symmetric: theta=0.25
+running evolution: epsilon=4.0
+running affinity: epsilon=3.0, R=10, alpha=0.5, k=20
+running affinity: epsilon=4.0, R=10, alpha=0.5, k=20
+running algebraic_distance: epsilon=2.0, p=inf, R=10, alpha=0.5, k=20
+running algebraic_distance: epsilon=3.0, p=inf, R=10, alpha=0.5, k=20
+```
+
+<img src="./strength_options/output/strength_options.png" width="300"/>
+
+
 ***
 
 <a name="rootnodeamg"></a>
@@ -576,23 +597,23 @@ Number of iterations:  19d
 
 residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
-residual at iteration  2: 8.19e+00
+residual at iteration  2: 8.20e+00
 residual at iteration  3: 1.12e+00
 residual at iteration  4: 2.58e-01
-residual at iteration  5: 6.83e-02
-residual at iteration  6: 1.88e-02
-residual at iteration  7: 5.22e-03
-residual at iteration  8: 1.47e-03
-residual at iteration  9: 4.14e-04
-residual at iteration 10: 1.18e-04
-residual at iteration 11: 3.35e-05
-residual at iteration 12: 9.60e-06
+residual at iteration  5: 6.81e-02
+residual at iteration  6: 1.87e-02
+residual at iteration  7: 5.20e-03
+residual at iteration  8: 1.46e-03
+residual at iteration  9: 4.13e-04
+residual at iteration 10: 1.17e-04
+residual at iteration 11: 3.34e-05
+residual at iteration 12: 9.59e-06
 residual at iteration 13: 2.76e-06
-residual at iteration 14: 7.97e-07
-residual at iteration 15: 2.31e-07
-residual at iteration 16: 6.73e-08
-residual at iteration 17: 1.97e-08
-residual at iteration 18: 5.78e-09
+residual at iteration 14: 7.98e-07
+residual at iteration 15: 2.32e-07
+residual at iteration 16: 6.75e-08
+residual at iteration 17: 1.98e-08
+residual at iteration 18: 5.81e-09
 ```
 
 ***
@@ -870,51 +891,49 @@ a smoothed aggregation solver:
 
 ```
 
-  _     ._   __/__   _ _  _  _ _/_   Recorded: 19:46:22  Samples:  574
- /_//_/// /_\ / //_// / //_'/ //     Duration: 1.707     CPU time: 7.036
+  _     ._   __/__   _ _  _  _ _/_   Recorded: 20:40:14  Samples:  620
+ /_//_/// /_\ / //_// / //_'/ //     Duration: 1.857     CPU time: 8.150
 /   _/                      v4.1.1
 
 Program: demo.py --savefig
 
-[31m1.706[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
-└─ [31m1.706[0m [48;5;24m[38;5;15msmoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
-   ├─ [31m1.348[0m [48;5;24m[38;5;15m_extend_hierarchy[0m  [2mpyamg/aggregation/aggregation.py:288[0m
-   │  ├─ [33m1.017[0m [48;5;24m[38;5;15mjacobi_prolongation_smoother[0m  [2mpyamg/aggregation/smooth.py:61[0m
-   │  │  ├─ [33m0.881[0m [48;5;24m[38;5;15mapproximate_spectral_radius[0m  [2mpyamg/util/linalg.py:257[0m
-   │  │  │  ├─ [33m0.722[0m [48;5;24m[38;5;15m_approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
-   │  │  │  │  ├─ [33m0.460[0m [self][0m  [2m[0m
-   │  │  │  │  ├─ [32m0.147[0m __mul__[0m  [2mscipy/sparse/linalg/_interface.py:392[0m
-   │  │  │  │  │     [20 frames hidden]  [2mscipy, <built-in>, numpy[0m
-   │  │  │  │  └─ [32m0.112[0m dot[0m  [2m<__array_function__ internals>:177[0m
-   │  │  │  │        [4 frames hidden]  [2m<__array_function__ internals>, <buil...[0m
-   │  │  │  ├─ [32m0.104[0m hstack[0m  [2m<__array_function__ internals>:177[0m
+[31m1.856[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
+└─ [31m1.856[0m [48;5;24m[38;5;15msmoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
+   ├─ [31m1.519[0m [48;5;24m[38;5;15m_extend_hierarchy[0m  [2mpyamg/aggregation/aggregation.py:288[0m
+   │  ├─ [33m1.079[0m [48;5;24m[38;5;15mjacobi_prolongation_smoother[0m  [2mpyamg/aggregation/smooth.py:61[0m
+   │  │  ├─ [33m0.950[0m [48;5;24m[38;5;15mapproximate_spectral_radius[0m  [2mpyamg/util/linalg.py:257[0m
+   │  │  │  ├─ [33m0.809[0m [48;5;24m[38;5;15m_approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
+   │  │  │  │  ├─ [33m0.482[0m [self][0m  [2m[0m
+   │  │  │  │  ├─ [32m0.166[0m dot[0m  [2m<__array_function__ internals>:177[0m
+   │  │  │  │  │     [4 frames hidden]  [2m<__array_function__ internals>, <buil...[0m
+   │  │  │  │  └─ [32m0.150[0m __mul__[0m  [2mscipy/sparse/linalg/_interface.py:392[0m
+   │  │  │  │        [20 frames hidden]  [2mscipy, <built-in>[0m
+   │  │  │  ├─ [32m0.107[0m hstack[0m  [2m<__array_function__ internals>:177[0m
    │  │  │  │     [5 frames hidden]  [2m<__array_function__ internals>, numpy...[0m
-   │  │  │  └─ [92m[2m0.041[0m dot[0m  [2m<__array_function__ internals>:177[0m
+   │  │  │  └─ [92m[2m0.019[0m dot[0m  [2m<__array_function__ internals>:177[0m
    │  │  │        [3 frames hidden]  [2m<__array_function__ internals>, <buil...[0m
-   │  │  ├─ [92m[2m0.051[0m __mul__[0m  [2mscipy/sparse/_base.py:582[0m
-   │  │  │     [19 frames hidden]  [2mscipy, <built-in>[0m
-   │  │  ├─ [92m[2m0.034[0m __sub__[0m  [2mscipy/sparse/_base.py:479[0m
-   │  │  │     [17 frames hidden]  [2mscipy, <built-in>[0m
+   │  │  ├─ [92m[2m0.059[0m __mul__[0m  [2mscipy/sparse/_base.py:582[0m
+   │  │  │     [18 frames hidden]  [2mscipy, <built-in>[0m
+   │  │  ├─ [92m[2m0.023[0m __sub__[0m  [2mscipy/sparse/_base.py:479[0m
+   │  │  │     [16 frames hidden]  [2mscipy, <built-in>[0m
    │  │  └─ [92m[2m0.019[0m [48;5;24m[38;5;15mget_diagonal[0m  [2mpyamg/util/utils.py:530[0m
-   │  ├─ [32m0.142[0m __mul__[0m  [2mscipy/sparse/_base.py:582[0m
-   │  │     [14 frames hidden]  [2mscipy, <built-in>[0m
-   │  ├─ [92m[2m0.079[0m __mul__[0m  [2mscipy/sparse/linalg/_interface.py:392[0m
+   │  ├─ [32m0.271[0m __mul__[0m  [2mscipy/sparse/_base.py:582[0m
+   │  │     [16 frames hidden]  [2mscipy, <built-in>[0m
+   │  ├─ [92m[2m0.077[0m __mul__[0m  [2mscipy/sparse/linalg/_interface.py:392[0m
    │  │     [4 frames hidden]  [2mscipy[0m
-   │  │        [92m[2m0.079[0m _matvec[0m  [2mscipy/sparse/linalg/_interface.py:529[0m
-   │  │        └─ [92m[2m0.079[0m [48;5;24m[38;5;15mmatvec[0m  [2mpyamg/relaxation/utils.py:73[0m
-   │  │           └─ [92m[2m0.079[0m [48;5;24m[38;5;15msmoother[0m  [2mpyamg/relaxation/smoothing.py:446[0m
-   │  │              └─ [92m[2m0.079[0m [48;5;24m[38;5;15mgauss_seidel[0m  [2mpyamg/relaxation/relaxation.py:276[0m
-   │  │                 └─ [92m[2m0.079[0m [48;5;24m[38;5;15mgauss_seidel[0m  [2mpyamg/relaxation/relaxation.py:276[0m
-   │  │                    └─ [92m[2m0.079[0m PyCapsule.gauss_seidel[0m  [2m<built-in>:0[0m
+   │  │        [92m[2m0.077[0m _matvec[0m  [2mscipy/sparse/linalg/_interface.py:529[0m
+   │  │        └─ [92m[2m0.077[0m [48;5;24m[38;5;15mmatvec[0m  [2mpyamg/relaxation/utils.py:73[0m
+   │  │           └─ [92m[2m0.077[0m [48;5;24m[38;5;15msmoother[0m  [2mpyamg/relaxation/smoothing.py:446[0m
+   │  │              └─ [92m[2m0.077[0m [48;5;24m[38;5;15mgauss_seidel[0m  [2mpyamg/relaxation/relaxation.py:276[0m
+   │  │                 └─ [92m[2m0.077[0m [48;5;24m[38;5;15mgauss_seidel[0m  [2mpyamg/relaxation/relaxation.py:276[0m
+   │  │                    └─ [92m[2m0.077[0m PyCapsule.gauss_seidel[0m  [2m<built-in>:0[0m
    │  │                          [2 frames hidden]  [2m<built-in>[0m
-   │  ├─ [92m[2m0.047[0m [48;5;24m[38;5;15msymmetric_strength_of_connection[0m  [2mpyamg/strength.py:213[0m
-   │  │  └─ [92m[2m0.024[0m [48;5;24m[38;5;15mscale_rows_by_largest_entry[0m  [2mpyamg/util/utils.py:1738[0m
-   │  ├─ [92m[2m0.028[0m [48;5;24m[38;5;15mfit_candidates[0m  [2mpyamg/aggregation/tentative.py:9[0m
-   │  └─ [92m[2m0.024[0m __getattr__[0m  [2mscipy/sparse/_base.py:739[0m
-   │        [9 frames hidden]  [2mscipy, <built-in>[0m
-   └─ [33m0.354[0m kron[0m  [2m<__array_function__ internals>:177[0m
-         [8 frames hidden]  [2m<__array_function__ internals>, numpy...[0m
-            [33m0.353[0m implement_array_function[0m  [2m<built-in>:0[0m
+   │  ├─ [92m[2m0.037[0m [48;5;24m[38;5;15msymmetric_strength_of_connection[0m  [2mpyamg/strength.py:213[0m
+   │  ├─ [92m[2m0.020[0m __getattr__[0m  [2mscipy/sparse/_base.py:739[0m
+   │  │     [13 frames hidden]  [2mscipy, <built-in>, numpy[0m
+   │  └─ [92m[2m0.020[0m [48;5;24m[38;5;15mfit_candidates[0m  [2mpyamg/aggregation/tentative.py:9[0m
+   └─ [32m0.333[0m kron[0m  [2m<__array_function__ internals>:177[0m
+         [9 frames hidden]  [2m<__array_function__ internals>, numpy...[0m
 
 
 ```
