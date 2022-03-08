@@ -1,3 +1,4 @@
 pyamg
 matplotlib
 vedo
+pyinstrument

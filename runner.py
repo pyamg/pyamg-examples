@@ -68,6 +68,11 @@ Other Applications:
     demo: demo1d.py, demo2d.py
   - dir: diffusion_dg
     title: High-Order DG on Poisson
+  - dir: edge_amg
+    title: Edge-based AMG
+Other:
+  - dir: profile_pyamg
+    title: Profiling Performance
 """)
 
 # generate table and header
