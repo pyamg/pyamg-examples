@@ -54,7 +54,7 @@ Coarse Solver:        'pinv'
      3          64          484 [0.12%]
      4           9           49 [0.01%]
 
-The residual norm is 0.18950389529528489
+The residual norm is 0.22418690473369335
 
 
 The Multigrid Hierarchy
@@ -70,18 +70,18 @@ Details: Specialized AMG
 ------------------------
 MultilevelSolver
 Number of Levels:     6
-Operator Complexity:  2.164
-Grid Complexity:      1.202
+Operator Complexity:  2.159
+Grid Complexity:      1.201
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
-     0       40000       357604 [46.21%]
-     1        6700       226352 [29.25%]
-     2        1237       177891 [22.99%]
-     3         109        11813 [1.53%]
+     0       40000       357604 [46.31%]
+     1        6700       226352 [29.31%]
+     2        1232       176222 [22.82%]
+     3         109        11829 [1.53%]
      4          13          169 [0.02%]
-     5           3            9 [0.00%]
+     5           2            4 [0.00%]
 
-The residual norm is 1.0658088716615871e-10
+The residual norm is 1.1033780992716918e-10
 
 
 ```
@@ -137,7 +137,7 @@ The demo produces residual norms that can vary from machine to machine.
 [demo.py](./aggregation/demo.py)
 
 In this example, the first-level aggregates are shown for AMG based on smoothed aggregation.
-An example mesh and adjacency matrix are loaded from `square.mat`, followed by a call to
+An example mesh and adjacency matrix is loaded from `square.mat`, followed by a call to
 `smoothed_aggregation_solver`.  Then the first-level aggregates are
 plotted. From the figure, most aggregates encompass entire groups of
 elements in the underlying mesh. Still, there are a many aggregates that yield
@@ -404,7 +404,7 @@ The C/F splitting---i.e. the splitting of indices into strictly coarse nodes
 (C-pts) and strictly fine nodes (F-pts)---using Ruge-Stuben coarsening is
 illustrated in this example.  An example mesh and adjacency graph is loaded
 from `square.mat`, `ruge_stuben_solver()` is initiated, and the first level of
-splittings is plotted.  Printing the multilevel object in this case shows that
+C/F splitting is plotted.  Printing the multilevel object in this case shows that
 the coarsening is typical: around 25% reduction in unknowns (or
 coarsening-by-four), as shown below. The demo also plots the coarse-fine
 splitting, with the orange C-pts and the blue F-pts.
@@ -568,9 +568,9 @@ example (corresponding to a simple finite element discretization on a regular
 grid).  Three near null space modes are fed to the
 `smoothed_aggregation_solver()` (relating to rotation and two types of
 translation).  Smoothed aggregation and root node are ideal for this problem
-and the results are apparent.  Very low operator complexities and the
-convergence is quick, whether you choose the root node or smoothed aggregation
-solver.
+and the results are apparent.  Very low operator complexities are observed and
+the convergence is quick, whether you choose the root node or smoothed
+aggregation solver.
 
 Using
 
@@ -599,21 +599,21 @@ residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
 residual at iteration  2: 8.20e+00
 residual at iteration  3: 1.12e+00
-residual at iteration  4: 2.58e-01
-residual at iteration  5: 6.81e-02
-residual at iteration  6: 1.87e-02
-residual at iteration  7: 5.20e-03
-residual at iteration  8: 1.46e-03
-residual at iteration  9: 4.13e-04
-residual at iteration 10: 1.17e-04
-residual at iteration 11: 3.34e-05
-residual at iteration 12: 9.59e-06
-residual at iteration 13: 2.76e-06
-residual at iteration 14: 7.98e-07
-residual at iteration 15: 2.32e-07
-residual at iteration 16: 6.75e-08
-residual at iteration 17: 1.98e-08
-residual at iteration 18: 5.81e-09
+residual at iteration  4: 2.56e-01
+residual at iteration  5: 6.74e-02
+residual at iteration  6: 1.85e-02
+residual at iteration  7: 5.13e-03
+residual at iteration  8: 1.44e-03
+residual at iteration  9: 4.04e-04
+residual at iteration 10: 1.14e-04
+residual at iteration 11: 3.26e-05
+residual at iteration 12: 9.30e-06
+residual at iteration 13: 2.67e-06
+residual at iteration 14: 7.68e-07
+residual at iteration 15: 2.22e-07
+residual at iteration 16: 6.45e-08
+residual at iteration 17: 1.88e-08
+residual at iteration 18: 5.50e-09
 ```
 
 ***
@@ -627,10 +627,10 @@ residual at iteration 18: 5.81e-09
 [demo.py --solver 1](./preconditioning/demo.py)
 
 This example shows how to effectively use multilevel solvers to
-precondtion a Krylov method. The first example considers the Poisson problem
+precondition a Krylov method. The first example considers the Poisson problem
 from the pyamg gallery and uses a constant near-nullspace vector for SA-AMG.
 The second example is 2D linear elasticity also from the pyamg gallery and uses
-the typical three ridgid body modes (rotation and translation in x and y) to
+the typical three rigid body modes (rotation and translation in x and y) to
 coach SA-AMG. Since both problems are symmetric and positive definite, CG
 acceleration is used. The residual histories show a clear improvement in using
 the SA-AMG preconditioners in both cases.
@@ -701,7 +701,7 @@ eigensubspace is extremely fast.
 
 [demo.py](./mesh_partition/demo.py)
 
-In this example we computing a partition of a basic crack mesh (`crack_mesh.mat`)
+In this example, we compute a partition of a basic cracked mesh (`crack_mesh.mat`)
 using the Fiedler vector (the second lowest eigenmode of the graph laplacian).
 We construct a SA-AMG preconditioner to assist LOBPCG in finding the Fiedler
 vector.  Positive/negative values of the Fiedler vector are plotted in
@@ -724,7 +724,7 @@ of the problem.
 In the case of 2D, discontinuous Galerkin is used, yielding multiple
 degrees of freedom at each spatial location.  As a result,
 the fine level (level-0) aggregates of the discontinuous
-elemeents, largely group neigboring vertices.  The wave-like near
+elements, largely group neighboring vertices.  The wave-like near
 null-space is then enforced on the first coarse grid (level-1), resulting
 in four modes.
 
@@ -867,10 +867,10 @@ Coarse Solver:        'pinv2'
 
 [demo.py](./edge_amg/demo.py)
 
-This example highlights the lowest order edge AMG implementation of
+This example highlights the lowest order edge AMG implementation of the
 Reitzinger-Schoberl algorithm.  From the convergence figure we observe
 significant improvements over out-of-the-box AMG due to the use of
-specialized relaxation method (`hiptmair_smoother`).
+the specialized relaxation method (`hiptmair_smoother`).
 
 <img src="./edge_amg/output/edgeAMG_convergence.png" width="300"/>
 
@@ -891,49 +891,18 @@ a smoothed aggregation solver:
 
 ```
 
-  _     ._   __/__   _ _  _  _ _/_   Recorded: 20:40:14  Samples:  620
- /_//_/// /_\ / //_// / //_'/ //     Duration: 1.857     CPU time: 8.150
+  _     ._   __/__   _ _  _  _ _/_   Recorded: 17:13:55  Samples:  535
+ /_//_/// /_\ / //_// / //_'/ //     Duration: 1.582     CPU time: 7.574
 /   _/                      v4.1.1
 
 Program: demo.py --savefig
 
-[31m1.856[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
-└─ [31m1.856[0m [48;5;24m[38;5;15msmoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
-   ├─ [31m1.519[0m [48;5;24m[38;5;15m_extend_hierarchy[0m  [2mpyamg/aggregation/aggregation.py:288[0m
-   │  ├─ [33m1.079[0m [48;5;24m[38;5;15mjacobi_prolongation_smoother[0m  [2mpyamg/aggregation/smooth.py:61[0m
-   │  │  ├─ [33m0.950[0m [48;5;24m[38;5;15mapproximate_spectral_radius[0m  [2mpyamg/util/linalg.py:257[0m
-   │  │  │  ├─ [33m0.809[0m [48;5;24m[38;5;15m_approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
-   │  │  │  │  ├─ [33m0.482[0m [self][0m  [2m[0m
-   │  │  │  │  ├─ [32m0.166[0m dot[0m  [2m<__array_function__ internals>:177[0m
-   │  │  │  │  │     [4 frames hidden]  [2m<__array_function__ internals>, <buil...[0m
-   │  │  │  │  └─ [32m0.150[0m __mul__[0m  [2mscipy/sparse/linalg/_interface.py:392[0m
-   │  │  │  │        [20 frames hidden]  [2mscipy, <built-in>[0m
-   │  │  │  ├─ [32m0.107[0m hstack[0m  [2m<__array_function__ internals>:177[0m
-   │  │  │  │     [5 frames hidden]  [2m<__array_function__ internals>, numpy...[0m
-   │  │  │  └─ [92m[2m0.019[0m dot[0m  [2m<__array_function__ internals>:177[0m
-   │  │  │        [3 frames hidden]  [2m<__array_function__ internals>, <buil...[0m
-   │  │  ├─ [92m[2m0.059[0m __mul__[0m  [2mscipy/sparse/_base.py:582[0m
-   │  │  │     [18 frames hidden]  [2mscipy, <built-in>[0m
-   │  │  ├─ [92m[2m0.023[0m __sub__[0m  [2mscipy/sparse/_base.py:479[0m
-   │  │  │     [16 frames hidden]  [2mscipy, <built-in>[0m
-   │  │  └─ [92m[2m0.019[0m [48;5;24m[38;5;15mget_diagonal[0m  [2mpyamg/util/utils.py:530[0m
-   │  ├─ [32m0.271[0m __mul__[0m  [2mscipy/sparse/_base.py:582[0m
-   │  │     [16 frames hidden]  [2mscipy, <built-in>[0m
-   │  ├─ [92m[2m0.077[0m __mul__[0m  [2mscipy/sparse/linalg/_interface.py:392[0m
-   │  │     [4 frames hidden]  [2mscipy[0m
-   │  │        [92m[2m0.077[0m _matvec[0m  [2mscipy/sparse/linalg/_interface.py:529[0m
-   │  │        └─ [92m[2m0.077[0m [48;5;24m[38;5;15mmatvec[0m  [2mpyamg/relaxation/utils.py:73[0m
-   │  │           └─ [92m[2m0.077[0m [48;5;24m[38;5;15msmoother[0m  [2mpyamg/relaxation/smoothing.py:446[0m
-   │  │              └─ [92m[2m0.077[0m [48;5;24m[38;5;15mgauss_seidel[0m  [2mpyamg/relaxation/relaxation.py:276[0m
-   │  │                 └─ [92m[2m0.077[0m [48;5;24m[38;5;15mgauss_seidel[0m  [2mpyamg/relaxation/relaxation.py:276[0m
-   │  │                    └─ [92m[2m0.077[0m PyCapsule.gauss_seidel[0m  [2m<built-in>:0[0m
-   │  │                          [2 frames hidden]  [2m<built-in>[0m
-   │  ├─ [92m[2m0.037[0m [48;5;24m[38;5;15msymmetric_strength_of_connection[0m  [2mpyamg/strength.py:213[0m
-   │  ├─ [92m[2m0.020[0m __getattr__[0m  [2mscipy/sparse/_base.py:739[0m
-   │  │     [13 frames hidden]  [2mscipy, <built-in>, numpy[0m
-   │  └─ [92m[2m0.020[0m [48;5;24m[38;5;15mfit_candidates[0m  [2mpyamg/aggregation/tentative.py:9[0m
-   └─ [32m0.333[0m kron[0m  [2m<__array_function__ internals>:177[0m
-         [9 frames hidden]  [2m<__array_function__ internals>, numpy...[0m
+[31m1.581[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
+└─ [31m1.581[0m smoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
+      [201 frames hidden]  [2mpyamg, scipy, <built-in>, numpy, abc,...[0m
+         [33m0.691[0m _approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
+         ├─ [33m0.410[0m [self][0m  [2m[0m
+         [33m0.337[0m implement_array_function[0m  [2m<built-in>:0[0m
 
 
 ```
