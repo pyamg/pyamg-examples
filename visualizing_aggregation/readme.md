@@ -1,4 +1,4 @@
-In these two example the `pyamg.vis` module is called to display
+In these two examples, the `pyamg.vis` module is called to display
 aggregation in both two and three dimensions.  `demo1.py` considers the Poisson
 problem on an unstructured triangulation of the unit square (from the PyAMG
 gallery).  In `demo2.py`, the same Poisson problem is considered on an
