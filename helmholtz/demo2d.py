@@ -154,7 +154,6 @@ Ec = J.reshape(E.shape)
 fig, ax = plt.subplots()
 ax.triplot(Vs[:,0], Vs[:,1], E, lw=0.5)
 
-from cycler import cycler
 for aggs in AggOp.T:
     I = aggs.indices
     ax.plot(Vs[I,0], Vs[I,1], 'o', ms=2)

@@ -13,7 +13,9 @@ Submitted 2010.
 """
 import numpy as np
 import pyamg
-from my_vis import shrink_elmts, my_vis
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+#from my_vis import shrink_elmts, my_vis
 
 print("\nDiffusion problem discretized with p=5 and the local\n" +
       "discontinuous Galerkin method.")
@@ -54,7 +56,6 @@ sa = pyamg.smoothed_aggregation_solver(
     **SA_build_args)
 resvec = []
 x = sa.solve(b, x0=x0, residuals=resvec, **SA_solve_args)
-print("*************************************************************")
 print("Observe that standard SA parameters for this p=5 discontinuous \n" +
       "Galerkin system yield an inefficient solver.\n")
 for i, r in enumerate(resvec):
@@ -87,32 +88,72 @@ sa = pyamg.smoothed_aggregation_solver(
     **SA_build_args)
 resvec = []
 x = sa.solve(b, x0=x0, residuals=resvec, **SA_solve_args)
-print("*************************************************************")
-print("Now use appropriate parameters, especially \'energy\' prolongation\n" +
+print("\nNow use appropriate parameters, especially \'energy\' prolongation\n" +
       "smoothing and a distance based strength measure on level 0.  This\n" +
       "yields a much more efficient solver.\n")
 for i, r in enumerate(resvec):
     print("residual at iteration {0:2}: {1:^6.2e}".format(i, r))
 
 # generate visualization files
-print("*************************************************************")
-print("Generating visualization files in .vtu format for use with Paraview.")
-s = """All values from coarse levels are interpolated using the aggregates,
-i.e., there is no fixed geometric hierarchy.  Additionally, the mesh
-has been artificially shrunk towards each element's barycenter, in order
-to highlight the discontinuous nature of the discretization.
+#elements2, vertices2 = shrink_elmts(elements, vertices)
+#my_vis(sa, vertices2, error=x, fname="DG_Example_", E2V=elements2[:, 0:3])
 
--- Near null-space mode from level * is in the file
-   DG_Example_B_variable0_lvl*.vtu
--- Aggregtes from level * are in the two file
-   DG_Example_aggs_lvl*_point-aggs,  and
-   DG_Example_aggs_lvl*_aggs.vtu
--- The mesh from from level * is in the file
-   DG_Example_mesh_lvl*.vtu
--- The error is in file
-   DG_Example_error_variable0.vtu
-"""
-print(s)
+print(sa)
+# first shrink the elements
+E = elements
+m = E.shape[1]
+Vs = np.zeros((m*E.shape[0], 2))
+Es = np.zeros((E.shape[0], m), dtype=np.int32)
+shrink = 0.75
+k = 0
+for i, e in enumerate(E):
+    xy = vertices[e, :]
+    xymean = xy.mean(axis=0)
+    Vs[k:k+m,:] = shrink * xy + (1-shrink) * np.kron(xy.mean(axis=0), np.ones((m, 1)))
+    Es[i,:] = np.arange(k, k+m)
+    k += m
 
-elements2, vertices2 = shrink_elmts(elements, vertices)
-my_vis(sa, vertices2, error=x, fname="DG_Example_", E2V=elements2[:, 0:3])
+AggOp = sa.levels[0].AggOp
+count = np.array(AggOp.sum(axis=0)).ravel()
+Vc = AggOp.T @ vertices
+Vc[:,0] /= count
+Vc[:,1] /= count
+I  = Es.ravel()
+J = AggOp.indices[I]
+Ec = J.reshape(Es.shape)
+
+fig, ax = plt.subplots()
+ax.triplot(Vs[:,0], Vs[:,1], Es[:,:3], lw=0.5)
+
+for aggs in AggOp.T:
+    I = aggs.indices
+    if len(I) == 1:
+        ax.plot(Vs[I,0], Vs[I,1], 'o', ms=5)
+    if len(I) == 2:
+        ax.plot(Vs[I,0], Vs[I,1], '-', lw=4, solid_capstyle='round')
+    if len(I) > 2:
+        patch = Polygon(Vs[I,:], False)
+        ax.add_patch(patch)
+ax.set_title('Level-0 aggregates')
+ax.axis('square')
+ax.axis('off')
+figname = f'./output/dgaggs.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()
+
+fig, ax = plt.subplots()
+B0 = sa.levels[1].B[:,0]
+ax.tripcolor(Vc[:,0], Vc[:,1], B0, Ec, lw=1.5)
+ax.set_title('Level-1 $B$')
+ax.axis('square')
+ax.axis('off')
+
+figname = f'./output/dgmodes.png'
+import sys
+if '--savefig' in sys.argv:
+    plt.savefig(figname, bbox_inches='tight', dpi=150)
+else:
+    plt.show()

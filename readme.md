@@ -53,7 +53,7 @@ Coarse Solver:        'pinv'
      3          64          484 [0.12%]
      4           9           49 [0.01%]
 
-The residual norm is 0.09698099058812655
+The residual norm is 0.19228030467508045
 
 
 The Multigrid Hierarchy
@@ -69,18 +69,18 @@ Details: Specialized AMG
 ------------------------
 MultilevelSolver
 Number of Levels:     6
-Operator Complexity:  2.159
-Grid Complexity:      1.201
+Operator Complexity:  2.164
+Grid Complexity:      1.202
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
-     0       40000       357604 [46.32%]
-     1        6700       226352 [29.32%]
-     2        1232       176224 [22.83%]
-     3         108        11634 [1.51%]
-     4          13          169 [0.02%]
-     5           2            4 [0.00%]
+     0       40000       357604 [46.21%]
+     1        6700       226352 [29.25%]
+     2        1237       177891 [22.99%]
+     3         109        11817 [1.53%]
+     4          11          121 [0.02%]
+     5           4           16 [0.00%]
 
-The residual norm is 1.0418617881770976e-10
+The residual norm is 1.0844406305459784e-10
 
 
 ```
@@ -121,8 +121,8 @@ The demo produces residual norms that can vary from machine to machine.
     iteration 5.0
     iteration 6.0
     iteration 7.0
-  Residuals ||r_k||_M, ||r_0||_M = 6.46e-01, 8.68e+06
-  Residual reduction ||r_k||_M/||r_0||_M = 7.44e-08
+  Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
+  Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
 ```
 
 ***
@@ -577,21 +577,21 @@ residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
 residual at iteration  2: 8.19e+00
 residual at iteration  3: 1.12e+00
-residual at iteration  4: 2.56e-01
-residual at iteration  5: 6.76e-02
-residual at iteration  6: 1.85e-02
-residual at iteration  7: 5.16e-03
-residual at iteration  8: 1.45e-03
-residual at iteration  9: 4.09e-04
-residual at iteration 10: 1.16e-04
-residual at iteration 11: 3.31e-05
-residual at iteration 12: 9.49e-06
-residual at iteration 13: 2.73e-06
-residual at iteration 14: 7.90e-07
-residual at iteration 15: 2.29e-07
-residual at iteration 16: 6.69e-08
-residual at iteration 17: 1.96e-08
-residual at iteration 18: 5.75e-09
+residual at iteration  4: 2.57e-01
+residual at iteration  5: 6.80e-02
+residual at iteration  6: 1.87e-02
+residual at iteration  7: 5.19e-03
+residual at iteration  8: 1.46e-03
+residual at iteration  9: 4.12e-04
+residual at iteration 10: 1.17e-04
+residual at iteration 11: 3.34e-05
+residual at iteration 12: 9.58e-06
+residual at iteration 13: 2.76e-06
+residual at iteration 14: 7.99e-07
+residual at iteration 15: 2.32e-07
+residual at iteration 16: 6.79e-08
+residual at iteration 17: 1.99e-08
+residual at iteration 18: 5.87e-09
 ```
 
 ***
@@ -766,6 +766,79 @@ Coarse Solver:        'pinv2'
 
 
 <img src="./helmholtz/output/2dhelmholtzB.png" width="300"/>
+
+
+#### High-Order DG on Poisson
+
+[demo.py](./diffusion_dg/demo.py)
+
+In this example we look at a 2D DG discretization of a Poisson problem.
+The mesh consists of 46 elements, with p=5, leading to 21 degrees of freedom
+per element.  The first figure shows that aggregation is local, leading to
+a continuous first level.  The first coarse level (level1) candidate vector `B` is
+also shown.
+
+```
+
+Diffusion problem discretized with p=5 and the local
+discontinuous Galerkin method.
+Observe that standard SA parameters for this p=5 discontinuous 
+Galerkin system yield an inefficient solver.
+
+residual at iteration  0: 2.98e+02
+residual at iteration  1: 1.07e+01
+residual at iteration  2: 5.17e+00
+residual at iteration  3: 2.71e+00
+residual at iteration  4: 1.63e+00
+residual at iteration  5: 9.92e-01
+residual at iteration  6: 5.22e-01
+residual at iteration  7: 3.57e-01
+residual at iteration  8: 2.27e-01
+residual at iteration  9: 1.26e-01
+residual at iteration 10: 8.83e-02
+residual at iteration 11: 5.53e-02
+residual at iteration 12: 3.64e-02
+residual at iteration 13: 2.62e-02
+residual at iteration 14: 1.78e-02
+residual at iteration 15: 1.17e-02
+residual at iteration 16: 6.79e-03
+residual at iteration 17: 4.44e-03
+residual at iteration 18: 2.63e-03
+residual at iteration 19: 1.43e-03
+residual at iteration 20: 8.59e-04
+
+Now use appropriate parameters, especially 'energy' prolongation
+smoothing and a distance based strength measure on level 0.  This
+yields a much more efficient solver.
+
+residual at iteration  0: 2.98e+02
+residual at iteration  1: 1.32e+00
+residual at iteration  2: 8.73e-02
+residual at iteration  3: 1.02e-02
+residual at iteration  4: 6.41e-04
+residual at iteration  5: 6.64e-05
+residual at iteration  6: 6.05e-06
+residual at iteration  7: 6.16e-07
+residual at iteration  8: 4.93e-08
+residual at iteration  9: 5.44e-09
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:  1.622
+Grid Complexity:      1.805
+Coarse Solver:        'pinv2'
+  level   unknowns     nonzeros
+     0         966        35338 [61.67%]
+     1         652        19602 [34.21%]
+     2          94         2006 [3.50%]
+     3          26          322 [0.56%]
+     4           6           36 [0.06%]
+
+```
+
+<img src="./diffusion_dg/output/dgaggs.png" width="300"/>
+
+
+<img src="./diffusion_dg/output/dgmodes.png" width="300"/>
 
 
 ***

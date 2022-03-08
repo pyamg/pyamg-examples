@@ -66,6 +66,8 @@ Other Applications:
   - dir: helmholtz
     title: Indefinite Helmholtz
     demo: demo1d.py, demo2d.py
+  - dir: diffusion_dg
+    title: High-Order DG on Poisson
 """)
 
 # generate table and header
