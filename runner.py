@@ -8,7 +8,7 @@ branch = 'reorg'
 def exectute_demo(exampledir, name='demo.py'):
     """Exectue a demo in a particular directory."""
     nameall = name.split()
-    output = subprocess.run(['python'] + nameall + ['--savefig'],
+    output = subprocess.run(['python3'] + nameall + ['--savefig'],
                             cwd=f'{exampledir}',
                             capture_output=True, text=True)
 
