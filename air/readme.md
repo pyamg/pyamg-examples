@@ -8,11 +8,12 @@ enforced strongly.
 
 AIR is ideal for upwind discretizations of advection-dominated problems.
 For pure advection, often AIR does not need Krylov acceleration; we see
-this by converging to 1e-10 residual tolerance in <10 iterations. AIR
-operator complexity tends to be large; here we comparse using AIR with
-and without second pass coarsening, with the latter leading to lower
-operator complexity but also a degradation in convergence.
-
+this by converging to 1e-10 residual tolerance in as little as 7
+iterations. AIR operator complexity tends to be large; here we comparse
+using AIR with distance-1 and distance-2 restriction, and with and
+without second pass coarsening. Distance-2 restriction and second-pass
+coarsening will both increase operator complexity but also a improve
+convergence.
 ```python
 python demo
 ```
