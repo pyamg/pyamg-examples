@@ -1,5 +1,4 @@
-# Linear Elasticity Example
-
+# AIR Example
 import numpy as np
 import pyamg
 import sys

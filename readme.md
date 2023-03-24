@@ -389,8 +389,7 @@ residual at iteration 13: 6.66e-06
 residual at iteration 14: 1.48e-06
 residual at iteration 15: 4.32e-07
 ```
-
-***
+*** 
 
 <a name="classicalamg"></a>
 ### Classical AMG
@@ -506,6 +505,55 @@ operator than for classical AMG.
 
 
 ***
+
+<a name="air"></a>
+### Nonsymmetric AMG (AIR)
+[demo.py](./air/demo.py)
+
+We demonstrate the use of AMG based on Approximate Ideal Restriction
+(AIR) to solve upwind discretiazations of advection. Here we consider
+a simple 2d first-order upwind finite difference discretization of
+the steady advection problem
+    (cos(theta),sin(theta)) cdot nabla u = 0,
+with Dirichlet inflow BCs on the left and bottom of the domain
+enforced strongly.
+
+AIR is ideal for upwind discretizations of advection-dominated problems.
+For pure advection, often AIR does not need Krylov acceleration; we see
+this by converging to 1e-10 residual tolerance in as little as 7
+iterations. AIR operator complexity tends to be large; here we comparse
+using AIR with distance-1 and distance-2 restriction, and with and
+without second pass coarsening. Distance-2 restriction and second-pass
+coarsening will both increase operator complexity but also a improve
+convergence.
+
+```
+Distance-1 AIR using RS coarsening *without* second pass.
+  Levels in hierarchy:        10
+  Operator complexity:        2.604073699237941
+  Number of iterations:       39
+  Average convergence factor: 0.545251958039081
+
+Distance-1 AIR using RS coarsening *with* second pass.
+  Levels in hierarchy:        13
+  Operator complexity:        3.7809599131373113
+  Number of iterations:       8
+  Average convergence factor: 0.044070522891302595
+
+Distance-2 AIR using RS coarsening *without* second pass.
+  Levels in hierarchy:        10
+  Operator complexity:        2.9577978699874667
+  Number of iterations:       11
+  Average convergence factor: 0.11031272788682472
+
+Distance-2 AIR using RS coarsening *with* second pass.
+  Levels in hierarchy:        14
+  Operator complexity:        3.7845389776207936
+  Number of iterations:       7
+  Average convergence factor: 0.028807761450019596
+```
+***
+
 
 <a name="finiteelements"></a>
 ### Finite Elements
