@@ -8,6 +8,7 @@ https://github.com/pyamg/pyamg-examples.
 - **<a href="#smoothedaggregationamg">Smoothed Aggregation AMG</a>**
 - **<a href="#classicalamg">Classical AMG</a>**
 - **<a href="#rootnodeamg">Rootnode AMG</a>**
+- **<a href="#air">Nonsymmetric AMG (AIR)</a>**
 - **<a href="#finiteelements">Finite Elements</a>**
 - **<a href="#preconditioning">Preconditioning</a>**
 - **<a href="#otherapplications">Other Applications</a>**
