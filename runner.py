@@ -3,8 +3,6 @@ import yaml
 import os
 from glob import glob
 
-branch = 'reorg'
-
 def exectute_demo(exampledir, name='demo.py'):
     """Exectue a demo in a particular directory."""
     nameall = name.split()
