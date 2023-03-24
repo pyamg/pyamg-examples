@@ -170,7 +170,8 @@ else:
 fig, axs = plt.subplots(nrows=2, ncols=2)
 for i, ax in enumerate(axs.ravel()):
     B0 = sa.levels[1].B[:,i]
-    ax.tripcolor(Vc[:,0], Vc[:,1], B0.real, Ec, lw=1.5)
+    tri = plt.matplotlib.tri.Triangulation(x=Vc[:,0], y=Vc[:,1], triangles=Ec)
+    ax.tripcolor(tri, B0.real, lw=1.5)
     ax.set_title(f'Level-1 $B_{i}$')
     ax.axis('square')
     ax.axis('off')
