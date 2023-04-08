@@ -8,7 +8,6 @@ https://github.com/pyamg/pyamg-examples.
 - **<a href="#smoothedaggregationamg">Smoothed Aggregation AMG</a>**
 - **<a href="#classicalamg">Classical AMG</a>**
 - **<a href="#rootnodeamg">Rootnode AMG</a>**
-- **<a href="#air">Nonsymmetric AMG (AIR)</a>**
 - **<a href="#finiteelements">Finite Elements</a>**
 - **<a href="#preconditioning">Preconditioning</a>**
 - **<a href="#otherapplications">Other Applications</a>**
@@ -45,8 +44,8 @@ Details: Default AMG
 --------------------
 MultilevelSolver
 Number of Levels:     5
-Operator Complexity:  1.125
-Grid Complexity:      1.127
+Operator Complexity:   1.125
+Grid Complexity:       1.127
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
      0       40000       357604 [88.91%]
@@ -55,7 +54,7 @@ Coarse Solver:        'pinv'
      3          64          484 [0.12%]
      4           9           49 [0.01%]
 
-The residual norm is 0.22418690473369335
+The residual norm is 0.17196739857412902
 
 
 The Multigrid Hierarchy
@@ -71,18 +70,18 @@ Details: Specialized AMG
 ------------------------
 MultilevelSolver
 Number of Levels:     6
-Operator Complexity:  2.159
-Grid Complexity:      1.201
+Operator Complexity:   2.159
+Grid Complexity:       1.201
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
      0       40000       357604 [46.31%]
      1        6700       226352 [29.31%]
      2        1232       176222 [22.82%]
-     3         109        11829 [1.53%]
+     3         109        11827 [1.53%]
      4          13          169 [0.02%]
-     5           2            4 [0.00%]
+     5           4           16 [0.00%]
 
-The residual norm is 1.1033780992716918e-10
+The residual norm is 1.0458292978648067e-10
 
 
 ```
@@ -299,8 +298,8 @@ residual at iteration 19: 1.65e-06
 residual at iteration 20: 7.13e-07
 MultilevelSolver
 Number of Levels:     5
-Operator Complexity:  1.344
-Grid Complexity:      1.184
+Operator Complexity:   1.344
+Grid Complexity:       1.184
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
      0       10000        50000 [74.43%]
@@ -390,7 +389,8 @@ residual at iteration 13: 6.66e-06
 residual at iteration 14: 1.48e-06
 residual at iteration 15: 4.32e-07
 ```
-*** 
+
+***
 
 <a name="classicalamg"></a>
 ### Classical AMG
@@ -412,8 +412,8 @@ splitting, with the orange C-pts and the blue F-pts.
 ```
 MultilevelSolver
 Number of Levels:     2
-Operator Complexity:  1.327
-Grid Complexity:      1.267
+Operator Complexity:   1.327
+Grid Complexity:       1.267
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
      0         191         1243 [75.33%]
@@ -457,6 +457,61 @@ running algebraic_distance: epsilon=3.0, p=inf, R=10, alpha=0.5, k=20
 ```
 
 <img src="./strength_options/output/strength_options.png" width="300"/>
+
+
+#### Approximate ideal restriction (AIR)
+
+[demo.py](./air/demo.py)
+
+We demonstrate the use of AMG based on Approximate Ideal Restriction
+(AIR) to solve upwind discretiazations of advection. Here we consider
+a simple 2d first-order upwind finite difference discretization of
+the steady advection problem
+    $(\cos(\theta),\sin(\theta)) \cdot \nabla u = 0$,
+with Dirichlet inflow BCs on the left and bottom of the domain
+enforced strongly.
+
+AIR is ideal for upwind discretizations of advection-dominated problems.
+For pure advection, often AIR does not need Krylov acceleration; we see
+this by converging to 1e-10 residual tolerance in as little as 7
+iterations. AIR operator complexity tends to be large; here we compare
+using AIR with distance-1 and distance-2 restriction, and with and
+without second pass coarsening. Distance-2 restriction and second-pass
+coarsening will both increase operator complexity but also improve
+convergence.
+```python
+python demo
+```
+
+```
+500 x 500 mesh:
+Distance-1 AIR using RS coarsening *without* second pass.
+	Levels in hierarchy:        10
+	Operator complexity:        2.604073699237941
+	Number of iterations:       39
+	Average convergence factor: 0.5452519246046812
+
+Distance-1 AIR using RS coarsening *with* second pass.
+	Levels in hierarchy:        13
+	Operator complexity:        3.7809599131373113
+	Number of iterations:       8
+	Average convergence factor: 0.044070522107121105
+
+Distance-2 AIR using RS coarsening *without* second pass.
+	Levels in hierarchy:        10
+	Operator complexity:        2.9532603668876214
+	Number of iterations:       11
+	Average convergence factor: 0.11031359469804951
+
+Distance-2 AIR using RS coarsening *with* second pass.
+	Levels in hierarchy:        14
+	Operator complexity:        3.77129643903191
+	Number of iterations:       7
+	Average convergence factor: 0.029339749752205272
+
+```
+
+<img src="./air/output/splitting.png" width="300"/>
 
 
 ***
@@ -506,55 +561,6 @@ operator than for classical AMG.
 
 
 ***
-
-<a name="air"></a>
-### Nonsymmetric AMG (AIR)
-[demo.py](./air/demo.py)
-
-We demonstrate the use of AMG based on Approximate Ideal Restriction
-(AIR) to solve upwind discretiazations of advection. Here we consider
-a simple 2d first-order upwind finite difference discretization of
-the steady advection problem
-    $(\cos(\theta),\sin(\theta)) \cdot \nabla u = 0$,
-with Dirichlet inflow BCs on the left and bottom of the domain
-enforced strongly.
-
-AIR is ideal for upwind discretizations of advection-dominated problems.
-For pure advection, often AIR does not need Krylov acceleration; we see
-this by converging to 1e-10 residual tolerance in as little as 7
-iterations. AIR operator complexity tends to be large; here we compare
-using AIR with distance-1 and distance-2 restriction, and with and
-without second pass coarsening. Distance-2 restriction and second-pass
-coarsening will both increase operator complexity but also improve
-convergence.
-
-```
-Distance-1 AIR using RS coarsening *without* second pass.
-  Levels in hierarchy:        10
-  Operator complexity:        2.604073699237941
-  Number of iterations:       39
-  Average convergence factor: 0.545251958039081
-
-Distance-1 AIR using RS coarsening *with* second pass.
-  Levels in hierarchy:        13
-  Operator complexity:        3.7809599131373113
-  Number of iterations:       8
-  Average convergence factor: 0.044070522891302595
-
-Distance-2 AIR using RS coarsening *without* second pass.
-  Levels in hierarchy:        10
-  Operator complexity:        2.9577978699874667
-  Number of iterations:       11
-  Average convergence factor: 0.11031272788682472
-
-Distance-2 AIR using RS coarsening *with* second pass.
-  Levels in hierarchy:        14
-  Operator complexity:        3.7845389776207936
-  Number of iterations:       7
-  Average convergence factor: 0.028807761450019596
-```
-***
-
 
 <a name="finiteelements"></a>
 ### Finite Elements
@@ -632,8 +638,8 @@ results in the following.
 ```
 MultilevelSolver
 Number of Levels:     5
-Operator Complexity:  1.125
-Grid Complexity:      1.127
+Operator Complexity:   1.125
+Grid Complexity:       1.127
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
      0       80000      1430416 [88.91%]
@@ -646,23 +652,23 @@ Number of iterations:  19d
 
 residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
-residual at iteration  2: 8.20e+00
-residual at iteration  3: 1.12e+00
-residual at iteration  4: 2.56e-01
-residual at iteration  5: 6.74e-02
-residual at iteration  6: 1.85e-02
+residual at iteration  2: 8.16e+00
+residual at iteration  3: 1.11e+00
+residual at iteration  4: 2.55e-01
+residual at iteration  5: 6.73e-02
+residual at iteration  6: 1.84e-02
 residual at iteration  7: 5.13e-03
 residual at iteration  8: 1.44e-03
-residual at iteration  9: 4.04e-04
-residual at iteration 10: 1.14e-04
-residual at iteration 11: 3.26e-05
-residual at iteration 12: 9.30e-06
-residual at iteration 13: 2.67e-06
-residual at iteration 14: 7.68e-07
-residual at iteration 15: 2.22e-07
-residual at iteration 16: 6.45e-08
-residual at iteration 17: 1.88e-08
-residual at iteration 18: 5.50e-09
+residual at iteration  9: 4.06e-04
+residual at iteration 10: 1.15e-04
+residual at iteration 11: 3.28e-05
+residual at iteration 12: 9.38e-06
+residual at iteration 13: 2.70e-06
+residual at iteration 14: 7.78e-07
+residual at iteration 15: 2.26e-07
+residual at iteration 16: 6.57e-08
+residual at iteration 17: 1.92e-08
+residual at iteration 18: 5.63e-09
 ```
 
 ***
@@ -696,8 +702,8 @@ produces the following.
 Matrix: Poisson
 MultilevelSolver
 Number of Levels:     6
-Operator Complexity:  1.337
-Grid Complexity:      1.188
+Operator Complexity:   1.337
+Grid Complexity:       1.188
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
      0      250000      1248000 [74.82%]
@@ -710,8 +716,8 @@ Coarse Solver:        'pinv'
 Matrix: Elasticity
 MultilevelSolver
 Number of Levels:     5
-Operator Complexity:  1.281
-Grid Complexity:      1.191
+Operator Complexity:   1.281
+Grid Complexity:       1.191
 Coarse Solver:        'pinv'
   level   unknowns     nonzeros
      0       80000      1430416 [78.08%]
@@ -816,8 +822,8 @@ residual at iteration  4: 3.29e-07
 residual at iteration  5: 3.87e-09
 MultilevelSolver
 Number of Levels:     4
-Operator Complexity:  1.435
-Grid Complexity:      1.411
+Operator Complexity:   1.435
+Grid Complexity:       1.411
 Coarse Solver:        'pinv2'
   level   unknowns     nonzeros
      0        2880        52016 [69.67%]
@@ -857,26 +863,26 @@ Observe that standard SA parameters for this p=5 discontinuous
 Galerkin system yield an inefficient solver.
 
 residual at iteration  0: 2.98e+02
-residual at iteration  1: 1.07e+01
-residual at iteration  2: 5.17e+00
+residual at iteration  1: 1.06e+01
+residual at iteration  2: 5.08e+00
 residual at iteration  3: 2.71e+00
-residual at iteration  4: 1.63e+00
-residual at iteration  5: 9.92e-01
-residual at iteration  6: 5.22e-01
+residual at iteration  4: 1.64e+00
+residual at iteration  5: 1.01e+00
+residual at iteration  6: 5.20e-01
 residual at iteration  7: 3.57e-01
-residual at iteration  8: 2.27e-01
-residual at iteration  9: 1.26e-01
-residual at iteration 10: 8.83e-02
-residual at iteration 11: 5.53e-02
-residual at iteration 12: 3.64e-02
-residual at iteration 13: 2.62e-02
-residual at iteration 14: 1.78e-02
-residual at iteration 15: 1.17e-02
-residual at iteration 16: 6.79e-03
-residual at iteration 17: 4.44e-03
-residual at iteration 18: 2.63e-03
-residual at iteration 19: 1.43e-03
-residual at iteration 20: 8.59e-04
+residual at iteration  8: 2.19e-01
+residual at iteration  9: 1.25e-01
+residual at iteration 10: 8.53e-02
+residual at iteration 11: 5.44e-02
+residual at iteration 12: 3.50e-02
+residual at iteration 13: 2.59e-02
+residual at iteration 14: 1.79e-02
+residual at iteration 15: 1.15e-02
+residual at iteration 16: 6.57e-03
+residual at iteration 17: 4.40e-03
+residual at iteration 18: 2.49e-03
+residual at iteration 19: 1.37e-03
+residual at iteration 20: 8.23e-04
 
 Now use appropriate parameters, especially 'energy' prolongation
 smoothing and a distance based strength measure on level 0.  This
@@ -884,25 +890,25 @@ yields a much more efficient solver.
 
 residual at iteration  0: 2.98e+02
 residual at iteration  1: 1.32e+00
-residual at iteration  2: 8.73e-02
+residual at iteration  2: 8.72e-02
 residual at iteration  3: 1.02e-02
-residual at iteration  4: 6.41e-04
-residual at iteration  5: 6.64e-05
-residual at iteration  6: 6.05e-06
+residual at iteration  4: 6.38e-04
+residual at iteration  5: 6.65e-05
+residual at iteration  6: 6.01e-06
 residual at iteration  7: 6.16e-07
-residual at iteration  8: 4.93e-08
-residual at iteration  9: 5.44e-09
+residual at iteration  8: 4.92e-08
+residual at iteration  9: 5.41e-09
 MultilevelSolver
 Number of Levels:     5
-Operator Complexity:  1.622
-Grid Complexity:      1.805
+Operator Complexity:   1.623
+Grid Complexity:       1.807
 Coarse Solver:        'pinv2'
   level   unknowns     nonzeros
-     0         966        35338 [61.67%]
-     1         652        19602 [34.21%]
+     0         966        35338 [61.63%]
+     1         652        19602 [34.19%]
      2          94         2006 [3.50%]
-     3          26          322 [0.56%]
-     4           6           36 [0.06%]
+     3          27          341 [0.59%]
+     4           7           49 [0.09%]
 
 ```
 
@@ -940,18 +946,16 @@ a smoothed aggregation solver:
 
 ```
 
-  _     ._   __/__   _ _  _  _ _/_   Recorded: 17:13:55  Samples:  535
- /_//_/// /_\ / //_// / //_'/ //     Duration: 1.582     CPU time: 7.574
-/   _/                      v4.1.1
+  _     ._   __/__   _ _  _  _ _/_   Recorded: 11:41:59  Samples:  527
+ /_//_/// /_\ / //_// / //_'/ //     Duration: 1.229     CPU time: 7.613
+/   _/                      v4.4.0
 
 Program: demo.py --savefig
 
-[31m1.581[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
-└─ [31m1.581[0m smoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
-      [201 frames hidden]  [2mpyamg, scipy, <built-in>, numpy, abc,...[0m
-         [33m0.691[0m _approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
-         ├─ [33m0.410[0m [self][0m  [2m[0m
-         [33m0.337[0m implement_array_function[0m  [2m<built-in>:0[0m
+[31m1.228[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
+└─ [31m1.228[0m smoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
+      [207 frames hidden]  [2mpyamg, scipy, <built-in>, numpy, <fro...[0m
+         [33m0.677[0m _approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
 
 
 ```

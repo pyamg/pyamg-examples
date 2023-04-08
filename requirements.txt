@@ -2,3 +2,4 @@ pyamg
 matplotlib
 vedo
 pyinstrument
+pyyaml
