@@ -132,7 +132,7 @@ for aggs in AggOp.T:
     if len(I) == 2:
         ax.plot(Vs[I,0], Vs[I,1], '-', lw=4, solid_capstyle='round')
     if len(I) > 2:
-        patch = Polygon(Vs[I,:], False)
+        patch = Polygon(Vs[I,:], closed=False)
         ax.add_patch(patch)
 ax.set_title('Level-0 aggregates')
 ax.axis('square')
@@ -146,7 +146,8 @@ else:
 
 fig, ax = plt.subplots()
 B0 = sa.levels[1].B[:,0]
-ax.tripcolor(Vc[:,0], Vc[:,1], B0, Ec, lw=1.5)
+tri = plt.matplotlib.tri.Triangulation(x=Vc[:,0], y=Vc[:,1], triangles=Ec[:, :3])
+ax.tripcolor(tri, B0.real, lw=1.5)
 ax.set_title('Level-1 $B$')
 ax.axis('square')
 ax.axis('off')
