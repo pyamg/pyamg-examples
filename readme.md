@@ -4,18 +4,40 @@ https://github.com/pyamg/pyamg-examples.
 
 ### Table of Contents
 - **<a href="#introduction">Introduction</a>**
+  - <a href="#introduction">Overview</a>
 - **<a href="#blackboxsolver">Blackbox Solver</a>**
 - **<a href="#smoothedaggregationamg">Smoothed Aggregation AMG</a>**
+  - <a href="#smoothedaggregationamg">Aggregation</a>
+  - <a href="#smoothedaggregationamg">One Dimensional Problem</a>
+  - <a href="#smoothedaggregationamg">Visualizing Aggregation</a>
+  - <a href="#smoothedaggregationamg">Solver Diagnostics</a>
+  - <a href="#smoothedaggregationamg">Complex Arithmetic</a>
+  - <a href="#smoothedaggregationamg">Nonsymmetric example</a>
 - **<a href="#classicalamg">Classical AMG</a>**
+  - <a href="#classicalamg">Coarse Fine Splitting</a>
+  - <a href="#classicalamg">Compatible Relaxation</a>
+  - <a href="#classicalamg">Stength of Connection</a>
+  - <a href="#classicalamg">Approximate ideal restriction (AIR)</a>
 - **<a href="#rootnodeamg">Rootnode AMG</a>**
+  - <a href="#rootnodeamg">Rootnode AMG</a>
 - **<a href="#finiteelements">Finite Elements</a>**
+  - <a href="#finiteelements">Anisotropic Diffusion</a>
+  - <a href="#finiteelements">Linear Elasticity</a>
 - **<a href="#preconditioning">Preconditioning</a>**
+  - <a href="#preconditioning">Krylov Methods</a>
+  - <a href="#preconditioning">Eigenvalue Solvers</a>
 - **<a href="#otherapplications">Other Applications</a>**
+  - <a href="#otherapplications">Graph Partitioning</a>
+  - <a href="#otherapplications">Indefinite Helmholtz</a>
+  - <a href="#otherapplications">High-Order DG on Poisson</a>
+  - <a href="#otherapplications">Edge-based AMG</a>
 - **<a href="#other">Other</a>**
+  - <a href="#other">Profiling Performance</a>
 
 <a name="introduction"></a>
 ### Introduction
 
+<a name="introduction"></a>
 
 #### Overview
 
@@ -54,7 +76,7 @@ Coarse Solver:        'pinv'
      3          64          484 [0.12%]
      4           9           49 [0.01%]
 
-The residual norm is 0.17196739857412902
+The residual norm is 0.1500503618476438
 
 
 The Multigrid Hierarchy
@@ -77,11 +99,11 @@ Coarse Solver:        'pinv'
      0       40000       357604 [46.31%]
      1        6700       226352 [29.31%]
      2        1232       176222 [22.82%]
-     3         109        11827 [1.53%]
+     3         109        11829 [1.53%]
      4          13          169 [0.02%]
-     5           4           16 [0.00%]
+     5           2            4 [0.00%]
 
-The residual norm is 1.0458292978648067e-10
+The residual norm is 1.0006655094457937e-10
 
 
 ```
@@ -131,6 +153,7 @@ The demo produces residual norms that can vary from machine to machine.
 <a name="smoothedaggregationamg"></a>
 ### Smoothed Aggregation AMG
 
+<a name="smoothedaggregationamg"></a>
 
 #### Aggregation
 
@@ -145,6 +168,7 @@ elements in the underlying mesh. Still, there are a many aggregates that yield
 
 <img src="./aggregation/output/aggregates.png" width="300"/>
 
+<a name="smoothedaggregationamg"></a>
 
 #### One Dimensional Problem
 
@@ -156,6 +180,7 @@ this case) are plotted with the associated (smoothed) basis functions.
 
 <img src="./one_dimension/output/one_dimension_aggregates.png" width="300"/>
 
+<a name="smoothedaggregationamg"></a>
 
 #### Visualizing Aggregation
 
@@ -192,6 +217,7 @@ Start [Paraview](http://www.paravieworg/paraview/resources/software.php):
 
 <img src="./visualizing_aggregation/output/vis_aggs2.png" width="300"/>
 
+<a name="smoothedaggregationamg"></a>
 
 #### Solver Diagnostics
 
@@ -257,6 +283,7 @@ Searching for optimal smoothed aggregation method for (2500,2500) matrix
     --> Diagnostic Results located in rot_ani_diff_diagnostic.txt
     --> See automatically generated function definition in rot_ani_diff_diagnostic.py
 ```
+<a name="smoothedaggregationamg"></a>
 
 #### Complex Arithmetic
 
@@ -309,6 +336,7 @@ Coarse Solver:        'pinv'
      4           1            1 [0.00%]
 
 ```
+<a name="smoothedaggregationamg"></a>
 
 #### Nonsymmetric example
 
@@ -395,6 +423,7 @@ residual at iteration 15: 4.32e-07
 <a name="classicalamg"></a>
 ### Classical AMG
 
+<a name="classicalamg"></a>
 
 #### Coarse Fine Splitting
 
@@ -423,6 +452,7 @@ Coarse Solver:        'pinv'
 
 <img src="./coarse_fine_splitting/output/splitting.png" width="300"/>
 
+<a name="classicalamg"></a>
 
 #### Compatible Relaxation
 
@@ -437,6 +467,7 @@ coarsening is not aggressive, resulting in a coarsening-by-two.
 
 <img src="./compatible_relaxation/output/crsplitting.png" width="300"/>
 
+<a name="classicalamg"></a>
 
 #### Stength of Connection
 
@@ -458,6 +489,7 @@ running algebraic_distance: epsilon=3.0, p=inf, R=10, alpha=0.5, k=20
 
 <img src="./strength_options/output/strength_options.png" width="300"/>
 
+<a name="classicalamg"></a>
 
 #### Approximate ideal restriction (AIR)
 
@@ -519,6 +551,7 @@ Distance-2 AIR using RS coarsening *with* second pass.
 <a name="rootnodeamg"></a>
 ### Rootnode AMG
 
+<a name="rootnodeamg"></a>
 
 #### Rootnode AMG
 
@@ -565,6 +598,7 @@ operator than for classical AMG.
 <a name="finiteelements"></a>
 ### Finite Elements
 
+<a name="finiteelements"></a>
 
 #### Anisotropic Diffusion
 
@@ -613,6 +647,7 @@ Rotation Angle = 0.393
   90000   |  806404   |    0.5    |    1.9    |    6.3   
  160000   |  1435204  |    0.5    |    1.9    |    6.5   
 ```
+<a name="finiteelements"></a>
 
 #### Linear Elasticity
 
@@ -652,23 +687,23 @@ Number of iterations:  19d
 
 residual at iteration  0: 1.63e+02
 residual at iteration  1: 1.13e+02
-residual at iteration  2: 8.16e+00
-residual at iteration  3: 1.11e+00
-residual at iteration  4: 2.55e-01
-residual at iteration  5: 6.73e-02
-residual at iteration  6: 1.84e-02
-residual at iteration  7: 5.13e-03
+residual at iteration  2: 8.18e+00
+residual at iteration  3: 1.12e+00
+residual at iteration  4: 2.56e-01
+residual at iteration  5: 6.76e-02
+residual at iteration  6: 1.85e-02
+residual at iteration  7: 5.15e-03
 residual at iteration  8: 1.44e-03
-residual at iteration  9: 4.06e-04
+residual at iteration  9: 4.07e-04
 residual at iteration 10: 1.15e-04
 residual at iteration 11: 3.28e-05
-residual at iteration 12: 9.38e-06
-residual at iteration 13: 2.70e-06
-residual at iteration 14: 7.78e-07
-residual at iteration 15: 2.26e-07
-residual at iteration 16: 6.57e-08
-residual at iteration 17: 1.92e-08
-residual at iteration 18: 5.63e-09
+residual at iteration 12: 9.36e-06
+residual at iteration 13: 2.69e-06
+residual at iteration 14: 7.74e-07
+residual at iteration 15: 2.24e-07
+residual at iteration 16: 6.50e-08
+residual at iteration 17: 1.90e-08
+residual at iteration 18: 5.55e-09
 ```
 
 ***
@@ -676,6 +711,7 @@ residual at iteration 18: 5.63e-09
 <a name="preconditioning"></a>
 ### Preconditioning
 
+<a name="preconditioning"></a>
 
 #### Krylov Methods
 
@@ -733,6 +769,7 @@ Coarse Solver:        'pinv'
 
 <img src="./preconditioning/output/convergence_poisson.png" width="300"/>
 
+<a name="preconditioning"></a>
 
 #### Eigenvalue Solvers
 
@@ -751,6 +788,7 @@ eigensubspace is extremely fast.
 <a name="otherapplications"></a>
 ### Other Applications
 
+<a name="otherapplications"></a>
 
 #### Graph Partitioning
 
@@ -764,6 +802,7 @@ different colors, illustrating the natural splitting this mesh.
 
 <img src="./mesh_partition/output/mesh_partition.png" width="300"/>
 
+<a name="otherapplications"></a>
 
 #### Indefinite Helmholtz
 
@@ -844,6 +883,7 @@ Coarse Solver:        'pinv2'
 
 <img src="./helmholtz/output/2dhelmholtzB.png" width="300"/>
 
+<a name="otherapplications"></a>
 
 #### High-Order DG on Poisson
 
@@ -917,6 +957,7 @@ Coarse Solver:        'pinv2'
 
 <img src="./diffusion_dg/output/dgmodes.png" width="300"/>
 
+<a name="otherapplications"></a>
 
 #### Edge-based AMG
 
@@ -935,6 +976,7 @@ the specialized relaxation method (`hiptmair_smoother`).
 <a name="other"></a>
 ### Other
 
+<a name="other"></a>
 
 #### Profiling Performance
 
@@ -946,16 +988,16 @@ a smoothed aggregation solver:
 
 ```
 
-  _     ._   __/__   _ _  _  _ _/_   Recorded: 11:41:59  Samples:  527
- /_//_/// /_\ / //_// / //_'/ //     Duration: 1.229     CPU time: 7.613
+  _     ._   __/__   _ _  _  _ _/_   Recorded: 11:57:00  Samples:  578
+ /_//_/// /_\ / //_// / //_'/ //     Duration: 1.314     CPU time: 7.202
 /   _/                      v4.4.0
 
 Program: demo.py --savefig
 
-[31m1.228[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
-└─ [31m1.228[0m smoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
-      [207 frames hidden]  [2mpyamg, scipy, <built-in>, numpy, <fro...[0m
-         [33m0.677[0m _approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
+[31m1.313[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
+└─ [31m1.313[0m smoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
+      [194 frames hidden]  [2mpyamg, scipy, <built-in>, <__array_fu...[0m
+         [33m0.782[0m _approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
 
 
 ```

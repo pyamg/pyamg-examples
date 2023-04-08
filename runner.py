@@ -103,6 +103,9 @@ for section in toc:
             print(f'Processing {demo["dir"]}')
             title = demo.get('title', None)
             if title:
+                hrefid = section.replace(' ', '').lower()
+                tocmd += f'  - <a href="#{hrefid}">{title}</a>\n'
+                main += f'<a name="{hrefid}"></a>\n'
                 main += f'\n#### {title}\n\n'
 
             demonames = [d.strip() for d in demo.get('demo', 'demo.py').split(',')]
