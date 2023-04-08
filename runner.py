@@ -45,6 +45,8 @@ Classical AMG:
     title: Compatible Relaxation
   - dir: strength_options
     title: Stength of Connection
+  - dir: air
+    title: Approximate ideal restriction (AIR)
 Rootnode AMG:
   - dir: rootnode
     title: Rootnode AMG
