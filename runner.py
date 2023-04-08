@@ -103,7 +103,7 @@ for section in toc:
             print(f'Processing {demo["dir"]}')
             title = demo.get('title', None)
             if title:
-                hrefid = section.replace(' ', '').lower()
+                hrefid = title.replace(' ', '').lower()
                 tocmd += f'  - <a href="#{hrefid}">{title}</a>\n'
                 main += f'<a name="{hrefid}"></a>\n'
                 main += f'\n#### {title}\n\n'
