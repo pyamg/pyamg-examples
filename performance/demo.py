@@ -19,14 +19,17 @@ def assembler(m):
     )
 
 times  = []
-fw = 10
+fw = 11
 kmin =  6
 kmax = 20
 Nlist = [int(2 ** (k / 3)) for k in range(kmin, kmax)]
 # print(Nlist)
 
-print('| N | DoFs | Assembly | Solve prep | Solve setup | Solve |')
-print('| ---- | ---- | ---- | ---- | ---- | ---- |')
+header = ['DoFs','Assembly', 'Solve prep', 'Solve setup', 'Solve']
+hline = '|'.join(["-"*(fw+2) for h in header])
+header = '|'.join([f'{h:^{fw+2}}' for h in header])
+print('|'+header+'|')
+print('|'+hline+'|')
 for N in Nlist:
     m = pre(N)
 
@@ -44,16 +47,16 @@ for N in Nlist:
     mlsolver = skf.solver_iter_pcg(verbose=False, M=ml, rtol=1e-8)
     solve_time = timeit(lambda: skf.solve(A, b, solver=mlsolver), number=1)
 
-    times.append([N, len(b), assemble_time, condense_time, setup_time, solve_time])
-    print(f'| {N:10d} | {len(b):10d} | {assemble_time:>{fw}.5f} | {condense_time:{fw}.5f} | {setup_time:{fw}.5f} | {solve_time:{fw}.5f} |')
+    times.append([len(b), assemble_time, condense_time, setup_time, solve_time])
+    print(f'| {len(b):>{fw}d} | {assemble_time:>{fw}.5f} | {condense_time:{fw}.5f} | {setup_time:{fw}.5f} | {solve_time:{fw}.5f} |')
 
 import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
-n = [t[1] for t in times]
-ax.loglog(n, [t[2] for t in times], label='Assembly')
-ax.loglog(n, [t[3] for t in times], label='Solve prep')
-ax.loglog(n, [t[4] for t in times], label='Solve setup')
-ax.loglog(n, [t[5] for t in times], label='Solve')
+n = [t[0] for t in times]
+ax.loglog(n, [t[1] for t in times], label='Assembly')
+ax.loglog(n, [t[2] for t in times], label='Solve prep')
+ax.loglog(n, [t[3] for t in times], label='Solve setup')
+ax.loglog(n, [t[4] for t in times], label='Solve')
 ax.set_xlabel('# DoFs')
 ax.set_ylabel('time (s)')
 ax.grid(True)
