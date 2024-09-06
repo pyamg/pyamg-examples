@@ -3,3 +3,4 @@ matplotlib
 vedo
 pyinstrument
 pyyaml
+scikit-fem

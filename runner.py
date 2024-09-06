@@ -1,9 +1,10 @@
 import subprocess
 import yaml
 import os
+import sys
 from glob import glob
 
-def exectute_demo(exampledir, name='demo.py'):
+def execute_demo(exampledir, name='demo.py'):
     """Exectue a demo in a particular directory."""
     nameall = name.split()
     output = subprocess.run(['python3'] + nameall + ['--savefig'],
@@ -75,6 +76,8 @@ Other Applications:
 Other:
   - dir: profile_pyamg
     title: Profiling Performance
+  - dir: performance
+    title: Scaling performance of AMG and FE assembly
 """)
 
 # generate table and header
@@ -89,6 +92,20 @@ tocmd = '### Table of Contents\n'
 
 main = '\n'
 
+dirs = None
+if len(sys.argv) > 1:
+    dirs = sys.argv[1:]
+    for d in dirs:
+        found = False
+        for section in toc:
+            for demo in toc[section]:
+                if d == demo['dir']:
+                    found = True
+        if not found or not os.path.isdir(d):
+            print('usage: runner.py')
+            print('usage: runner.py dir1 [dir2] ...')
+            exit()
+
 for section in toc:
 
     # add to the TOC
@@ -100,7 +117,7 @@ for section in toc:
 
     if toc[section] is not None:
         for demo in toc[section]:
-            print(f'Processing {demo["dir"]}')
+            print(f'Processing {demo["dir"]}.', end=' ')
             title = demo.get('title', None)
             if title:
                 hrefid = title.replace(' ', '').lower()
@@ -117,10 +134,18 @@ for section in toc:
             main += readmeoutput
 
             # get the demo output
+            runit = True
+            if dirs is not None:
+                if demo['dir'] not in dirs:
+                    runit = False
+                    print('')
+            if runit:
+                print('[--->rerunning]')
             for demoname in demonames:
-                output = exectute_demo(demo['dir'], name=demoname)
-                if len(output) > 0:
-                    main += '\n```\n' + output + '```\n'
+                if runit:
+                    output = execute_demo(demo['dir'], name=demoname)
+                    if len(output) > 0:
+                        main += '\n```\n' + output + '```\n'
 
             # get the output figs
             figs = glob(os.path.join(f'{demo["dir"]}', 'output') +'/*.png')
