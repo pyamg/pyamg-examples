@@ -33,7 +33,6 @@ https://github.com/pyamg/pyamg-examples.
   - <a href="#edge-basedamg">Edge-based AMG</a>
 - **<a href="#other">Other</a>**
   - <a href="#profilingperformance">Profiling Performance</a>
-  - <a href="#scalingperformanceofamgandfeassembly">Scaling performance of AMG and FE assembly</a>
 
 <a name="introduction"></a>
 ### Introduction
@@ -60,6 +59,55 @@ The comments in `demo.py` follow several steps that walk through the demo:
 - Step 7: print details
 - Step 8: plot convergence history
 
+```
+
+
+Details: Default AMG
+--------------------
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:   1.125
+Grid Complexity:       1.127
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       40000       357604 [88.91%]
+     1        4489        39601 [9.85%]
+     2         529         4489 [1.12%]
+     3          64          484 [0.12%]
+     4           9           49 [0.01%]
+
+The residual norm is 0.2110043217253744
+
+
+The Multigrid Hierarchy
+-----------------------
+A_0:      40000x40000        P_0:      40000x4489      
+A_1:       4489x4489         P_1:       4489x529       
+A_2:        529x529          P_2:        529x64        
+A_3:         64x64           P_3:         64x9         
+A_4:          9x9         
+
+
+Details: Specialized AMG
+------------------------
+MultilevelSolver
+Number of Levels:     6
+Operator Complexity:   2.159
+Grid Complexity:       1.201
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       40000       357604 [46.31%]
+     1        6700       226352 [29.31%]
+     2        1232       176222 [22.82%]
+     3         109        11827 [1.53%]
+     4          13          169 [0.02%]
+     5           4           16 [0.00%]
+
+The residual norm is 1.1195909450352103e-10
+
+
+```
+
 <img src="./0_start_here/output/amg_convergence.png" width="300"/>
 
 
@@ -85,6 +133,20 @@ To use `solve()`, only the matrix `A` and a right-hand side `b` are needed:
 x = pyamg.solve(A, b, verb=True)
 ```
 The demo produces residual norms that can vary from machine to machine.
+
+```
+  Detected a Hermitian matrix
+    maxiter = 400
+    iteration 1.0
+    iteration 2.0
+    iteration 3.0
+    iteration 4.0
+    iteration 5.0
+    iteration 6.0
+    iteration 7.0
+  Residuals ||r_k||_M, ||r_0||_M = 6.45e-01, 8.68e+06
+  Residual reduction ||r_k||_M/||r_0||_M = 7.43e-08
+```
 
 ***
 
@@ -192,6 +254,35 @@ each solver.
 
 The second file defines a function `rot_ani_diff_diagnostic.py`, that when
 given a matrix, automatically generates and uses the best solver found.
+
+```
+
+Searching for optimal smoothed aggregation method for (2500,2500) matrix
+    ...
+    User specified a symmetric matrix
+    User specified definiteness as positive
+    ...
+    Test 1 out of 18
+    Test 2 out of 18
+    Test 3 out of 18
+    Test 4 out of 18
+    Test 5 out of 18
+    Test 6 out of 18
+    Test 7 out of 18
+    Test 8 out of 18
+    Test 9 out of 18
+    Test 10 out of 18
+    Test 11 out of 18
+    Test 12 out of 18
+    Test 13 out of 18
+    Test 14 out of 18
+    Test 15 out of 18
+    Test 16 out of 18
+    Test 17 out of 18
+    Test 18 out of 18
+    --> Diagnostic Results located in rot_ani_diff_diagnostic.txt
+    --> See automatically generated function definition in rot_ani_diff_diagnostic.py
+```
 <a name="complexarithmetic"></a>
 
 #### Complex Arithmetic
@@ -209,6 +300,42 @@ Using
 python demo.py --solver 1
 ```
 results in the following.
+
+```
+residual at iteration  0: 2.00e+02
+residual at iteration  1: 1.21e+02
+residual at iteration  2: 2.47e+01
+residual at iteration  3: 5.40e+00
+residual at iteration  4: 1.46e+00
+residual at iteration  5: 4.60e-01
+residual at iteration  6: 1.58e-01
+residual at iteration  7: 5.77e-02
+residual at iteration  8: 2.20e-02
+residual at iteration  9: 8.70e-03
+residual at iteration 10: 3.53e-03
+residual at iteration 11: 1.46e-03
+residual at iteration 12: 6.12e-04
+residual at iteration 13: 2.59e-04
+residual at iteration 14: 1.11e-04
+residual at iteration 15: 4.75e-05
+residual at iteration 16: 2.04e-05
+residual at iteration 17: 8.82e-06
+residual at iteration 18: 3.81e-06
+residual at iteration 19: 1.65e-06
+residual at iteration 20: 7.13e-07
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:   1.344
+Grid Complexity:       1.184
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       10000        50000 [74.43%]
+     1        1658        15132 [22.53%]
+     2         170         1906 [2.84%]
+     3          12          138 [0.21%]
+     4           1            1 [0.00%]
+
+```
 <a name="nonsymmetricexample"></a>
 
 #### Nonsymmetric example
@@ -229,6 +356,68 @@ python demo.py --solver 1
 
 we observe the following convergence history.
 
+```
+
+Observe that standard multigrid parameters for Hermitian systems
+yield a nonconvergent stand-alone solver.
+
+residual at iteration  0: 8.64e-01
+residual at iteration  1: 6.92e-01
+residual at iteration  2: 2.02e+01
+residual at iteration  3: 5.89e+02
+residual at iteration  4: 1.72e+04
+residual at iteration  5: 5.02e+05
+residual at iteration  6: 1.47e+07
+residual at iteration  7: 4.28e+08
+residual at iteration  8: 1.25e+10
+residual at iteration  9: 3.65e+11
+residual at iteration 10: 1.07e+13
+residual at iteration 11: 3.12e+14
+residual at iteration 12: 9.10e+15
+residual at iteration 13: 2.66e+17
+residual at iteration 14: 7.76e+18
+residual at iteration 15: 2.27e+20
+*************************************************************
+Now using nonsymmetric parameters for multigrid , we obtain a
+convergent stand-alone solver. 
+
+residual at iteration  0: 8.64e-01
+residual at iteration  1: 1.14e-01
+residual at iteration  2: 3.53e-02
+residual at iteration  3: 1.61e-02
+residual at iteration  4: 8.68e-03
+residual at iteration  5: 5.09e-03
+residual at iteration  6: 3.08e-03
+residual at iteration  7: 1.89e-03
+residual at iteration  8: 1.18e-03
+residual at iteration  9: 7.44e-04
+residual at iteration 10: 4.78e-04
+residual at iteration 11: 3.14e-04
+residual at iteration 12: 2.11e-04
+residual at iteration 13: 1.46e-04
+residual at iteration 14: 1.04e-04
+residual at iteration 15: 7.55e-05
+*************************************************************
+Now, we use the nonsymmetric solver to accelerate GMRES. 
+
+residual at iteration  0: 5.54e+00
+residual at iteration  1: 1.47e+00
+residual at iteration  2: 5.00e-01
+residual at iteration  3: 2.96e-01
+residual at iteration  4: 1.62e-01
+residual at iteration  5: 5.09e-02
+residual at iteration  6: 1.20e-02
+residual at iteration  7: 4.86e-03
+residual at iteration  8: 1.39e-03
+residual at iteration  9: 9.68e-04
+residual at iteration 10: 3.05e-04
+residual at iteration 11: 1.36e-04
+residual at iteration 12: 2.94e-05
+residual at iteration 13: 6.66e-06
+residual at iteration 14: 1.48e-06
+residual at iteration 15: 4.32e-07
+```
+
 ***
 
 <a name="classicalamg"></a>
@@ -248,6 +437,18 @@ C/F splitting is plotted.  Printing the multilevel object in this case shows tha
 the coarsening is typical: around 25% reduction in unknowns (or
 coarsening-by-four), as shown below. The demo also plots the coarse-fine
 splitting, with the orange C-pts and the blue F-pts.
+
+```
+MultilevelSolver
+Number of Levels:     2
+Operator Complexity:   1.327
+Grid Complexity:       1.267
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0         191         1243 [75.33%]
+     1          51          407 [24.67%]
+
+```
 
 <img src="./coarse_fine_splitting/output/splitting.png" width="300"/>
 
@@ -276,6 +477,16 @@ In this example we look at several strength of connection measures, including `s
 `evolution`, `affinity`, and `algebraic_distance`.  From the output, we see the large impact
 on convergence and the variability due to parameter selection.
 
+```
+running symmetric: theta=0.0
+running symmetric: theta=0.25
+running evolution: epsilon=4.0
+running affinity: epsilon=3.0, R=10, alpha=0.5, k=20
+running affinity: epsilon=4.0, R=10, alpha=0.5, k=20
+running algebraic_distance: epsilon=2.0, p=inf, R=10, alpha=0.5, k=20
+running algebraic_distance: epsilon=3.0, p=inf, R=10, alpha=0.5, k=20
+```
+
 <img src="./strength_options/output/strength_options.png" width="300"/>
 
 <a name="approximateidealrestriction(air)"></a>
@@ -302,6 +513,34 @@ coarsening will both increase operator complexity but also improve
 convergence.
 ```python
 python demo
+```
+
+```
+500 x 500 mesh:
+Distance-1 AIR using RS coarsening *without* second pass.
+	Levels in hierarchy:        10
+	Operator complexity:        2.604073699237941
+	Number of iterations:       39
+	Average convergence factor: 0.5452519246046812
+
+Distance-1 AIR using RS coarsening *with* second pass.
+	Levels in hierarchy:        13
+	Operator complexity:        3.7809599131373113
+	Number of iterations:       8
+	Average convergence factor: 0.044070522107121105
+
+Distance-2 AIR using RS coarsening *without* second pass.
+	Levels in hierarchy:        10
+	Operator complexity:        2.9532603668876214
+	Number of iterations:       11
+	Average convergence factor: 0.11031359469804951
+
+Distance-2 AIR using RS coarsening *with* second pass.
+	Levels in hierarchy:        14
+	Operator complexity:        3.77129643903191
+	Number of iterations:       7
+	Average convergence factor: 0.029339749752205272
+
 ```
 
 <img src="./air/output/splitting.png" width="300"/>
@@ -370,6 +609,44 @@ finite element (Q1) discretizations of anisotropic diffusion.  In particular,
 the Classic Strength Measure is compared to the Evolution Measure.  For this
 example, we see that total work is reduced by using the Evolution Measure and
 that a scalable convergence rate is observed with rootnode:
+
+```
+Running Grid = (100 x 100)
+Running Grid = (200 x 200)
+Running Grid = (300 x 300)
+Running Grid = (400 x 400)
+
+AMG Scalability Study for Ax = 0, x_init = rand
+
+Emphasis on Robustness of Evolution Strength 
+Measure and Root-Node Solver
+
+Rotated Anisotropic Diffusion in 2D
+Anisotropic Coefficient = 1.000e-03
+Rotation Angle = 0.393
+    n     |    nnz    |    rho    |   OpCx    |   Work   
+--------------------------------------------------------
+ Classic strength 
+--------------------------------------------------------
+  10000   |   88804   |   0.86    |    1.6    |    24    
+  40000   |  357604   |   0.87    |    1.6    |    25    
+  90000   |  806404   |   0.87    |    1.6    |    27    
+ 160000   |  1435204  |   0.87    |    1.6    |    27    
+--------------------------------------------------------
+ Evolution strength 
+--------------------------------------------------------
+  10000   |   88804   |   0.56    |    1.8    |     7    
+  40000   |  357604   |   0.67    |    1.8    |    10    
+  90000   |  806404   |   0.69    |    1.8    |    11    
+ 160000   |  1435204  |   0.72    |    1.8    |    13    
+--------------------------------------------------------
+ Evolution strength with Rootnode 
+--------------------------------------------------------
+  10000   |   88804   |   0.46    |    1.8    |    5.4   
+  40000   |  357604   |   0.49    |    1.9    |     6    
+  90000   |  806404   |    0.5    |    1.9    |    6.3   
+ 160000   |  1435204  |    0.5    |    1.9    |    6.5   
+```
 <a name="linearelasticity"></a>
 
 #### Linear Elasticity
@@ -392,6 +669,42 @@ python demo --solver 2
 ```
 
 results in the following.
+
+```
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:   1.125
+Grid Complexity:       1.127
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       80000      1430416 [88.91%]
+     1        8978       158404 [9.85%]
+     2        1058        17956 [1.12%]
+     3         128         1936 [0.12%]
+     4          18          196 [0.01%]
+
+Number of iterations:  19d
+
+residual at iteration  0: 1.63e+02
+residual at iteration  1: 1.13e+02
+residual at iteration  2: 8.19e+00
+residual at iteration  3: 1.12e+00
+residual at iteration  4: 2.57e-01
+residual at iteration  5: 6.78e-02
+residual at iteration  6: 1.86e-02
+residual at iteration  7: 5.19e-03
+residual at iteration  8: 1.46e-03
+residual at iteration  9: 4.11e-04
+residual at iteration 10: 1.17e-04
+residual at iteration 11: 3.32e-05
+residual at iteration 12: 9.52e-06
+residual at iteration 13: 2.73e-06
+residual at iteration 14: 7.89e-07
+residual at iteration 15: 2.29e-07
+residual at iteration 16: 6.65e-08
+residual at iteration 17: 1.94e-08
+residual at iteration 18: 5.68e-09
+```
 
 ***
 
@@ -420,6 +733,36 @@ python demo.py --solver 1
 ```
 
 produces the following.
+
+```
+Matrix: Poisson
+MultilevelSolver
+Number of Levels:     6
+Operator Complexity:   1.337
+Grid Complexity:       1.188
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0      250000      1248000 [74.82%]
+     1       41750       373416 [22.39%]
+     2        4704        41554 [2.49%]
+     3         532         4526 [0.27%]
+     4          65          509 [0.03%]
+     5           9           65 [0.00%]
+
+Matrix: Elasticity
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:   1.281
+Grid Complexity:       1.191
+Coarse Solver:        'pinv'
+  level   unknowns     nonzeros
+     0       80000      1430416 [78.08%]
+     1       13467       356409 [19.45%]
+     2        1587        40401 [2.21%]
+     3         192         4356 [0.24%]
+     4          27          441 [0.02%]
+
+```
 
 <img src="./preconditioning/output/convergence_elasticity.png" width="300"/>
 
@@ -479,6 +822,56 @@ elements, largely group neighboring vertices.  The wave-like near
 null-space is then enforced on the first coarse grid (level-1), resulting
 in four modes.
 
+```
+
+Running 2D Helmholtz Example
+-- 10.00 Points-per-wavelength
+-- 2.73e-01 = h,  2.50 = omega
+-- Discretized with a local discontinuous Galerkin method
+   on annulus-shaped domain
+Using only a constant mode for interpolation yields an inefficient solver.
+This is due to aliasing oscillatory, but algebraically smooth, modes on the coarse levels.
+residual at iteration  0: 3.14e+01
+residual at iteration  1: 4.00e+00
+residual at iteration  2: 2.53e+00
+residual at iteration  3: 9.74e-01
+residual at iteration  4: 2.76e-01
+residual at iteration  5: 1.22e-01
+residual at iteration  6: 5.91e-02
+residual at iteration  7: 2.64e-02
+residual at iteration  8: 1.48e-02
+residual at iteration  9: 6.75e-03
+residual at iteration 10: 3.30e-03
+residual at iteration 11: 1.73e-03
+residual at iteration 12: 6.48e-04
+residual at iteration 13: 3.75e-04
+residual at iteration 14: 1.44e-04
+residual at iteration 15: 6.55e-05
+residual at iteration 16: 3.85e-05
+residual at iteration 17: 1.34e-05
+residual at iteration 18: 7.11e-06
+residual at iteration 19: 3.81e-06
+residual at iteration 20: 9.36e-07
+Note the improved performance from using planewaves in B.
+residual at iteration  0: 3.05e+01
+residual at iteration  1: 2.62e-01
+residual at iteration  2: 2.42e-03
+residual at iteration  3: 2.88e-05
+residual at iteration  4: 3.29e-07
+residual at iteration  5: 3.87e-09
+MultilevelSolver
+Number of Levels:     4
+Operator Complexity:   1.435
+Grid Complexity:       1.411
+Coarse Solver:        'pinv2'
+  level   unknowns     nonzeros
+     0        2880        52016 [69.67%]
+     1         880        10480 [14.04%]
+     2         256         9856 [13.20%]
+     3          48         2304 [3.09%]
+
+```
+
 <img src="./helmholtz/output/1dhelmholtzconv.png" width="300"/>
 
 
@@ -501,6 +894,63 @@ The mesh consists of 46 elements, with p=5, leading to 21 degrees of freedom
 per element.  The first figure shows that aggregation is local, leading to
 a continuous first level.  The first coarse level (level1) candidate vector `B` is
 also shown.
+
+```
+
+Diffusion problem discretized with p=5 and the local
+discontinuous Galerkin method.
+Observe that standard SA parameters for this p=5 discontinuous 
+Galerkin system yield an inefficient solver.
+
+residual at iteration  0: 2.98e+02
+residual at iteration  1: 1.06e+01
+residual at iteration  2: 5.08e+00
+residual at iteration  3: 2.71e+00
+residual at iteration  4: 1.64e+00
+residual at iteration  5: 1.01e+00
+residual at iteration  6: 5.20e-01
+residual at iteration  7: 3.57e-01
+residual at iteration  8: 2.19e-01
+residual at iteration  9: 1.25e-01
+residual at iteration 10: 8.53e-02
+residual at iteration 11: 5.44e-02
+residual at iteration 12: 3.50e-02
+residual at iteration 13: 2.59e-02
+residual at iteration 14: 1.79e-02
+residual at iteration 15: 1.15e-02
+residual at iteration 16: 6.57e-03
+residual at iteration 17: 4.40e-03
+residual at iteration 18: 2.49e-03
+residual at iteration 19: 1.37e-03
+residual at iteration 20: 8.23e-04
+
+Now use appropriate parameters, especially 'energy' prolongation
+smoothing and a distance based strength measure on level 0.  This
+yields a much more efficient solver.
+
+residual at iteration  0: 2.98e+02
+residual at iteration  1: 1.32e+00
+residual at iteration  2: 8.72e-02
+residual at iteration  3: 1.02e-02
+residual at iteration  4: 6.38e-04
+residual at iteration  5: 6.65e-05
+residual at iteration  6: 6.01e-06
+residual at iteration  7: 6.16e-07
+residual at iteration  8: 4.92e-08
+residual at iteration  9: 5.41e-09
+MultilevelSolver
+Number of Levels:     5
+Operator Complexity:   1.623
+Grid Complexity:       1.807
+Coarse Solver:        'pinv2'
+  level   unknowns     nonzeros
+     0         966        35338 [61.63%]
+     1         652        19602 [34.19%]
+     2          94         2006 [3.50%]
+     3          27          341 [0.59%]
+     4           7           49 [0.09%]
+
+```
 
 <img src="./diffusion_dg/output/dgaggs.png" width="300"/>
 
@@ -535,43 +985,22 @@ the specialized relaxation method (`hiptmair_smoother`).
 This is a short example on profiling the setup phase of AMG.
 Here, we use `pyinstrument` to analyze the construction of
 a smoothed aggregation solver:
-<a name="scalingperformanceofamgandfeassembly"></a>
-
-#### Scaling performance of AMG and FE assembly
-
-[demo.py](./performance/demo.py)
-
-This demo shows the performance of finite element assembly (by way of scikit-fem)
-and multigrid setup/solve (within PCG).  The solver is run to a tolerance of `1e-8`.
-The figure shows:
-
-- `DoFs`: the total number of degrees of freedom in the system
-- `Assembly`: the total time to assemble the FE matrix (scikit-fem)
-- `Solve prep`: the total time to condense the system to non-Dirichlet nodes (scikit-fem)
-- `Solve setup`: the total time for the AMG setup phase (pyamg)
-- `Solve`: the total time for the AMG solve phase (pyamg) withing PCG (scikit-fem)
 
 ```
-|    DoFs     |  Assembly   | Solve prep  | Solve setup |    Solve    |
-|-------------|-------------|-------------|-------------|-------------|
-|           8 |     0.00129 |     0.00036 |     0.00011 |     0.00032 |
-|          27 |     0.00118 |     0.00022 |     0.00107 |     0.00048 |
-|          64 |     0.00184 |     0.00022 |     0.00192 |     0.00061 |
-|         216 |     0.00392 |     0.00025 |     0.00225 |     0.00079 |
-|         512 |     0.00772 |     0.00029 |     0.00337 |     0.00100 |
-|        1000 |     0.01452 |     0.00037 |     0.00473 |     0.00154 |
-|        2744 |     0.03613 |     0.00054 |     0.00776 |     0.00357 |
-|        5832 |     0.07164 |     0.00089 |     0.01256 |     0.00661 |
-|       12167 |     0.15317 |     0.00175 |     0.02915 |     0.01497 |
-|       27000 |     0.34997 |     0.00300 |     0.04513 |     0.03619 |
-|       54872 |     0.68680 |     0.00654 |     0.10547 |     0.07335 |
-|      110592 |     1.38780 |     0.01384 |     0.18897 |     0.16864 |
-|      238328 |     2.99099 |     0.02868 |     0.34677 |     0.36793 |
-|      474552 |     6.05607 |     0.06064 |     0.86078 |     0.83992 |
+
+  _     ._   __/__   _ _  _  _ _/_   Recorded: 12:00:00  Samples:  598
+ /_//_/// /_\ / //_// / //_'/ //     Duration: 1.320     CPU time: 7.091
+/   _/                      v4.4.0
+
+Program: demo.py --savefig
+
+[31m1.319[0m [48;5;24m[38;5;15m<module>[0m  [2mdemo.py:1[0m
+└─ [31m1.319[0m smoothed_aggregation_solver[0m  [2mpyamg/aggregation/aggregation.py:26[0m
+      [236 frames hidden]  [2mpyamg, <__array_function__ internals>...[0m
+         [33m0.748[0m _approximate_eigenvalues[0m  [2mpyamg/util/linalg.py:156[0m
+
+
 ```
-
-<img src="./performance/output/performance.png" width="300"/>
-
 
 ***
 
