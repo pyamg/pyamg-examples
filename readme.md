@@ -978,6 +978,41 @@ the specialized relaxation method (`hiptmair_smoother`).
 
 <a name="profilingperformance"></a>
 
+#### Scaling performance of AMG and FE assembly
+
+[demo.py](./performance/demo.py)
+
+This demo shows the performance of finite element assembly (by way of scikit-fem)
+and multigrid setup/solve (within PCG).  The solver is run to a tolerance of `1e-8`.
+The figure shows:
+
+- `DoFs`: the total number of degrees of freedom in the system
+- `Assembly`: the total time to assemble the FE matrix (scikit-fem)
+- `Solve prep`: the total time to condense the system to non-Dirichlet nodes (scikit-fem)
+- `Solve setup`: the total time for the AMG setup phase (pyamg)
+- `Solve`: the total time for the AMG solve phase (pyamg) withing PCG (scikit-fem)
+
+```
+|    DoFs     |  Assembly   | Solve prep  | Solve setup |    Solve    |
+|-------------|-------------|-------------|-------------|-------------|
+|           8 |     0.00169 |     0.00045 |     0.00011 |     0.00049 |
+|          27 |     0.00142 |     0.00027 |     0.00148 |     0.00054 |
+|          64 |     0.00193 |     0.00025 |     0.00210 |     0.00061 |
+|         216 |     0.00393 |     0.00025 |     0.00225 |     0.00079 |
+|         512 |     0.00760 |     0.00028 |     0.00331 |     0.00099 |
+|        1000 |     0.01450 |     0.00034 |     0.00462 |     0.00152 |
+|        2744 |     0.03646 |     0.00055 |     0.00776 |     0.00357 |
+|        5832 |     0.07144 |     0.00088 |     0.01526 |     0.00664 |
+|       12167 |     0.14817 |     0.00150 |     0.01945 |     0.01439 |
+|       27000 |     0.33348 |     0.00307 |     0.05211 |     0.03602 |
+|       54872 |     0.68135 |     0.00625 |     0.07649 |     0.07217 |
+|      110592 |     1.41124 |     0.01306 |     0.18654 |     0.16615 |
+|      238328 |     3.15382 |     0.03606 |     0.61186 |     0.40605 |
+|      474552 |     6.58809 |     0.06941 |     1.00435 |     0.86555 |
+```
+
+<img src="./performance/output/performance.png" width="300"/>
+
 #### Profiling Performance
 
 [demo.py](./profile_pyamg/demo.py)
